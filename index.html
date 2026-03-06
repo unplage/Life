@@ -1007,7 +1007,7 @@
                         </div>
                         <div class="person-card">
                             <div class="avatar">👩</div>
-                            <div class="person-name" id="femaleName">李女士</div>
+                            <div class="person-name" id="femaleName">女士</div>
                             <div class="birthday-countdown" id="femaleBirthdayCountdown"></div>
                             <div class="progress-bar"><div class="progress-fill" id="femaleProgress"></div></div>
                         </div>
@@ -1426,7 +1426,7 @@
                 if(leap && month>leap) days+=this.getLeapDays(idx);
                 days += day - 1;
                 let base = new Date(1900,0,31);
-                return new Date(base.getTime() + days*86400000);
+                return new Date(base.getTime() + (days + 1)*86400000);
             },
             getBirthdaySolar(lunarYear, lunarMonth, lunarDay, targetYear) {
                 return this.lunarToSolar(targetYear, lunarMonth, lunarDay);
