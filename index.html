@@ -1426,7 +1426,9 @@
                 if(leap && month>leap) days+=this.getLeapDays(idx);
                 days += day - 1;
                 let base = new Date(1900,0,31);
-                return new Date(base.getTime() + (days + 1)*86400000);
+                let result = new Date(base);
+                result.setDate(base.getDate() + days);
+                return result;
             },
             getBirthdaySolar(lunarYear, lunarMonth, lunarDay, targetYear) {
                 return this.lunarToSolar(targetYear, lunarMonth, lunarDay);
