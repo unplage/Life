@@ -1209,8 +1209,19 @@
         }
 
         // ========== 体重模块 ==========
+        // 辅助函数
+        function getLocalDateString(date = new Date()) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        
+        // 保存体重
         async function saveWeight() {
-            let w = parseFloat(document.getElementById('weightInput').value), bf = parseFloat(document.getElementById('bodyFatInput').value), d = document.getElementById('weightDate').value || new Date().toISOString().split('T')[0];
+            let w = parseFloat(document.getElementById('weightInput').value), 
+                bf = parseFloat(document.getElementById('bodyFatInput').value), 
+                d = document.getElementById('weightDate').value || getLocalDateString();
             if(isNaN(w)) { alert('请输入有效的体重'); return; }
             await addData('weight', { date:d, weight:w, bodyFat:bf||null, timestamp:Date.now() });
             alert('体重记录已保存！'); loadWeightData();
