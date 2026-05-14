@@ -1098,6 +1098,14 @@
 
     <script>
         // ========== 工具函数 ==========
+        // 获取本地时区日期字符串 (YYYY-MM-DD)
+        function getLocalDateString(date = new Date()) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
         function showFeatureAlert(feature) { alert(`${feature} 功能即将上线，敬请期待！`); }
         function closeModal() { document.getElementById('diaryModal').classList.remove('active'); }
         function closePhotoModal() { document.getElementById('photoModal').classList.remove('active'); }
@@ -1197,7 +1205,7 @@
         async function saveOutfitRecord() {
             let photo = document.getElementById('outfitImg').src, note = document.getElementById('outfitNote').value, temp = document.getElementById('tempInput').value;
             if(!photo && !note) { alert('请上传照片或填写备注'); return; }
-            await addData('outfits', { date: new Date().toISOString().split('T')[0], photo: photo||'', note: note||'', temp: temp||'', timestamp: Date.now() });
+            await addData('outfits', { date: getLocalDateString(), photo: photo||'', note: note||'', temp: temp||'', timestamp: Date.now() });
             alert('穿搭记录已保存！'); loadOutfitHistory();
             document.getElementById('outfitPhoto').value = ''; document.getElementById('outfitNote').value = ''; document.getElementById('outfitPreview').style.display = 'none';
         }
@@ -1209,15 +1217,6 @@
         }
 
         // ========== 体重模块 ==========
-        // 辅助函数
-        function getLocalDateString(date = new Date()) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-        
-        // 保存体重
         async function saveWeight() {
             let w = parseFloat(document.getElementById('weightInput').value), 
                 bf = parseFloat(document.getElementById('bodyFatInput').value), 
@@ -1288,7 +1287,7 @@
             if(!start) { alert('请选择开始日期'); return; }
             await addData('periods', { startDate:start, endDate:end||null, symptoms, timestamp:Date.now() });
             alert('生理期记录已保存！'); loadPeriodData();
-            document.getElementById('periodStart').value = new Date().toISOString().split('T')[0];
+            document.getElementById('periodStart').value = getLocalDateString();
             document.getElementById('periodEnd').value = '';
             document.querySelectorAll('.period-symptom').forEach(cb=>cb.checked=false);
         }
@@ -1398,7 +1397,7 @@
             });
         });
         async function saveDiary() {
-            let date = document.getElementById('diaryDate').value || new Date().toISOString().split('T')[0];
+            let date = document.getElementById('diaryDate').value || getLocalDateString();
             let title = document.getElementById('diaryTitle').value, content = document.getElementById('diaryContent').value;
             if(!title && !content) { alert('请填写标题或内容'); return; }
             await addData('diaries', { date, title:title||'无标题', content, mood:selectedMood, timestamp:Date.now() });
@@ -1520,7 +1519,7 @@
             document.getElementById('upcomingList').innerHTML = upcomingHtml || '<p>暂无即将到来的事件</p>';
         }
 
-        // ========== 导出/导入（修复）==========
+        // ========== 导出/导入 ==========
         async function exportData() {
             try {
                 alert('正在准备导出数据...');
@@ -1544,7 +1543,7 @@
                 let url = URL.createObjectURL(blob);
                 let a = document.createElement('a');
                 a.href = url;
-                a.download = `beautiful_mood_${new Date().toISOString().split('T')[0]}.json`;
+                a.download = `beautiful_mood_${getLocalDateString()}.json`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -1609,9 +1608,9 @@
         document.addEventListener('DOMContentLoaded', async () => {
             let now = new Date();
             document.getElementById('currentDate').innerHTML = now.toLocaleDateString('zh-CN', {year:'numeric',month:'long',day:'numeric',weekday:'long'});
-            document.getElementById('weightDate').value = now.toISOString().split('T')[0];
-            document.getElementById('diaryDate').value = now.toISOString().split('T')[0];
-            document.getElementById('periodStart').value = now.toISOString().split('T')[0];
+            document.getElementById('weightDate').value = getLocalDateString(now);
+            document.getElementById('diaryDate').value = getLocalDateString(now);
+            document.getElementById('periodStart').value = getLocalDateString(now);
             try {
                 await initDB();
                 loadOutfitHistory(); loadWeightData(); loadPeriodData(); loadDiaries(); updateAnniversary();
