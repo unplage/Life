@@ -26,7 +26,7 @@
             --radius-sm: 12px;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Roboto', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: var(--text);
@@ -162,7 +162,7 @@
             color: var(--text-light);
             margin-bottom: 8px;
         }
-        .form-input {
+        .form-input, .form-select {
             width: 100%;
             padding: 14px 16px;
             border: 2px solid #e0e0e0;
@@ -171,7 +171,7 @@
             transition: all 0.3s ease;
             font-family: inherit;
         }
-        .form-input:focus {
+        .form-input:focus, .form-select:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 4px rgba(255,107,107,0.1);
@@ -207,6 +207,7 @@
         .btn-small {
             padding: 8px 16px;
             font-size: 14px;
+            width: auto;
         }
         /* 穿搭模块 */
         .outfit-display {
@@ -822,6 +823,69 @@
             align-items: center;
             justify-content: center;
         }
+        /* 孕期模块专用样式 */
+        .stage-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 8px;
+            overflow-x: auto;
+        }
+        .stage-tab {
+            background: none;
+            border: none;
+            padding: 8px 16px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            border-radius: 30px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .stage-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .pregnancy-header {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            color: #2d3436;
+            text-align: center;
+        }
+        .week-badge {
+            font-size: 28px;
+            font-weight: 800;
+        }
+        .vaccine-timeline {
+            margin-top: 16px;
+        }
+        .vaccine-item {
+            background: #e8f4f8;
+            border-radius: 20px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #f43f5e;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
         @media (max-width: 480px) {
             .app-container {
                 max-width: 100%;
@@ -831,7 +895,7 @@
             }
         }
     </style>
-<base target="_blank">
+    <base target="_blank">
 </head>
 <body>
     <div class="app-container">
@@ -841,16 +905,17 @@
         </div>
 
         <div class="nav-tabs">
-            <button class="nav-tab active" data-section="outfit">👔 穿搭</button>
+            <button class="nav-tab" data-section="outfit">👔 穿搭</button>
             <button class="nav-tab" data-section="weight">⚖️ 体重</button>
             <button class="nav-tab" data-section="period">🌸 生理期</button>
+            <button class="nav-tab" data-section="pregnancy">🤰 孕期全周期</button>
             <button class="nav-tab" data-section="diary">📔 日记</button>
             <button class="nav-tab" data-section="more">➕ 更多</button>
         </div>
 
         <div class="content">
             <!-- 穿搭模块 -->
-            <div class="section active" id="outfit-section">
+            <div class="section" id="outfit-section">
                 <div class="outfit-display" id="outfitDisplay">
                     <span class="outfit-emoji" id="outfitEmoji">👕</span>
                     <div class="outfit-desc" id="outfitDesc">今日穿搭建议</div>
@@ -912,7 +977,7 @@
                 </div>
             </div>
 
-            <!-- 生理期模块（智能预测） -->
+            <!-- 生理期模块 -->
             <div class="section" id="period-section">
                 <div class="period-status" id="periodStatus">
                     <div class="status-item"><div class="status-number" id="cycleDay">--</div><div class="status-label">周期第几天</div></div>
@@ -944,6 +1009,113 @@
                 </div>
             </div>
 
+            <!-- 孕期全周期模块（含宝宝成长） -->
+            <div class="section active" id="pregnancy-section">
+                <div class="pregnancy-header" id="pregnancyHeader">
+                    <div class="week-badge" id="gestationalWeek">-- 孕周 --</div>
+                    <div id="pregnancyStatus">🌸 备孕 / 孕期管理</div>
+                    <button class="btn-small" style="margin-top:8px; background:white; border:none; border-radius:20px;" onclick="showPregnancySettings()">⚙️ 设置预产期/末次月经</button>
+                </div>
+                <div class="stage-tabs">
+                    <button class="stage-tab" data-stage="preconception">🌱 备孕</button>
+                    <button class="stage-tab" data-stage="pregnancy">🤰 怀孕</button>
+                    <button class="stage-tab" data-stage="delivery">🏥 生产</button>
+                    <button class="stage-tab" data-stage="postpartum">🌙 月子</button>
+                    <button class="stage-tab active" data-stage="baby">👶 宝宝成长</button>
+                </div>
+                <!-- 备孕面板 -->
+                <div id="preconception-panel" class="stage-panel" style="display:none;">
+                    <div class="card">
+                        <div class="card-title">📝 备孕记录</div>
+                        <div class="form-group"><label>基础体温(℃)</label><input type="number" step="0.1" class="form-input" id="preBbt" placeholder="36.2"></div>
+                        <div class="form-group"><label>排卵试纸</label><select class="form-input" id="preOvulation"><option value="阴性">阴性</option><option value="弱阳">弱阳</option><option value="阳性">阳性</option><option value="强阳">强阳</option></select></div>
+                        <div class="form-group"><label>叶酸补充</label><select class="form-input" id="preFolic"><option value="是">是</option><option value="否">否</option></select></div>
+                        <div class="form-group"><label>记录日期</label><input type="date" class="form-input" id="preDate"></div>
+                        <button class="btn btn-primary" onclick="savePreconceptionRecord()">保存备孕记录</button>
+                        <div class="history-list" id="preHistoryList" style="margin-top:16px;"></div>
+                    </div>
+                </div>
+                <!-- 怀孕面板 -->
+                <div id="pregnancy-panel" class="stage-panel" style="display:none;">
+                    <div class="card">
+                        <div class="card-title">📊 孕期指标</div>
+                        <div class="metrics-grid">
+                            <div><label>体重(kg)</label><input type="number" step="0.1" class="form-input" id="pregWeight"></div>
+                            <div><label>血压(mmHg)</label><input type="text" class="form-input" id="pregBp" placeholder="120/80"></div>
+                            <div><label>血糖(mmol/L)</label><input type="number" step="0.1" class="form-input" id="pregGlucose"></div>
+                            <div><label>宫高(cm)</label><input type="number" step="0.5" class="form-input" id="pregFundal"></div>
+                            <div><label>腹围(cm)</label><input type="number" step="0.5" class="form-input" id="pregAbdominal"></div>
+                            <div><label>胎心率(bpm)</label><input type="number" class="form-input" id="pregFetalHr"></div>
+                            <div><label>胎动(次/小时)</label><input type="number" class="form-input" id="pregFetalMove"></div>
+                        </div>
+                        <div class="form-group"><label>备注</label><textarea class="form-input" id="pregNote" rows="2"></textarea></div>
+                        <div class="form-group"><label>日期</label><input type="date" class="form-input" id="pregDate"></div>
+                        <button class="btn btn-primary" onclick="savePregnancyRecord()">保存怀孕记录</button>
+                        <div class="chart-container"><canvas id="pregWeightChart" width="360" height="150"></canvas></div>
+                        <div class="history-list" id="pregHistoryList"></div>
+                    </div>
+                </div>
+                <!-- 生产面板 -->
+                <div id="delivery-panel" class="stage-panel" style="display:none;">
+                    <div class="card">
+                        <div class="card-title">👶 分娩记录</div>
+                        <div class="form-group"><label>分娩日期</label><input type="date" class="form-input" id="deliveryDate"></div>
+                        <div class="form-group"><label>分娩方式</label><select class="form-input" id="deliveryMode"><option value="顺产">顺产</option><option value="剖宫产">剖宫产</option><option value="助产">助产(胎吸/产钳)</option></select></div>
+                        <div class="form-group"><label>宝宝性别</label><select class="form-input" id="babyGender"><option value="女">女宝</option><option value="男">男宝</option></select></div>
+                        <div class="form-group"><label>宝宝体重(g)</label><input type="number" class="form-input" id="babyWeight"></div>
+                        <div class="form-group"><label>宝宝身长(cm)</label><input type="number" step="0.5" class="form-input" id="babyLength"></div>
+                        <div class="form-group"><label>Apgar评分(1-10)</label><input type="number" class="form-input" id="apgarScore" min="0" max="10"></div>
+                        <div class="form-group"><label>产后出血量(ml)</label><input type="number" class="form-input" id="bloodLoss"></div>
+                        <button class="btn btn-primary" onclick="saveDeliveryRecord()">保存生产记录</button>
+                        <div class="history-list" id="deliveryHistoryList"></div>
+                    </div>
+                </div>
+                <!-- 月子面板 -->
+                <div id="postpartum-panel" class="stage-panel" style="display:none;">
+                    <div class="card">
+                        <div class="card-title">🌙 产后恢复</div>
+                        <div class="metrics-grid">
+                            <div><label>子宫底高度(cm)</label><input type="number" step="0.5" class="form-input" id="ppUterus"></div>
+                            <div><label>恶露情况</label><select class="form-input" id="ppLochia"><option value="少-淡红">少-淡红</option><option value="中-红色">中-红色</option><option value="多-血块">多-血块</option></select></div>
+                            <div><label>伤口愈合</label><select class="form-input" id="ppWound"><option value="良好">良好</option><option value="红肿">红肿</option><option value="疼痛">疼痛</option></select></div>
+                            <div><label>情绪评分(1-5)</label><input type="number" class="form-input" id="ppMood" min="1" max="5"></div>
+                            <div><label>盆底肌训练</label><select class="form-input" id="ppPelvic"><option value="是">是</option><option value="否">否</option></select></div>
+                        </div>
+                        <div class="form-group"><label>记录日期</label><input type="date" class="form-input" id="ppDate"></div>
+                        <button class="btn btn-primary" onclick="savePostpartumRecord()">保存月子记录</button>
+                        <div class="history-list" id="ppHistoryList"></div>
+                    </div>
+                </div>
+                <!-- 宝宝成长面板 -->
+                <div id="baby-panel" class="stage-panel">
+                    <div class="card">
+                        <div class="card-title">📊 宝宝体重趋势</div>
+                        <div class="chart-container"><canvas id="babyWeightChart" width="360" height="150"></canvas></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">💉 疫苗记录</div>
+                        <button class="btn-small btn-primary" onclick="showAddVaccineModal()" style="margin-bottom:12px;">+ 添加疫苗</button>
+                        <div id="vaccineList" class="vaccine-timeline"></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">🍼 饭食 & 💩 排泄记录</div>
+                        <div class="metrics-grid">
+                            <div><button class="btn-small btn-primary" onclick="showAddFoodModal()">🍚 添加饭食</button></div>
+                            <div><button class="btn-small btn-primary" onclick="showAddExcretionModal()">🚽 添加排泄</button></div>
+                        </div>
+                        <div class="chart-container" style="height:180px;"><canvas id="foodExcreteChart" width="360" height="150"></canvas></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">📝 宝宝成长记录</div>
+                        <div class="form-group"><label>日期</label><input type="date" class="form-input" id="babyRecordDate"></div>
+                        <div class="form-group"><label>体重(kg)</label><input type="number" step="0.01" class="form-input" id="babyWeightInput" placeholder="例: 5.2"></div>
+                        <div class="form-group"><label>身高(cm)</label><input type="number" step="0.5" class="form-input" id="babyHeightInput"></div>
+                        <button class="btn btn-primary" onclick="saveBabyRecord()">保存成长记录</button>
+                        <div class="history-list" id="babyHistoryList" style="margin-top:16px;"></div>
+                    </div>
+                </div>
+            </div>
+
             <!-- 日记模块 -->
             <div class="section" id="diary-section">
                 <div class="card">
@@ -970,7 +1142,7 @@
                 </div>
             </div>
 
-            <!-- 更多模块（含纪念日入口） -->
+            <!-- 更多模块 -->
             <div class="section" id="more-section">
                 <div class="card">
                     <div class="card-title">🎯 功能模块</div>
@@ -1034,9 +1206,10 @@
         </div>
 
         <div class="bottom-nav">
-            <div class="nav-item active" data-section="outfit"><span class="nav-item-icon">👔</span><span class="nav-item-label">穿搭</span></div>
+            <div class="nav-item" data-section="outfit"><span class="nav-item-icon">👔</span><span class="nav-item-label">穿搭</span></div>
             <div class="nav-item" data-section="weight"><span class="nav-item-icon">⚖️</span><span class="nav-item-label">体重</span></div>
             <div class="nav-item" data-section="period"><span class="nav-item-icon">🌸</span><span class="nav-item-label">生理期</span></div>
+            <div class="nav-item active" data-section="pregnancy"><span class="nav-item-icon">🤰</span><span class="nav-item-label">孕期</span></div>
             <div class="nav-item" data-section="diary"><span class="nav-item-icon">📔</span><span class="nav-item-label">日记</span></div>
             <div class="nav-item" data-section="more"><span class="nav-item-icon">➕</span><span class="nav-item-label">更多</span></div>
         </div>
@@ -1095,10 +1268,42 @@
     <div class="modal" id="photoModal">
         <div class="modal-content photo-modal-content"><img id="photoModalImg" src=""><button class="photo-modal-close" onclick="closePhotoModal()">&times;</button></div>
     </div>
+    <div class="modal" id="vaccineModal">
+        <div class="modal-content">
+            <div class="modal-header"><div class="modal-title">💉 添加疫苗</div><button class="modal-close" onclick="closeModal('vaccineModal')">&times;</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label>疫苗名称</label><input type="text" id="vaccineName" class="form-input"></div>
+                <div class="form-group"><label>接种日期</label><input type="date" id="vaccineDate" class="form-input"></div>
+                <div class="form-group"><label>下次提醒(可选)</label><input type="text" id="vaccineNext" class="form-input" placeholder="2025-12-01"></div>
+                <button class="btn btn-primary" onclick="addVaccine()">保存</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="foodModal">
+        <div class="modal-content">
+            <div class="modal-header"><div class="modal-title">🍚 饭食记录</div><button class="modal-close" onclick="closeModal('foodModal')">&times;</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label>日期</label><input type="date" id="foodDate" class="form-input"></div>
+                <div class="form-group"><label>类型</label><select id="foodType" class="form-select"><option value="母乳">母乳</option><option value="奶粉">奶粉</option><option value="辅食">辅食</option><option value="正餐">正餐</option></select></div>
+                <div class="form-group"><label>量(ml/碗)</label><input type="text" id="foodAmount" class="form-input"></div>
+                <button class="btn btn-primary" onclick="addFoodRecord()">保存</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="excreteModal">
+        <div class="modal-content">
+            <div class="modal-header"><div class="modal-title">💩 排泄记录</div><button class="modal-close" onclick="closeModal('excreteModal')">&times;</button></div>
+            <div class="modal-body">
+                <div class="form-group"><label>日期</label><input type="date" id="excreteDate" class="form-input"></div>
+                <div class="form-group"><label>类型</label><select id="excreteType" class="form-select"><option value="大便">大便</option><option value="小便">小便</option><option value="混合">混合</option></select></div>
+                <div class="form-group"><label>次数</label><input type="number" id="excreteCount" class="form-input" min="1"></div>
+                <button class="btn btn-primary" onclick="addExcreteRecord()">保存</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         // ========== 工具函数 ==========
-        // 获取本地时区日期字符串 (YYYY-MM-DD)
         function getLocalDateString(date = new Date()) {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -1110,6 +1315,7 @@
         function closeModal() { document.getElementById('diaryModal').classList.remove('active'); }
         function closePhotoModal() { document.getElementById('photoModal').classList.remove('active'); }
         function closeModalById(id) { document.getElementById(id).classList.remove('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
         function dataURLToBlob(dataURL) {
             const arr = dataURL.split(','), mime = arr[0].match(/:(.*?);/)[1];
             const bstr = atob(arr[1]), u8 = new Uint8Array(bstr.length);
@@ -1119,7 +1325,7 @@
 
         // ========== 数据库初始化 ==========
         const DB_NAME = 'LifeFlowDB';
-        const DB_VERSION = 2;
+        const DB_VERSION = 6;
         let db;
         const initDB = () => new Promise((resolve,reject) => {
             const req = indexedDB.open(DB_NAME, DB_VERSION);
@@ -1133,6 +1339,12 @@
                 if(!db.objectStoreNames.contains('diaries')) db.createObjectStore('diaries', {keyPath:'id',autoIncrement:true}).createIndex('date','date');
                 if(!db.objectStoreNames.contains('closetCategories')) db.createObjectStore('closetCategories', {keyPath:'id',autoIncrement:true}).createIndex('name','name',{unique:true});
                 if(!db.objectStoreNames.contains('clothes')) db.createObjectStore('clothes', {keyPath:'id',autoIncrement:true}).createIndex('categoryId','categoryId');
+                if(!db.objectStoreNames.contains('pregnancy_records')) db.createObjectStore('pregnancy_records', {keyPath:'id',autoIncrement:true});
+                if(!db.objectStoreNames.contains('pregnancy_settings')) db.createObjectStore('pregnancy_settings', {keyPath:'id',autoIncrement:true});
+                if(!db.objectStoreNames.contains('baby_records')) db.createObjectStore('baby_records', {keyPath:'id',autoIncrement:true});
+                if(!db.objectStoreNames.contains('vaccines')) db.createObjectStore('vaccines', {keyPath:'id',autoIncrement:true});
+                if(!db.objectStoreNames.contains('baby_food')) db.createObjectStore('baby_food', {keyPath:'id',autoIncrement:true});
+                if(!db.objectStoreNames.contains('baby_excrete')) db.createObjectStore('baby_excrete', {keyPath:'id',autoIncrement:true});
             };
         });
 
@@ -1253,7 +1465,7 @@
             let latest = recs[0];
             document.getElementById('currentWeight').textContent = latest.weight.toFixed(1);
             document.getElementById('currentBodyFat').textContent = latest.bodyFat ? latest.bodyFat.toFixed(1) : '--';
-            document.getElementById('weightHistory').innerHTML = recs.slice(0,10).map(item => `<div class="history-item"><span class="history-date">${item.date}</span><span class="history-value">${item.weight}kg ${item.bodyFat?'('+item.bodyFat+'%)':''}</span><div class="history-actions"><button class="edit-btn" onclick="editWeight(${item.id})">✏️</button><button class="delete-btn" onclick="deleteWeight(${item.id})" style="background:none;border:none;color:#f43f5e;">🗑️</button></div></div>`).join('');
+            document.getElementById('weightHistory').innerHTML = recs.slice(0,10).map(item => `<div class="history-item"><span class="history-date">${item.date}</span><span class="history-value">${item.weight}kg ${item.bodyFat?'('+item.bodyFat+'%)':''}</span><div class="history-actions"><button class="edit-btn" onclick="editWeight(${item.id})">✏️</button><button class="delete-btn" onclick="deleteWeight(${item.id})">🗑️</button></div></div>`).join('');
             drawWeightChart(recs.slice().reverse());
         }
         function drawWeightChart(recs) {
@@ -1280,7 +1492,7 @@
             } else { ctx.fillStyle='#ff6b6b'; ctx.fillText('体重 (kg)', canvas.width-90,20); }
         }
 
-        // ========== 生理期（智能预测）==========
+        // ========== 生理期 ==========
         async function savePeriod() {
             let start = document.getElementById('periodStart').value, end = document.getElementById('periodEnd').value;
             let symptoms = Array.from(document.querySelectorAll('.period-symptom:checked')).map(cb=>cb.value);
@@ -1293,7 +1505,7 @@
         }
         async function loadPeriodData() {
             let periods = await getAllData('periods');
-            periods.sort((a,b)=>new Date(a.startDate)-new Date(b.startDate)); // 按日期升序
+            periods.sort((a,b)=>new Date(a.startDate)-new Date(b.startDate));
             let last = periods.length ? periods[periods.length-1] : null;
             if(!last) {
                 document.getElementById('cycleDay').textContent='--'; document.getElementById('nextPeriod').textContent='--';
@@ -1303,8 +1515,6 @@
                 let today = new Date(), lastStart = new Date(last.startDate);
                 let diffDays = Math.floor((today - lastStart) / (86400000)) + 1;
                 document.getElementById('cycleDay').textContent = diffDays;
-
-                // 计算平均周期长度
                 let avgCycle = 28;
                 if(periods.length >= 2) {
                     let total = 0;
@@ -1317,15 +1527,9 @@
                 let nextDate = new Date(lastStart); nextDate.setDate(lastStart.getDate() + avgCycle);
                 let daysToNext = Math.ceil((nextDate - today) / 86400000);
                 document.getElementById('nextPeriod').textContent = daysToNext>0 ? daysToNext+'天' : '已到来';
-
-                // 预测易孕期（下次月经前14天前后各3天）
-                let ovulationStart = new Date(nextDate); ovulationStart.setDate(nextDate.getDate() - 17);
-                let ovulationEnd = new Date(nextDate); ovulationEnd.setDate(nextDate.getDate() - 11);
                 let predText = `预测下次: ${nextDate.toLocaleDateString('zh-CN')} (周期${avgCycle}天)`;
                 if(daysToNext<=0) predText = '请记录新周期';
                 document.getElementById('predictionDetail').innerHTML = predText;
-
-                // 历史列表
                 let html = '';
                 periods.slice().reverse().forEach(p => {
                     let start = p.startDate, end = p.endDate||'未记录';
@@ -1355,7 +1559,6 @@
                     end.setDate(end.getDate()+5);
                     return new Date(dateStr) >= start && new Date(dateStr) <= end;
                 });
-                // 智能预测：根据最近周期计算下一次
                 let isPredicted = false, isOvulation = false;
                 if(periods.length) {
                     let last = periods[periods.length-1], lastStart = new Date(last.startDate);
@@ -1372,8 +1575,6 @@
                     let predStart = new Date(nextStart), predEnd = new Date(nextStart);
                     predEnd.setDate(predEnd.getDate()+5);
                     if(new Date(dateStr) >= predStart && new Date(dateStr) <= predEnd) isPredicted = true;
-
-                    // 易孕期：下次月经前14天前后各3天
                     let ovuStart = new Date(nextStart); ovuStart.setDate(nextStart.getDate()-17);
                     let ovuEnd = new Date(nextStart); ovuEnd.setDate(nextStart.getDate()-11);
                     if(new Date(dateStr) >= ovuStart && new Date(dateStr) <= ovuEnd) isOvulation = true;
@@ -1386,6 +1587,242 @@
                 html += `<div class="${cls}">${d}</div>`;
             }
             cal.innerHTML = html;
+        }
+
+        // ========== 孕期全周期模块（原有） ==========
+        async function getPregnancySetting() {
+            let list = await getAllData('pregnancy_settings');
+            return list.length ? list[0] : null;
+        }
+        async function savePregnancySetting(setting) {
+            let exist = await getPregnancySetting();
+            if(exist) { setting.id = exist.id; await updateData('pregnancy_settings', setting); }
+            else await addData('pregnancy_settings', setting);
+        }
+        function calculateGestationalWeek(lastMenstrualDate) {
+            if(!lastMenstrualDate) return null;
+            let lmp = new Date(lastMenstrualDate);
+            let today = new Date();
+            let diffDays = Math.floor((today - lmp) / 86400000);
+            if(diffDays<0) return { weeks:0, days:0, totalDays:0 };
+            let weeks = Math.floor(diffDays / 7);
+            let days = diffDays % 7;
+            return { weeks, days, totalDays: diffDays };
+        }
+        async function updatePregnancyHeader() {
+            let setting = await getPregnancySetting();
+            if(setting && setting.lastMenstrualDate) {
+                let gw = calculateGestationalWeek(setting.lastMenstrualDate);
+                if(gw && gw.weeks>=0) {
+                    document.getElementById('gestationalWeek').innerHTML = `${gw.weeks}周+${gw.days}天`;
+                    let due = setting.expectedDue ? Math.ceil((new Date(setting.expectedDue)-new Date())/86400000) : '?';
+                    document.getElementById('pregnancyStatus').innerHTML = `🤰 孕期第${Math.floor(gw.weeks/4)+1}个月 · 距离预产期 ${due}天`;
+                    return;
+                }
+            }
+            document.getElementById('gestationalWeek').innerHTML = '✨ 备孕/孕期';
+            document.getElementById('pregnancyStatus').innerHTML = '🌸 记录身体变化，迎接宝宝';
+        }
+        window.showPregnancySettings = function() {
+            let date = prompt("请输入末次月经第一天(YYYY-MM-DD):", getLocalDateString());
+            if(date) {
+                let due = new Date(date); due.setDate(due.getDate()+280);
+                let dueStr = due.toISOString().slice(0,10);
+                savePregnancySetting({ lastMenstrualDate: date, expectedDue: dueStr });
+                updatePregnancyHeader();
+                alert(`预产期大约为: ${dueStr}`);
+            }
+        };
+        async function savePreconceptionRecord() {
+            let date = document.getElementById('preDate').value || getLocalDateString();
+            let bbt = document.getElementById('preBbt').value;
+            let ovulation = document.getElementById('preOvulation').value;
+            let folic = document.getElementById('preFolic').value;
+            if(!bbt && !ovulation) { alert("请至少记录一项指标"); return; }
+            await addData('pregnancy_records', { stage:'preconception', date, data: { bbt, ovulation, folic }, createdAt:Date.now() });
+            alert("备孕记录已保存");
+            loadPreconceptionHistory();
+        }
+        async function savePregnancyRecord() {
+            let date = document.getElementById('pregDate').value || getLocalDateString();
+            let weight = document.getElementById('pregWeight').value;
+            let bp = document.getElementById('pregBp').value;
+            let glucose = document.getElementById('pregGlucose').value;
+            let fundal = document.getElementById('pregFundal').value;
+            let abdominal = document.getElementById('pregAbdominal').value;
+            let fetalHr = document.getElementById('pregFetalHr').value;
+            let fetalMove = document.getElementById('pregFetalMove').value;
+            let note = document.getElementById('pregNote').value;
+            await addData('pregnancy_records', { stage:'pregnancy', date, data: { weight, bp, glucose, fundal, abdominal, fetalHr, fetalMove, note }, createdAt:Date.now() });
+            alert("怀孕记录已保存");
+            loadPregnancyHistory();
+            drawPregWeightChart();
+        }
+        async function saveDeliveryRecord() {
+            let deliveryDate = document.getElementById('deliveryDate').value;
+            if(!deliveryDate) { alert("请填写分娩日期"); return; }
+            let mode = document.getElementById('deliveryMode').value;
+            let gender = document.getElementById('babyGender').value;
+            let weight = document.getElementById('babyWeight').value;
+            let length = document.getElementById('babyLength').value;
+            let apgar = document.getElementById('apgarScore').value;
+            let bloodLoss = document.getElementById('bloodLoss').value;
+            await addData('pregnancy_records', { stage:'delivery', date:deliveryDate, data: { mode, gender, weight, length, apgar, bloodLoss }, createdAt:Date.now() });
+            alert("生产记录已保存");
+            loadDeliveryHistory();
+        }
+        async function savePostpartumRecord() {
+            let date = document.getElementById('ppDate').value || getLocalDateString();
+            let uterus = document.getElementById('ppUterus').value;
+            let lochia = document.getElementById('ppLochia').value;
+            let wound = document.getElementById('ppWound').value;
+            let mood = document.getElementById('ppMood').value;
+            let pelvic = document.getElementById('ppPelvic').value;
+            await addData('pregnancy_records', { stage:'postpartum', date, data: { uterus, lochia, wound, mood, pelvic }, createdAt:Date.now() });
+            alert("月子记录已保存");
+            loadPostpartumHistory();
+        }
+        async function loadPreconceptionHistory() {
+            let all = await getAllData('pregnancy_records');
+            let records = all.filter(r=>r.stage==='preconception').sort((a,b)=>new Date(b.date)-new Date(a.date));
+            let container = document.getElementById('preHistoryList');
+            if(!records.length) { container.innerHTML='<div class="empty-state">暂无备孕记录</div>'; return; }
+            container.innerHTML = records.map(rec => `<div class="history-item"><div class="history-date">${rec.date}</div><div class="history-value">🌡️${rec.data.bbt||'--'}℃ / ${rec.data.ovulation}</div><button class="delete-btn" onclick="deletePregnancyRecord(${rec.id})">🗑️</button></div>`).join('');
+        }
+        async function loadPregnancyHistory() {
+            let all = await getAllData('pregnancy_records');
+            let records = all.filter(r=>r.stage==='pregnancy').sort((a,b)=>new Date(a.date)-new Date(b.date));
+            let container = document.getElementById('pregHistoryList');
+            if(!records.length) { container.innerHTML='<div class="empty-state">暂无孕期记录</div>'; return; }
+            container.innerHTML = records.map(rec => `<div class="history-item"><div>${rec.date}</div><div>⚖️${rec.data.weight||'--'}kg  🤰宫高${rec.data.fundal||'--'}cm</div><button class="delete-btn" onclick="deletePregnancyRecord(${rec.id})">🗑️</button></div>`).join('');
+            drawPregWeightChart(records);
+        }
+        async function loadDeliveryHistory() {
+            let all = await getAllData('pregnancy_records');
+            let records = all.filter(r=>r.stage==='delivery').sort((a,b)=>new Date(b.date)-new Date(a.date));
+            let container = document.getElementById('deliveryHistoryList');
+            if(!records.length) { container.innerHTML='<div class="empty-state">暂无分娩记录</div>'; return; }
+            container.innerHTML = records.map(rec => `<div class="history-item"><div>${rec.date}</div><div>${rec.data.mode} | ${rec.data.gender} ${rec.data.weight}g</div><button class="delete-btn" onclick="deletePregnancyRecord(${rec.id})">🗑️</button></div>`).join('');
+        }
+        async function loadPostpartumHistory() {
+            let all = await getAllData('pregnancy_records');
+            let records = all.filter(r=>r.stage==='postpartum').sort((a,b)=>new Date(b.date)-new Date(a.date));
+            let container = document.getElementById('ppHistoryList');
+            if(!records.length) { container.innerHTML='<div class="empty-state">暂无月子记录</div>'; return; }
+            container.innerHTML = records.map(rec => `<div class="history-item"><div>${rec.date}</div><div>😊情绪${rec.data.mood}/5 | 恶露${rec.data.lochia}</div><button class="delete-btn" onclick="deletePregnancyRecord(${rec.id})">🗑️</button></div>`).join('');
+        }
+        window.deletePregnancyRecord = async (id) => {
+            if(confirm("删除这条记录？")) { await deleteData('pregnancy_records', id); refreshCurrentStagePanel(); }
+        };
+        function refreshCurrentStagePanel() {
+            let activeStage = document.querySelector('.stage-tab.active').dataset.stage;
+            if(activeStage === 'preconception') loadPreconceptionHistory();
+            if(activeStage === 'pregnancy') { loadPregnancyHistory(); drawPregWeightChart(); }
+            if(activeStage === 'delivery') loadDeliveryHistory();
+            if(activeStage === 'postpartum') loadPostpartumHistory();
+        }
+        function drawPregWeightChart(records=null) {
+            if(!records) { getAllData('pregnancy_records').then(all=>{ let r = all.filter(rr=>rr.stage==='pregnancy').sort((a,b)=>new Date(a.date)-new Date(b.date)); drawPregWeightChart(r); }); return; }
+            let canvas = document.getElementById('pregWeightChart');
+            if(!canvas) return;
+            let ctx = canvas.getContext('2d');
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            let valid = records.filter(r=>r.data.weight && !isNaN(parseFloat(r.data.weight))).map(r=>({date:r.date, weight:parseFloat(r.data.weight)}));
+            if(valid.length<2) { ctx.fillText("至少需要2次体重记录", 100,100); return; }
+            let minW = Math.min(...valid.map(v=>v.weight))-2, maxW = Math.max(...valid.map(v=>v.weight))+2;
+            let pad=40, cw=canvas.width-pad*2, ch=canvas.height-pad*2;
+            ctx.beginPath(); ctx.strokeStyle='#ff6b6b'; ctx.lineWidth=2;
+            valid.forEach((v,i)=>{ let x=pad+cw/(valid.length-1)*i, y=pad+ch-((v.weight-minW)/(maxW-minW))*ch; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); });
+            ctx.stroke();
+            valid.forEach((v,i)=>{ let x=pad+cw/(valid.length-1)*i, y=pad+ch-((v.weight-minW)/(maxW-minW))*ch; ctx.fillStyle='#ff6b6b'; ctx.beginPath(); ctx.arc(x,y,4,0,2*Math.PI); ctx.fill(); });
+            ctx.fillStyle='#2d3436'; ctx.font='10px sans-serif'; ctx.fillText("体重趋势(kg)", pad,20);
+        }
+
+        // ========== 宝宝成长模块 ==========
+        async function saveBabyRecord() {
+            let date = document.getElementById('babyRecordDate').value || getLocalDateString();
+            let weight = parseFloat(document.getElementById('babyWeightInput').value);
+            let height = parseFloat(document.getElementById('babyHeightInput').value);
+            if(isNaN(weight) && isNaN(height)) { alert("请至少填写体重或身高"); return; }
+            await addData('baby_records', { date, weight: weight||null, height: height||null, timestamp:Date.now() });
+            alert("保存成功"); loadBabyHistory(); drawBabyWeightChart();
+            document.getElementById('babyWeightInput').value = ''; document.getElementById('babyHeightInput').value = '';
+        }
+        async function loadBabyHistory() {
+            let records = await getAllData('baby_records');
+            records.sort((a,b)=>new Date(b.date)-new Date(a.date));
+            let container = document.getElementById('babyHistoryList');
+            if(!records.length){ container.innerHTML='<div class="empty-state">暂无成长记录</div>'; return; }
+            container.innerHTML = records.map(rec=>`<div class="history-item"><div>${rec.date}</div><div>⚖️${rec.weight?rec.weight+'kg':'-'} 📏${rec.height?rec.height+'cm':'-'}</div><button class="delete-btn" onclick="deleteBabyRecord(${rec.id})">🗑️</button></div>`).join('');
+        }
+        window.deleteBabyRecord = async (id)=>{ if(confirm("删除?")){ await deleteData('baby_records',id); loadBabyHistory(); drawBabyWeightChart(); } };
+        async function drawBabyWeightChart() {
+            let records = await getAllData('baby_records');
+            let valid = records.filter(r=>r.weight!==null).sort((a,b)=>new Date(a.date)-new Date(b.date));
+            let canvas = document.getElementById('babyWeightChart');
+            if(!canvas) return;
+            let ctx = canvas.getContext('2d');
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            if(valid.length<2){ ctx.fillText("至少2次体重记录",100,80); return; }
+            let weights=valid.map(v=>v.weight), minW=Math.min(...weights)-0.5, maxW=Math.max(...weights)+0.5;
+            let pad=40, cw=canvas.width-pad*2, ch=canvas.height-pad*2;
+            ctx.beginPath(); ctx.strokeStyle='#ff6b6b'; ctx.lineWidth=2;
+            valid.forEach((v,i)=>{ let x=pad+cw/(valid.length-1)*i, y=pad+ch-((v.weight-minW)/(maxW-minW))*ch; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); });
+            ctx.stroke();
+            valid.forEach((v,i)=>{ let x=pad+cw/(valid.length-1)*i, y=pad+ch-((v.weight-minW)/(maxW-minW))*ch; ctx.fillStyle='#ff6b6b'; ctx.beginPath(); ctx.arc(x,y,4,0,2*Math.PI); ctx.fill(); });
+            ctx.fillStyle='#333'; ctx.fillText("体重(kg)", pad,20);
+        }
+        window.showAddVaccineModal = ()=>document.getElementById('vaccineModal').classList.add('active');
+        window.addVaccine = async ()=>{
+            let name = document.getElementById('vaccineName').value;
+            let date = document.getElementById('vaccineDate').value;
+            let next = document.getElementById('vaccineNext').value;
+            if(!name||!date){ alert("请填写疫苗名称和日期"); return; }
+            await addData('vaccines', { name, date, next, createdAt:Date.now() });
+            closeModal('vaccineModal'); loadVaccines();
+            document.getElementById('vaccineName').value=''; document.getElementById('vaccineDate').value=''; document.getElementById('vaccineNext').value='';
+        };
+        async function loadVaccines() {
+            let list = await getAllData('vaccines');
+            list.sort((a,b)=>new Date(b.date)-new Date(a.date));
+            let container = document.getElementById('vaccineList');
+            if(!list.length){ container.innerHTML='<div class="empty-state">暂无疫苗记录</div>'; return; }
+            container.innerHTML = list.map(v=>`<div class="vaccine-item"><div><strong>${v.name}</strong> ${v.date}</div><div>${v.next?`下次提醒: ${v.next}`:''}</div><button class="delete-btn" onclick="deleteVaccine(${v.id})">删除</button></div>`).join('');
+        }
+        window.deleteVaccine = async (id)=>{ if(confirm("删除疫苗记录?")){ await deleteData('vaccines',id); loadVaccines(); } };
+        window.showAddFoodModal = ()=>document.getElementById('foodModal').classList.add('active');
+        window.addFoodRecord = async ()=>{
+            let date = document.getElementById('foodDate').value||getLocalDateString();
+            let type = document.getElementById('foodType').value;
+            let amount = document.getElementById('foodAmount').value;
+            await addData('baby_food', { date, type, amount, timestamp:Date.now() });
+            closeModal('foodModal'); drawFoodExcreteChart();
+            document.getElementById('foodDate').value=''; document.getElementById('foodAmount').value='';
+        };
+        window.showAddExcretionModal = ()=>document.getElementById('excreteModal').classList.add('active');
+        window.addExcreteRecord = async ()=>{
+            let date = document.getElementById('excreteDate').value||getLocalDateString();
+            let type = document.getElementById('excreteType').value;
+            let count = parseInt(document.getElementById('excreteCount').value);
+            await addData('baby_excrete', { date, type, count, timestamp:Date.now() });
+            closeModal('excreteModal'); drawFoodExcreteChart();
+            document.getElementById('excreteDate').value=''; document.getElementById('excreteCount').value='';
+        };
+        async function drawFoodExcreteChart() {
+            let foods = await getAllData('baby_food');
+            let excrets = await getAllData('baby_excrete');
+            let ctx = document.getElementById('foodExcreteChart').getContext('2d');
+            ctx.clearRect(0,0,360,150);
+            let foodCount = foods.length, excreteCount = excrets.length;
+            if(foodCount+excreteCount===0){ ctx.fillText("暂无数据",150,75); return; }
+            let total = foodCount+excreteCount;
+            let foodAngle = (foodCount/total)*2*Math.PI;
+            let excreteAngle = (excreteCount/total)*2*Math.PI;
+            let centerX=180, centerY=75, radius=60;
+            ctx.beginPath(); ctx.fillStyle='#ff9a9e'; ctx.moveTo(centerX,centerY); ctx.arc(centerX,centerY,radius,0,foodAngle); ctx.fill();
+            ctx.beginPath(); ctx.fillStyle='#4ecdc4'; ctx.moveTo(centerX,centerY); ctx.arc(centerX,centerY,radius,foodAngle,foodAngle+excreteAngle); ctx.fill();
+            ctx.fillStyle='#333'; ctx.font='12px sans-serif'; ctx.fillText(`饭食 ${foodCount}次`, centerX-50, centerY+radius+10);
+            ctx.fillText(`排泄 ${excreteCount}次`, centerX+20, centerY+radius+10);
         }
 
         // ========== 日记模块 ==========
@@ -1420,7 +1857,7 @@
         }
         async function deleteDiary(id) { if(confirm('确定删除？')) { await deleteData('diaries', id); closeModal(); loadDiaries(); } }
 
-        // ========== 纪念日模块（农历转换）==========
+        // ========== 纪念日模块 ==========
         const lunarCalendar = {
             lunarInfo: [0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x09ad0,0x055d2,0x04ae0,0x0a5b6,0x0a4d0,0x0d250,0x1d255,0x0b540,0x0d6a0,0x0ada2,0x095b0,0x14977,0x04970,0x0a4b0,0x0b4b5,0x06a50,0x06d40,0x1ab54,0x02b60,0x09570,0x052f2,0x04970,0x06566,0x0d4a0,0x0ea50,0x06e95,0x05ad0,0x02b60,0x186e3,0x092e0,0x1c8d7,0x0c950,0x0d4a0,0x1d8a6,0x0b550,0x056a0,0x1a5b4,0x025d0,0x092d0,0x0d2b2,0x0a950,0x0b557,0x06ca0,0x0b550,0x15355,0x04da0,0x0a5d0,0x14573,0x052d0,0x0a9a8,0x0e950,0x06aa0,0x0aea6,0x0ab50,0x04b60,0x0aae4,0x0a570,0x05260,0x0f263,0x0d950,0x05b57,0x056a0,0x096d0,0x04dd5,0x04ad0,0x0a4d0,0x0d4d4,0x0d250,0x0d558,0x0b540,0x0b5a0,0x195a6,0x095b0,0x049b0,0x0a974,0x0a4b0,0x0b27a,0x06a50,0x06d40,0x0af46,0x0ab60,0x09570,0x04af5,0x04970,0x064b0,0x074a3,0x0ea50,0x06b58,0x055c0,0x0ab60,0x096d5,0x092e0,0x0c960,0x0d954,0x0d4a0,0x0da50,0x07552,0x056a0,0x0abb7,0x025d0,0x092d0,0x0cab5,0x0a950,0x0b4a0,0x0baa4,0x0ad50,0x055d9,0x04ba0,0x0a5b0,0x15176,0x052b0,0x0a930,0x07954,0x06aa0,0x0ad50,0x05b52,0x04b60,0x0a6e6,0x0a4e0,0x0d260,0x0ea65,0x0d530,0x05aa0,0x076a3,0x096d0,0x04bd7,0x04ad0,0x0a4d0,0x1d0b6,0x0d250,0x0d520,0x0dd45,0x0b5a0,0x056d0,0x055b2,0x049b0,0x0a577,0x0a4b0,0x0aa50,0x1b255,0x06d20,0x0ada0],
             getLunarYearDays(y) { let sum=348; for(let i=0x8000;i>0x8;i>>=1) sum+=(this.lunarInfo[y]&i)?1:0; return sum+this.getLeapDays(y); },
@@ -1491,21 +1928,18 @@
             let marryDays = daysBetween(now, importantDates.marry);
             document.getElementById('marryCountdown').innerHTML = marryDays ? `结婚${marryDays}天` : '即将到来';
 
-            // 七夕
             let qixi = lunarCalendar.lunarToSolar(y, 7, 7);
             if(qixi < now) qixi = lunarCalendar.lunarToSolar(y+1, 7, 7);
             let qixiC = calculateCountdown(qixi);
             document.getElementById('qixiDate').innerHTML = formatDate(qixi);
             document.getElementById('qixiCountdown').innerHTML = qixiC.text;
 
-            // 情人节
             let val = new Date(y,1,14);
             if(val < now) val.setFullYear(y+1);
             let valC = calculateCountdown(val);
             document.getElementById('valentineDate').innerHTML = formatDate(val);
             document.getElementById('valentineCountdown').innerHTML = valC.text;
 
-            // 即将到来事件列表
             let events = [
                 { date: maleBD, name: `${birthdays.male.name}生日` },
                 { date: femaleBD, name: `${birthdays.female.name}生日` },
@@ -1523,7 +1957,7 @@
         async function exportData() {
             try {
                 alert('正在准备导出数据...');
-                let stores = ['outfits','weight','periods','diaries','clothes','closetCategories'];
+                let stores = ['outfits','weight','periods','diaries','clothes','closetCategories','pregnancy_records','pregnancy_settings','baby_records','vaccines','baby_food','baby_excrete'];
                 let exportObj = {};
                 for(let s of stores) {
                     let data = await getAllData(s);
@@ -1558,13 +1992,12 @@
             reader.onload = async e => {
                 try {
                     let imported = JSON.parse(e.target.result);
-                    if(!imported.outfits || !imported.weight || !imported.periods || !imported.diaries || !imported.clothes || !imported.closetCategories)
-                        { alert('无效的数据文件'); return; }
+                    if(!imported.outfits || !imported.weight || !imported.periods || !imported.diaries) { alert('无效的数据文件'); return; }
                     if(!confirm('导入将覆盖当前所有数据，确定继续？')) return;
-                    let stores = ['outfits','weight','periods','diaries','clothes','closetCategories'];
+                    let stores = ['outfits','weight','periods','diaries','clothes','closetCategories','pregnancy_records','pregnancy_settings','baby_records','vaccines','baby_food','baby_excrete'];
                     for(let s of stores) await clearStore(s);
                     for(let s of stores) {
-                        for(let item of imported[s]) {
+                        for(let item of imported[s] || []) {
                             let {id, ...rest} = item;
                             if(s==='clothes' && rest.imageBlob && typeof rest.imageBlob==='string')
                                 rest.imageBlob = await base64ToBlob(rest.imageBlob);
@@ -1577,6 +2010,7 @@
                     if(active==='weight') loadWeightData();
                     if(active==='period') loadPeriodData();
                     if(active==='diary') loadDiaries();
+                    if(active==='pregnancy') { updatePregnancyHeader(); refreshCurrentStagePanel(); loadBabyHistory(); drawBabyWeightChart(); loadVaccines(); drawFoodExcreteChart(); }
                     if(active==='anniversary') updateAnniversary();
                 } catch(err) { alert('导入失败：'+err.message); } finally { input.value=''; }
             };
@@ -1584,8 +2018,8 @@
         }
         async function clearAllData() {
             if(!confirm('确定清空所有数据？不可恢复！')) return;
-            await clearStore('outfits'); await clearStore('weight'); await clearStore('periods');
-            await clearStore('diaries'); await clearStore('clothes'); await clearStore('closetCategories');
+            let stores = ['outfits','weight','periods','diaries','clothes','closetCategories','pregnancy_records','pregnancy_settings','baby_records','vaccines','baby_food','baby_excrete'];
+            for(let s of stores) await clearStore(s);
             alert('数据已清空'); location.reload();
         }
 
@@ -1599,23 +2033,11 @@
             if(section==='period') loadPeriodData();
             if(section==='diary') loadDiaries();
             if(section==='outfit') loadOutfitHistory();
+            if(section==='pregnancy') { updatePregnancyHeader(); refreshCurrentStagePanel(); loadBabyHistory(); drawBabyWeightChart(); loadVaccines(); drawFoodExcreteChart(); }
             if(section==='anniversary') updateAnniversary();
         }
         document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>switchSection(t.dataset.section)));
         document.querySelectorAll('.nav-item').forEach(i=>i.addEventListener('click',()=>switchSection(i.dataset.section)));
-
-        // ========== 初始化 ==========
-        document.addEventListener('DOMContentLoaded', async () => {
-            let now = new Date();
-            document.getElementById('currentDate').innerHTML = now.toLocaleDateString('zh-CN', {year:'numeric',month:'long',day:'numeric',weekday:'long'});
-            document.getElementById('weightDate').value = getLocalDateString(now);
-            document.getElementById('diaryDate').value = getLocalDateString(now);
-            document.getElementById('periodStart').value = getLocalDateString(now);
-            try {
-                await initDB();
-                loadOutfitHistory(); loadWeightData(); loadPeriodData(); loadDiaries(); updateAnniversary();
-            } catch(e) { alert('数据库初始化失败'); }
-        });
 
         // ========== 衣橱管理 ==========
         let currentCategoryId = null;
@@ -1678,18 +2100,53 @@
         };
         window.deleteClothes = async function(id) { if(confirm('确定删除？')) { await deleteData('clothes',id); loadClothesByCategory(currentCategoryId); } };
 
-        // 模态框点击外部关闭
+        // 孕期阶段切换
+        document.querySelectorAll('.stage-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.stage-tab').forEach(t=>t.classList.remove('active'));
+                this.classList.add('active');
+                let stage = this.dataset.stage;
+                document.querySelectorAll('.stage-panel').forEach(panel=>panel.style.display='none');
+                let panelId = stage==='baby'?'baby-panel':`${stage}-panel`;
+                document.getElementById(panelId).style.display = 'block';
+                if(stage==='preconception') loadPreconceptionHistory();
+                if(stage==='pregnancy') { loadPregnancyHistory(); drawPregWeightChart(); }
+                if(stage==='delivery') loadDeliveryHistory();
+                if(stage==='postpartum') loadPostpartumHistory();
+                if(stage==='baby') { loadBabyHistory(); drawBabyWeightChart(); loadVaccines(); drawFoodExcreteChart(); }
+            });
+        });
+
+        // 模态框关闭辅助
         document.getElementById('closetModal').addEventListener('click',e=>{if(e.target===document.getElementById('closetModal')) closeClosetModal();});
         document.getElementById('addCategoryModal').addEventListener('click',e=>{if(e.target===document.getElementById('addCategoryModal')) closeModalById('addCategoryModal');});
         document.getElementById('addClothesModal').addEventListener('click',e=>{if(e.target===document.getElementById('addClothesModal')) closeModalById('addClothesModal');});
         document.getElementById('editWeightModal').addEventListener('click',e=>{if(e.target===document.getElementById('editWeightModal')) closeModalById('editWeightModal');});
         document.getElementById('diaryModal').addEventListener('click',e=>{if(e.target===document.getElementById('diaryModal')) closeModal();});
         document.getElementById('photoModal').addEventListener('click',e=>{if(e.target===document.getElementById('photoModal')) closePhotoModal();});
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', async () => {
+            let now = new Date();
+            document.getElementById('currentDate').innerHTML = now.toLocaleDateString('zh-CN', {year:'numeric',month:'long',day:'numeric',weekday:'long'});
+            document.getElementById('weightDate').value = getLocalDateString(now);
+            document.getElementById('diaryDate').value = getLocalDateString(now);
+            document.getElementById('periodStart').value = getLocalDateString(now);
+            document.getElementById('preDate').value = getLocalDateString(now);
+            document.getElementById('pregDate').value = getLocalDateString(now);
+            document.getElementById('ppDate').value = getLocalDateString(now);
+            document.getElementById('babyRecordDate').value = getLocalDateString(now);
+            try {
+                await initDB();
+                loadOutfitHistory(); loadWeightData(); loadPeriodData(); loadDiaries(); updateAnniversary();
+                await updatePregnancyHeader();
+                loadPreconceptionHistory(); loadPregnancyHistory(); loadDeliveryHistory(); loadPostpartumHistory();
+                loadBabyHistory(); drawBabyWeightChart(); loadVaccines(); drawFoodExcreteChart();
+            } catch(e) { alert('数据库初始化失败'); }
+        });
     </script>
     <script>
       if ('serviceWorker' in navigator) {
-        // 注意：如果站点在子目录（如 /project/），注册路径需要包含子目录前缀
-        // 一般使用相对路径 './sv.js' 或绝对路径 '/project/sv.js'
         navigator.serviceWorker.register('./sv.js').then(reg => {
           console.log('Service Worker 注册成功，作用域:', reg.scope);
         }).catch(err => {
