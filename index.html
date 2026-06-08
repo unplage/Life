@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>美丽心情 · 生活管理</title>
     <link rel="manifest" href="./manifest.json">
+    <!-- 引入 ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -98,7 +100,7 @@
         .outfit-display { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: var(--radius); color: white; margin-bottom: 20px; position: relative; overflow: hidden; }
         .outfit-emoji { font-size: 80px; display: block; animation: float 3s ease-in-out infinite; }
         @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-        .chart-container { height: 240px; margin: 20px 0; background: var(--light); border-radius: var(--radius-sm); padding: 16px; overflow-x: hidden; width: 100%; }
+        .chart-container { height: 250px; margin: 20px 0; background: #ffffff; border-radius: var(--radius-sm); padding: 8px; overflow-x: hidden; width: 100%; }
         .closet-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .closet-categories { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
         .category-tag { background: var(--light); padding: 8px 16px; border-radius: 30px; font-size: 14px; cursor: pointer; border: 2px solid transparent; transition: 0.3s; }
@@ -128,7 +130,7 @@
         .photo-modal-content { background: transparent; max-width: 90%; text-align: center; }
         .photo-modal-content img { max-width: 100%; max-height: 80vh; border-radius: var(--radius); }
         .photo-modal-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.8); border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; cursor: pointer; }
-        canvas { width: 100%; height: auto; display: block; }
+        .echarts-chart { width: 100%; height: 100%; }
     </style>
 </head>
 <body>
@@ -153,7 +155,7 @@
         <!-- 体重模块 -->
         <div class="section" id="weight-section">
             <div class="card"><div class="card-title">📊 体重记录</div><div class="weight-stats"><div class="stat-box"><div class="stat-value" id="currentWeight">--</div><div class="stat-label">当前体重 (kg)</div></div><div class="stat-box"><div class="stat-value" id="currentBodyFat">--</div><div class="stat-label">体脂率 (%)</div></div></div><div class="form-group"><label class="form-label">体重 (kg)</label><input type="number" class="form-input" id="weightInput" step="0.1"></div><div class="form-group"><label class="form-label">体脂率 (%)</label><input type="number" class="form-input" id="bodyFatInput" step="0.1"></div><div class="form-group"><label class="form-label">日期</label><input type="date" class="form-input" id="weightDate"></div><button class="btn btn-primary" onclick="saveWeight()">保存记录</button></div>
-            <div class="card"><div class="card-title">📈 体重与体脂趋势</div><div class="chart-container"><canvas id="weightCanvas" style="width:100%; height:auto;"></canvas></div><div class="history-list" id="weightHistory"></div></div>
+            <div class="card"><div class="card-title">📈 体重与体脂趋势</div><div class="chart-container" id="weightChartContainer"></div><div class="history-list" id="weightHistory"></div></div>
         </div>
         <!-- 生理期模块 -->
         <div class="section" id="period-section">
@@ -167,10 +169,10 @@
             <div class="pregnancy-header"><div class="week-badge" id="gestationalWeek">--</div><div id="pregnancyStatus"></div><button class="btn-small" style="margin-top:8px; background:white; border:none; border-radius:20px;" onclick="showPregnancySettings()">⚙️ 设置预产期/末次月经</button></div>
             <div class="stage-tabs"><button class="stage-tab" data-stage="preconception">🌱 备孕</button><button class="stage-tab" data-stage="pregnancy">🤰 怀孕</button><button class="stage-tab" data-stage="delivery">🏥 生产</button><button class="stage-tab" data-stage="postpartum">🌙 月子</button><button class="stage-tab active" data-stage="baby">👶 宝宝成长</button></div>
             <div id="preconception-panel" class="stage-panel" style="display:none;"><div class="card"><div class="card-title">📝 备孕记录</div><div class="form-group"><label>基础体温(℃)</label><input type="number" step="0.1" class="form-input" id="preBbt" placeholder="36.2"></div><div class="form-group"><label>排卵试纸</label><select class="form-input" id="preOvulation"><option value="阴性">阴性</option><option value="弱阳">弱阳</option><option value="阳性">阳性</option><option value="强阳">强阳</option></select></div><div class="form-group"><label>叶酸补充</label><select class="form-input" id="preFolic"><option value="是">是</option><option value="否">否</option></select></div><div class="form-group"><label>记录日期</label><input type="date" class="form-input" id="preDate"></div><button class="btn btn-primary" onclick="savePreconceptionRecord()">保存备孕记录</button><div class="history-list" id="preHistoryList" style="margin-top:16px;"></div></div></div>
-            <div id="pregnancy-panel" class="stage-panel" style="display:none;"><div class="card"><div class="card-title">📊 孕期指标</div><div class="metrics-grid"><div><label>体重(kg)</label><input type="number" step="0.1" class="form-input" id="pregWeight"></div><div><label>血压(mmHg)</label><input type="text" class="form-input" id="pregBp" placeholder="120/80"></div><div><label>血糖(mmol/L)</label><input type="number" step="0.1" class="form-input" id="pregGlucose"></div><div><label>宫高(cm)</label><input type="number" step="0.5" class="form-input" id="pregFundal"></div><div><label>腹围(cm)</label><input type="number" step="0.5" class="form-input" id="pregAbdominal"></div><div><label>胎心率(bpm)</label><input type="number" class="form-input" id="pregFetalHr"></div><div><label>胎动(次/小时)</label><input type="number" class="form-input" id="pregFetalMove"></div></div><div class="form-group"><label>备注</label><textarea class="form-input" id="pregNote" rows="2"></textarea></div><div class="form-group"><label>日期</label><input type="date" class="form-input" id="pregDate"></div><button class="btn btn-primary" onclick="savePregnancyRecord()">保存怀孕记录</button><div class="chart-container"><canvas id="pregWeightChart" style="width:100%; height:auto;"></canvas></div><div class="history-list" id="pregHistoryList"></div></div></div>
+            <div id="pregnancy-panel" class="stage-panel" style="display:none;"><div class="card"><div class="card-title">📊 孕期指标</div><div class="metrics-grid"><div><label>体重(kg)</label><input type="number" step="0.1" class="form-input" id="pregWeight"></div><div><label>血压(mmHg)</label><input type="text" class="form-input" id="pregBp" placeholder="120/80"></div><div><label>血糖(mmol/L)</label><input type="number" step="0.1" class="form-input" id="pregGlucose"></div><div><label>宫高(cm)</label><input type="number" step="0.5" class="form-input" id="pregFundal"></div><div><label>腹围(cm)</label><input type="number" step="0.5" class="form-input" id="pregAbdominal"></div><div><label>胎心率(bpm)</label><input type="number" class="form-input" id="pregFetalHr"></div><div><label>胎动(次/小时)</label><input type="number" class="form-input" id="pregFetalMove"></div></div><div class="form-group"><label>备注</label><textarea class="form-input" id="pregNote" rows="2"></textarea></div><div class="form-group"><label>日期</label><input type="date" class="form-input" id="pregDate"></div><button class="btn btn-primary" onclick="savePregnancyRecord()">保存怀孕记录</button><div class="chart-container" id="pregWeightChartContainer"></div><div class="history-list" id="pregHistoryList"></div></div></div>
             <div id="delivery-panel" class="stage-panel" style="display:none;"><div class="card"><div class="card-title">👶 分娩记录</div><div class="form-group"><label>分娩日期</label><input type="date" class="form-input" id="deliveryDate"></div><div class="form-group"><label>分娩方式</label><select class="form-input" id="deliveryMode"><option value="顺产">顺产</option><option value="剖宫产">剖宫产</option><option value="助产">助产</option></select></div><div class="form-group"><label>宝宝性别</label><select class="form-input" id="babyGender"><option value="女">女宝</option><option value="男">男宝</option></select></div><div class="form-group"><label>宝宝体重(g)</label><input type="number" class="form-input" id="babyWeight"></div><div class="form-group"><label>宝宝身长(cm)</label><input type="number" step="0.5" class="form-input" id="babyLength"></div><div class="form-group"><label>Apgar评分(1-10)</label><input type="number" class="form-input" id="apgarScore" min="0" max="10"></div><div class="form-group"><label>产后出血量(ml)</label><input type="number" class="form-input" id="bloodLoss"></div><button class="btn btn-primary" onclick="saveDeliveryRecord()">保存生产记录</button><div class="history-list" id="deliveryHistoryList"></div></div></div>
             <div id="postpartum-panel" class="stage-panel" style="display:none;"><div class="card"><div class="card-title">🌙 产后恢复</div><div class="metrics-grid"><div><label>子宫底高度(cm)</label><input type="number" step="0.5" class="form-input" id="ppUterus"></div><div><label>恶露情况</label><select class="form-input" id="ppLochia"><option value="少-淡红">少-淡红</option><option value="中-红色">中-红色</option><option value="多-血块">多-血块</option></select></div><div><label>伤口愈合</label><select class="form-input" id="ppWound"><option value="良好">良好</option><option value="红肿">红肿</option><option value="疼痛">疼痛</option></select></div><div><label>情绪评分(1-5)</label><input type="number" class="form-input" id="ppMood" min="1" max="5"></div><div><label>盆底肌训练</label><select class="form-input" id="ppPelvic"><option value="是">是</option><option value="否">否</option></select></div></div><div class="form-group"><label>记录日期</label><input type="date" class="form-input" id="ppDate"></div><button class="btn btn-primary" onclick="savePostpartumRecord()">保存月子记录</button><div class="history-list" id="ppHistoryList"></div></div></div>
-            <div id="baby-panel" class="stage-panel"><div class="card"><div class="card-title">📊 宝宝体重趋势</div><div class="chart-container"><canvas id="babyWeightChart" style="width:100%; height:auto;"></canvas></div></div><div class="card"><div class="card-title">💉 疫苗记录</div><button class="btn-small btn-primary" onclick="showAddVaccineModal()" style="margin-bottom:12px;">+ 添加疫苗</button><div id="vaccineList" class="vaccine-timeline"></div></div><div class="card"><div class="card-title">🍼 饭食 & 💩 排泄记录</div><div class="metrics-grid"><div><button class="btn-small btn-primary" onclick="showAddFoodModal()">🍚 添加饭食</button></div><div><button class="btn-small btn-primary" onclick="showAddExcretionModal()">🚽 添加排泄</button></div></div><div class="chart-container" style="height:200px;"><canvas id="foodExcreteChart" style="width:100%; height:auto;"></canvas></div></div><div class="card"><div class="card-title">📝 宝宝成长记录</div><div class="form-group"><label>日期</label><input type="date" class="form-input" id="babyRecordDate"></div><div class="form-group"><label>体重(kg)</label><input type="number" step="0.01" class="form-input" id="babyWeightInput" placeholder="例: 5.2"></div><div class="form-group"><label>身高(cm)</label><input type="number" step="0.5" class="form-input" id="babyHeightInput"></div><button class="btn btn-primary" onclick="saveBabyRecord()">保存成长记录</button><div class="history-list" id="babyHistoryList" style="margin-top:16px;"></div></div></div>
+            <div id="baby-panel" class="stage-panel"><div class="card"><div class="card-title">📊 宝宝体重趋势</div><div class="chart-container" id="babyWeightChartContainer"></div></div><div class="card"><div class="card-title">💉 疫苗记录</div><button class="btn-small btn-primary" onclick="showAddVaccineModal()" style="margin-bottom:12px;">+ 添加疫苗</button><div id="vaccineList" class="vaccine-timeline"></div></div><div class="card"><div class="card-title">🍼 饭食 & 💩 排泄记录</div><div class="metrics-grid"><div><button class="btn-small btn-primary" onclick="showAddFoodModal()">🍚 添加饭食</button></div><div><button class="btn-small btn-primary" onclick="showAddExcretionModal()">🚽 添加排泄</button></div></div><div class="chart-container" id="foodExcreteChartContainer" style="height:200px;"></div></div><div class="card"><div class="card-title">📝 宝宝成长记录</div><div class="form-group"><label>日期</label><input type="date" class="form-input" id="babyRecordDate"></div><div class="form-group"><label>体重(kg)</label><input type="number" step="0.01" class="form-input" id="babyWeightInput" placeholder="例: 5.2"></div><div class="form-group"><label>身高(cm)</label><input type="number" step="0.5" class="form-input" id="babyHeightInput"></div><button class="btn btn-primary" onclick="saveBabyRecord()">保存成长记录</button><div class="history-list" id="babyHistoryList" style="margin-top:16px;"></div></div></div>
         </div>
         <!-- 日记模块 -->
         <div class="section" id="diary-section">
@@ -210,7 +212,7 @@
         <div class="nav-item" data-section="more"><span class="nav-item-icon">➕</span><span class="nav-item-label">更多</span></div>
     </div>
 </div>
-<!-- 模态框 -->
+<!-- 模态框（因篇幅与之前相同，此处省略具体内容，但实际代码中保留完整，为避免超出长度限制，此处保留原模态框结构） -->
 <div class="modal" id="closetModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">我的衣橱</div><button class="modal-close" onclick="closeClosetModal()">&times;</button></div><div class="modal-body"><div class="closet-header"><h4>分类管理</h4><button class="btn btn-primary btn-small" onclick="showAddCategory()">+ 添加分类</button></div><div class="closet-categories" id="closetCategories"></div><div style="margin:20px 0; text-align:right;"><button class="btn btn-primary btn-small" onclick="showAddClothes()">+ 添加衣物</button></div><div class="closet-items" id="closetItems"></div></div></div></div>
 <div class="modal" id="addCategoryModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">添加分类</div><button class="modal-close" onclick="closeModalById('addCategoryModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label class="form-label">分类名称</label><input type="text" class="form-input" id="newCategoryName"></div><button class="btn btn-primary" onclick="addCategory()">保存</button></div></div></div>
 <div class="modal" id="addClothesModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">添加衣物</div><button class="modal-close" onclick="closeModalById('addClothesModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label class="form-label">选择分类</label><select class="form-input" id="clothesCategory"></select></div><div class="form-group"><label class="form-label">衣物代码</label><input type="text" class="form-input" id="clothesCode"></div><div class="form-group"><label class="form-label">拍照或上传照片</label><input type="file" class="form-input" id="clothesImage" accept="image/*" capture="environment"></div><button class="btn btn-primary" onclick="addClothes()">保存</button></div></div></div>
@@ -304,179 +306,51 @@
     async function deleteWeight(id) { if(confirm('确定删除？')) { await deleteData('weight', id); loadWeightData(); } }
     async function loadWeightData() {
         let recs = await getAllData('weight');
-        if(!recs.length) { document.getElementById('currentWeight').textContent = '--'; document.getElementById('currentBodyFat').textContent = '--'; document.getElementById('weightHistory').innerHTML = '<div class="empty-state"><div class="empty-icon">⚖️</div><p>暂无体重记录</p></div>'; drawWeightChart([]); return; }
+        if(!recs.length) { document.getElementById('currentWeight').textContent = '--'; document.getElementById('currentBodyFat').textContent = '--'; document.getElementById('weightHistory').innerHTML = '<div class="empty-state"><div class="empty-icon">⚖️</div><p>暂无体重记录</p></div>'; updateWeightChart([]); return; }
         recs.sort((a,b)=>b.timestamp - a.timestamp);
         let latest = recs[0];
         document.getElementById('currentWeight').textContent = latest.weight.toFixed(1);
         document.getElementById('currentBodyFat').textContent = latest.bodyFat ? latest.bodyFat.toFixed(1) : '--';
-        // 显示全部记录（历史列表滚动）
         document.getElementById('weightHistory').innerHTML = recs.map(item => `<div class="history-item"><span class="history-date">${item.date}</span><span class="history-value">${item.weight}kg ${item.bodyFat?'('+item.bodyFat+'%)':''}</span><div class="history-actions"><button class="edit-btn" onclick="editWeight(${item.id})">✏️</button><button class="delete-btn" onclick="deleteWeight(${item.id})">🗑️</button></div></div>`).join('');
-        // 传递给图表的数据按日期升序
         let chartData = recs.slice().sort((a,b)=>new Date(a.date)-new Date(b.date));
-        drawWeightChart(chartData);
+        updateWeightChart(chartData);
     }
 
-    // 专业体重图表：双Y轴（体重左，体脂右）
-    function drawWeightChart(recs) {
-        const canvas = document.getElementById('weightCanvas');
-        if (!canvas) return;
-        const container = canvas.parentElement;
-        const containerWidth = container.clientWidth - 32;
-        const containerHeight = 240;
-        canvas.width = containerWidth;
-        canvas.height = containerHeight;
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+    // ECharts 体重与体脂双轴图
+    let weightChart = null;
+    function updateWeightChart(recs) {
+        const container = document.getElementById('weightChartContainer');
+        if (!container) return;
+        if (!weightChart) weightChart = echarts.init(container);
         if (recs.length < 2) {
-            ctx.fillText('需要至少2条记录', 20, 50);
+            weightChart.clear();
+            weightChart.setOption({
+                title: { text: '至少需要2条记录', left: 'center', top: 'center', textStyle: { fontSize: 12, color: '#999' } }
+            });
             return;
         }
-
-        const sorted = [...recs]; // 已按日期升序
-        const weights = sorted.map(r => r.weight);
-        const bodyFats = sorted.map(r => r.bodyFat).filter(f => f != null);
-        const hasFat = bodyFats.length > 0;
-
-        // 体重Y轴范围
-        const minW = Math.min(...weights) - 0.5;
-        const maxW = Math.max(...weights) + 0.5;
-        // 体脂Y轴范围
-        let minF = hasFat ? Math.min(...bodyFats) - 0.5 : null;
-        let maxF = hasFat ? Math.max(...bodyFats) + 0.5 : null;
-
-        const padLeft = 50, padRight = 50, padTop = 20, padBottom = 30;
-        const graphW = canvas.width - padLeft - padRight;
-        const graphH = canvas.height - padTop - padBottom;
-
-        // 背景网格
-        ctx.save();
-        ctx.strokeStyle = '#ddd';
-        ctx.lineWidth = 0.5;
-        for (let i = 0; i <= 4; i++) {
-            const y = padTop + (graphH / 4) * i;
-            ctx.beginPath();
-            ctx.moveTo(padLeft, y);
-            ctx.lineTo(canvas.width - padRight, y);
-            ctx.stroke();
-        }
-        const step = Math.max(1, Math.floor(sorted.length / 5));
-        for (let i = 0; i < sorted.length; i += step) {
-            const x = padLeft + (graphW / (sorted.length - 1)) * i;
-            ctx.beginPath();
-            ctx.moveTo(x, padTop);
-            ctx.lineTo(x, canvas.height - padBottom);
-            ctx.stroke();
-        }
-
-        // 左侧Y轴（体重）
-        ctx.fillStyle = '#333';
-        ctx.font = '11px sans-serif';
-        for (let i = 0; i <= 4; i++) {
-            const value = minW + (maxW - minW) * (i / 4);
-            const y = padTop + graphH - (graphH * (i / 4));
-            ctx.fillText(value.toFixed(1) + 'kg', 5, y + 3);
-        }
-
-        // 右侧Y轴（体脂）
+        const dates = recs.map(r => r.date.slice(5));
+        const weights = recs.map(r => r.weight);
+        const bodyFats = recs.map(r => r.bodyFat !== null && r.bodyFat !== undefined ? r.bodyFat : null);
+        const hasFat = bodyFats.some(v => v !== null);
+        const series = [
+            { name: '体重 (kg)', type: 'line', data: weights, smooth: false, lineStyle: { color: '#ff6b6b', width: 2 }, symbol: 'circle', symbolSize: 6, itemStyle: { color: '#ff6b6b' }, yAxisIndex: 0 }
+        ];
         if (hasFat) {
-            ctx.fillStyle = '#4ecdc4';
-            for (let i = 0; i <= 4; i++) {
-                const value = minF + (maxF - minF) * (i / 4);
-                const y = padTop + graphH - (graphH * (i / 4));
-                ctx.fillText(value.toFixed(1) + '%', canvas.width - 35, y + 3);
-            }
+            series.push({ name: '体脂率 (%)', type: 'line', data: bodyFats, smooth: false, lineStyle: { color: '#4ecdc4', width: 2, type: 'dashed' }, symbol: 'diamond', symbolSize: 6, itemStyle: { color: '#4ecdc4' }, yAxisIndex: 1 });
         }
-
-        // X轴日期
-        ctx.fillStyle = '#333';
-        ctx.font = '10px sans-serif';
-        for (let i = 0; i < sorted.length; i += step) {
-            const x = padLeft + (graphW / (sorted.length - 1)) * i;
-            const dateStr = sorted[i].date.slice(5);
-            ctx.fillText(dateStr, x - 15, canvas.height - padBottom + 15);
-        }
-
-        // 体重折线（左Y）
-        ctx.beginPath();
-        ctx.strokeStyle = '#ff6b6b';
-        ctx.lineWidth = 2;
-        sorted.forEach((r, idx) => {
-            const x = padLeft + (graphW / (sorted.length - 1)) * idx;
-            const y = padTop + graphH - ((r.weight - minW) / (maxW - minW)) * graphH;
-            if (idx === 0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
-        });
-        ctx.stroke();
-
-        // 体脂折线（右Y）
-        if (hasFat) {
-            ctx.beginPath();
-            ctx.strokeStyle = '#4ecdc4';
-            ctx.setLineDash([5, 3]);
-            ctx.lineWidth = 2;
-            let first = true;
-            sorted.forEach((r, idx) => {
-                if (r.bodyFat != null) {
-                    const x = padLeft + (graphW / (sorted.length - 1)) * idx;
-                    const y = padTop + graphH - ((r.bodyFat - minF) / (maxF - minF)) * graphH;
-                    if (first) { ctx.moveTo(x, y); first = false; }
-                    else ctx.lineTo(x, y);
-                } else {
-                    first = true;
-                    ctx.stroke();
-                    ctx.beginPath();
-                }
-            });
-            ctx.stroke();
-            ctx.setLineDash([]);
-        }
-
-        // 数据点及数值
-        sorted.forEach((r, idx) => {
-            const x = padLeft + (graphW / (sorted.length - 1)) * idx;
-            // 体重点
-            const yW = padTop + graphH - ((r.weight - minW) / (maxW - minW)) * graphH;
-            ctx.fillStyle = '#ff6b6b';
-            ctx.beginPath();
-            ctx.arc(x, yW, 4, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.fillStyle = 'white';
-            ctx.beginPath();
-            ctx.arc(x, yW, 2, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.fillStyle = '#ff6b6b';
-            ctx.font = '10px sans-serif';
-            ctx.fillText(r.weight.toFixed(1), x + 5, yW - 5);
-
-            // 体脂点
-            if (hasFat && r.bodyFat != null) {
-                const yF = padTop + graphH - ((r.bodyFat - minF) / (maxF - minF)) * graphH;
-                ctx.fillStyle = '#4ecdc4';
-                ctx.beginPath();
-                ctx.arc(x, yF, 4, 0, 2 * Math.PI);
-                ctx.fill();
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                ctx.arc(x, yF, 2, 0, 2 * Math.PI);
-                ctx.fill();
-                ctx.fillStyle = '#4ecdc4';
-                ctx.fillText(r.bodyFat.toFixed(1) + '%', x + 5, yF + 10);
-            }
-        });
-
-        // 图例
-        ctx.fillStyle = '#ff6b6b';
-        ctx.fillRect(padLeft, padTop - 18, 12, 12);
-        ctx.fillStyle = '#333';
-        ctx.fillText('体重 (kg)', padLeft + 16, padTop - 6);
-        if (hasFat) {
-            ctx.fillStyle = '#4ecdc4';
-            ctx.fillRect(padLeft + 100, padTop - 18, 12, 12);
-            ctx.fillStyle = '#333';
-            ctx.fillText('体脂率 (%)', padLeft + 116, padTop - 6);
-        }
-        ctx.restore();
+        const option = {
+            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+            legend: { data: hasFat ? ['体重 (kg)', '体脂率 (%)'] : ['体重 (kg)'], left: 'left', top: 0 },
+            grid: { left: '8%', right: '8%', top: '15%', bottom: '5%', containLabel: true },
+            xAxis: { type: 'category', data: dates, axisLabel: { rotate: 30, fontSize: 10, interval: 'auto' } },
+            yAxis: [
+                { type: 'value', name: '体重 (kg)', nameLocation: 'middle', nameGap: 40, axisLabel: { formatter: '{value}' }, min: 'dataMin', max: 'dataMax' },
+                { type: 'value', name: '体脂率 (%)', nameLocation: 'middle', nameGap: 40, axisLabel: { formatter: '{value}' }, min: 'dataMin', max: 'dataMax' }
+            ],
+            series: series
+        };
+        weightChart.setOption(option, true);
     }
 
     // ========== 生理期 ==========
@@ -530,193 +404,67 @@
     async function updatePregnancyHeader() { let setting = await getPregnancySetting(); if(setting && setting.lastMenstrualDate) { let gw = calculateGestationalWeek(setting.lastMenstrualDate); if(gw) { document.getElementById('gestationalWeek').innerHTML = `${gw.weeks}周+${gw.days}天`; let dueDays = Math.ceil((new Date(setting.expectedDue)-new Date())/86400000); document.getElementById('pregnancyStatus').innerHTML = `🤰 距离预产期 ${dueDays}天`; return; } } document.getElementById('gestationalWeek').innerHTML = '✨ 备孕/孕期'; document.getElementById('pregnancyStatus').innerHTML = '🌸 记录身体变化，迎接宝宝'; }
     window.showPregnancySettings = function() { let date = prompt("请输入末次月经第一天(YYYY-MM-DD):", getLocalDateString()); if(date) { let due = new Date(date); due.setDate(due.getDate()+280); let dueStr = due.toISOString().slice(0,10); savePregnancySetting({ lastMenstrualDate: date, expectedDue: dueStr }); updatePregnancyHeader(); alert(`预产期大约为: ${dueStr}`); } };
     async function savePreconceptionRecord() { let date = document.getElementById('preDate').value || getLocalDateString(); let bbt = document.getElementById('preBbt').value; let ovulation = document.getElementById('preOvulation').value; let folic = document.getElementById('preFolic').value; if(!bbt && !ovulation) { alert("请至少记录一项指标"); return; } await addData('pregnancy_records', { stage:'preconception', date, data: { bbt, ovulation, folic }, createdAt:Date.now() }); alert("备孕记录已保存"); loadPreconceptionHistory(); }
-    async function savePregnancyRecord() { let date = document.getElementById('pregDate').value || getLocalDateString(); let weight = document.getElementById('pregWeight').value; let bp = document.getElementById('pregBp').value; let glucose = document.getElementById('pregGlucose').value; let fundal = document.getElementById('pregFundal').value; let abdominal = document.getElementById('pregAbdominal').value; let fetalHr = document.getElementById('pregFetalHr').value; let fetalMove = document.getElementById('pregFetalMove').value; let note = document.getElementById('pregNote').value; await addData('pregnancy_records', { stage:'pregnancy', date, data: { weight, bp, glucose, fundal, abdominal, fetalHr, fetalMove, note }, createdAt:Date.now() }); alert("怀孕记录已保存"); loadPregnancyHistory(); drawPregWeightChart(); }
+    async function savePregnancyRecord() { let date = document.getElementById('pregDate').value || getLocalDateString(); let weight = document.getElementById('pregWeight').value; let bp = document.getElementById('pregBp').value; let glucose = document.getElementById('pregGlucose').value; let fundal = document.getElementById('pregFundal').value; let abdominal = document.getElementById('pregAbdominal').value; let fetalHr = document.getElementById('pregFetalHr').value; let fetalMove = document.getElementById('pregFetalMove').value; let note = document.getElementById('pregNote').value; await addData('pregnancy_records', { stage:'pregnancy', date, data: { weight, bp, glucose, fundal, abdominal, fetalHr, fetalMove, note }, createdAt:Date.now() }); alert("怀孕记录已保存"); loadPregnancyHistory(); updatePregWeightChart(); }
     async function saveDeliveryRecord() { let deliveryDate = document.getElementById('deliveryDate').value; if(!deliveryDate) { alert("请填写分娩日期"); return; } let mode = document.getElementById('deliveryMode').value; let gender = document.getElementById('babyGender').value; let weight = document.getElementById('babyWeight').value; let length = document.getElementById('babyLength').value; let apgar = document.getElementById('apgarScore').value; let bloodLoss = document.getElementById('bloodLoss').value; await addData('pregnancy_records', { stage:'delivery', date:deliveryDate, data: { mode, gender, weight, length, apgar, bloodLoss }, createdAt:Date.now() }); alert("生产记录已保存"); loadDeliveryHistory(); }
     async function savePostpartumRecord() { let date = document.getElementById('ppDate').value || getLocalDateString(); let uterus = document.getElementById('ppUterus').value; let lochia = document.getElementById('ppLochia').value; let wound = document.getElementById('ppWound').value; let mood = document.getElementById('ppMood').value; let pelvic = document.getElementById('ppPelvic').value; await addData('pregnancy_records', { stage:'postpartum', date, data: { uterus, lochia, wound, mood, pelvic }, createdAt:Date.now() }); alert("月子记录已保存"); loadPostpartumHistory(); }
     async function loadPreconceptionHistory() { let all = await getAllData('pregnancy_records'); let records = all.filter(r=>r.stage==='preconception').sort((a,b)=>new Date(b.date)-new Date(a.date)); let container = document.getElementById('preHistoryList'); if(!records.length) { container.innerHTML='<div class="empty-state">暂无备孕记录</div>'; return; } container.innerHTML = records.map(rec => `<div class="history-item"><div class="history-date">${rec.date}</div><div class="history-value">🌡️${rec.data.bbt||'--'}℃ / ${rec.data.ovulation}</div><button class="delete-btn" onclick="deletePregnancyRecord(${rec.id})">🗑️</button></div>`).join(''); }
-    async function loadPregnancyHistory() { let all = await getAllData('pregnancy_records'); let records = all.filter(r=>r.stage==='pregnancy').sort((a,b)=>new Date(a.date)-new Date(b.date)); let container = document.getElementById('pregHistoryList'); if(!records.length) { container.innerHTML='<div class="empty-state">暂无孕期记录</div>'; return; } container.innerHTML = records.map(rec => `<div class="history-item"><div>${rec.date}</div><div>⚖️${rec.data.weight||'--'}kg  🤰宫高${rec.data.fundal||'--'}cm</div><button class="delete-btn" onclick="deletePregnancyRecord(${rec.id})">🗑️</button></div>`).join(''); drawPregWeightChart(records); }
+    async function loadPregnancyHistory() { let all = await getAllData('pregnancy_records'); let records = all.filter(r=>r.stage==='pregnancy').sort((a,b)=>new Date(a.date)-new Date(b.date)); let container = document.getElementById('pregHistoryList'); if(!records.length) { container.innerHTML='<div class="empty-state">暂无孕期记录</div>'; return; } container.innerHTML = records.map(rec => `<div class="history-item"><div>${rec.date}</div><div>⚖️${rec.data.weight||'--'}kg  🤰宫高${rec.data.fundal||'--'}cm</div><button class="delete-btn" onclick="deletePregnancyRecord(${rec.id})">🗑️</button></div>`).join(''); updatePregWeightChart(records); }
     async function loadDeliveryHistory() { let all = await getAllData('pregnancy_records'); let records = all.filter(r=>r.stage==='delivery').sort((a,b)=>new Date(b.date)-new Date(a.date)); let container = document.getElementById('deliveryHistoryList'); if(!records.length) { container.innerHTML='<div class="empty-state">暂无分娩记录</div>'; return; } container.innerHTML = records.map(rec => `<div class="history-item"><div>${rec.date}</div><div>${rec.data.mode} | ${rec.data.gender} ${rec.data.weight}g</div><button class="delete-btn" onclick="deletePregnancyRecord(${rec.id})">🗑️</button></div>`).join(''); }
     async function loadPostpartumHistory() { let all = await getAllData('pregnancy_records'); let records = all.filter(r=>r.stage==='postpartum').sort((a,b)=>new Date(b.date)-new Date(a.date)); let container = document.getElementById('ppHistoryList'); if(!records.length) { container.innerHTML='<div class="empty-state">暂无月子记录</div>'; return; } container.innerHTML = records.map(rec => `<div class="history-item"><div>${rec.date}</div><div>😊情绪${rec.data.mood}/5 | 恶露${rec.data.lochia}</div><button class="delete-btn" onclick="deletePregnancyRecord(${rec.id})">🗑️</button></div>`).join(''); }
     window.deletePregnancyRecord = async (id) => { if(confirm("删除这条记录？")) { await deleteData('pregnancy_records', id); refreshCurrentStagePanel(); } };
-    function refreshCurrentStagePanel() { let activeStage = document.querySelector('.stage-tab.active').dataset.stage; if(activeStage === 'preconception') loadPreconceptionHistory(); if(activeStage === 'pregnancy') { loadPregnancyHistory(); drawPregWeightChart(); } if(activeStage === 'delivery') loadDeliveryHistory(); if(activeStage === 'postpartum') loadPostpartumHistory(); }
-
-    // 孕期体重趋势图（单Y轴）
-    function drawPregWeightChart(records=null) {
-        if(!records) { getAllData('pregnancy_records').then(all=>{ let r = all.filter(rr=>rr.stage==='pregnancy').sort((a,b)=>new Date(a.date)-new Date(b.date)); drawPregWeightChart(r); }); return; }
-        const canvas = document.getElementById('pregWeightChart');
-        if(!canvas) return;
-        const container = canvas.parentElement;
-        const containerWidth = container.clientWidth - 32;
-        const containerHeight = 220;
-        canvas.width = containerWidth;
-        canvas.height = containerHeight;
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+    function refreshCurrentStagePanel() { let activeStage = document.querySelector('.stage-tab.active').dataset.stage; if(activeStage === 'preconception') loadPreconceptionHistory(); if(activeStage === 'pregnancy') { loadPregnancyHistory(); updatePregWeightChart(); } if(activeStage === 'delivery') loadDeliveryHistory(); if(activeStage === 'postpartum') loadPostpartumHistory(); }
+    let pregWeightChart = null;
+    function updatePregWeightChart(records=null) {
+        if(!records) { getAllData('pregnancy_records').then(all=>{ let r = all.filter(rr=>rr.stage==='pregnancy').sort((a,b)=>new Date(a.date)-new Date(b.date)); updatePregWeightChart(r); }); return; }
+        const container = document.getElementById('pregWeightChartContainer');
+        if (!container) return;
+        if (!pregWeightChart) pregWeightChart = echarts.init(container);
         let valid = records.filter(r => r.data.weight !== null && r.data.weight !== undefined && r.data.weight !== '' && !isNaN(parseFloat(r.data.weight))).map(r=>({date:r.date, weight:parseFloat(r.data.weight)}));
-        if(valid.length<2) { ctx.fillText("至少需要2次体重记录", 20, 50); return; }
-
-        const minW = Math.min(...valid.map(v=>v.weight)) - 0.5;
-        const maxW = Math.max(...valid.map(v=>v.weight)) + 0.5;
-        const padLeft = 50, padRight = 30, padTop = 20, padBottom = 30;
-        const graphW = canvas.width - padLeft - padRight;
-        const graphH = canvas.height - padTop - padBottom;
-
-        ctx.strokeStyle = '#ddd';
-        ctx.lineWidth = 0.5;
-        for (let i = 0; i <= 4; i++) {
-            const y = padTop + (graphH / 4) * i;
-            ctx.beginPath();
-            ctx.moveTo(padLeft, y);
-            ctx.lineTo(canvas.width - padRight, y);
-            ctx.stroke();
+        if(valid.length<2) {
+            pregWeightChart.clear();
+            pregWeightChart.setOption({ title: { text: '至少需要2次体重记录', left: 'center', top: 'center', textStyle: { fontSize: 12, color: '#999' } } });
+            return;
         }
-        const step = Math.max(1, Math.floor(valid.length / 5));
-        for (let i = 0; i < valid.length; i += step) {
-            const x = padLeft + (graphW / (valid.length - 1)) * i;
-            ctx.beginPath();
-            ctx.moveTo(x, padTop);
-            ctx.lineTo(x, canvas.height - padBottom);
-            ctx.stroke();
-        }
-
-        ctx.fillStyle = '#333';
-        ctx.font = '11px sans-serif';
-        for (let i = 0; i <= 4; i++) {
-            const value = minW + (maxW - minW) * (i / 4);
-            const y = padTop + graphH - (graphH * (i / 4));
-            ctx.fillText(value.toFixed(1) + 'kg', 5, y + 3);
-        }
-
-        ctx.fillStyle = '#333';
-        ctx.font = '10px sans-serif';
-        for (let i = 0; i < valid.length; i += step) {
-            const x = padLeft + (graphW / (valid.length - 1)) * i;
-            const dateStr = valid[i].date.slice(5);
-            ctx.fillText(dateStr, x - 15, canvas.height - padBottom + 15);
-        }
-
-        ctx.beginPath();
-        ctx.strokeStyle = '#ff6b6b';
-        ctx.lineWidth = 2;
-        valid.forEach((v, idx) => {
-            const x = padLeft + (graphW / (valid.length - 1)) * idx;
-            const y = padTop + graphH - ((v.weight - minW) / (maxW - minW)) * graphH;
-            if (idx === 0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
-        });
-        ctx.stroke();
-
-        valid.forEach((v, idx) => {
-            const x = padLeft + (graphW / (valid.length - 1)) * idx;
-            const y = padTop + graphH - ((v.weight - minW) / (maxW - minW)) * graphH;
-            ctx.fillStyle = '#ff6b6b';
-            ctx.beginPath();
-            ctx.arc(x, y, 4, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.fillStyle = 'white';
-            ctx.beginPath();
-            ctx.arc(x, y, 2, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.fillStyle = '#ff6b6b';
-            ctx.font = '10px sans-serif';
-            ctx.fillText(v.weight.toFixed(1), x + 5, y - 5);
-        });
-
-        ctx.fillStyle = '#333';
-        ctx.font = '12px sans-serif';
-        ctx.fillText("孕期体重趋势", padLeft, padTop - 5);
+        const dates = valid.map(v => v.date.slice(5));
+        const weights = valid.map(v => v.weight);
+        const option = {
+            tooltip: { trigger: 'axis' },
+            legend: { data: ['体重 (kg)'], left: 'left', top: 0 },
+            grid: { left: '8%', right: '5%', top: '15%', bottom: '5%', containLabel: true },
+            xAxis: { type: 'category', data: dates, axisLabel: { rotate: 30, fontSize: 10, interval: 'auto' } },
+            yAxis: { type: 'value', name: '体重 (kg)', nameLocation: 'middle', nameGap: 40 },
+            series: [{ name: '体重 (kg)', type: 'line', data: weights, smooth: false, lineStyle: { color: '#ff6b6b', width: 2 }, symbol: 'circle', symbolSize: 6, areaStyle: { opacity: 0.1, color: '#ff6b6b' } }]
+        };
+        pregWeightChart.setOption(option, true);
     }
 
     // ========== 宝宝成长 ==========
-    async function saveBabyRecord() { let date = document.getElementById('babyRecordDate').value || getLocalDateString(); let weight = parseFloat(document.getElementById('babyWeightInput').value); let height = parseFloat(document.getElementById('babyHeightInput').value); if(isNaN(weight) && isNaN(height)) { alert("请至少填写体重或身高"); return; } await addData('baby_records', { date, weight: weight||null, height: height||null, timestamp:Date.now() }); alert("保存成功"); loadBabyHistory(); drawBabyWeightChart(); document.getElementById('babyWeightInput').value = ''; document.getElementById('babyHeightInput').value = ''; }
+    async function saveBabyRecord() { let date = document.getElementById('babyRecordDate').value || getLocalDateString(); let weight = parseFloat(document.getElementById('babyWeightInput').value); let height = parseFloat(document.getElementById('babyHeightInput').value); if(isNaN(weight) && isNaN(height)) { alert("请至少填写体重或身高"); return; } await addData('baby_records', { date, weight: weight||null, height: height||null, timestamp:Date.now() }); alert("保存成功"); loadBabyHistory(); updateBabyWeightChart(); document.getElementById('babyWeightInput').value = ''; document.getElementById('babyHeightInput').value = ''; }
     async function loadBabyHistory() { let records = await getAllData('baby_records'); records.sort((a,b)=>new Date(b.date)-new Date(a.date)); let container = document.getElementById('babyHistoryList'); if(!records.length){ container.innerHTML='<div class="empty-state">暂无成长记录</div>'; return; } container.innerHTML = records.map(rec=>`<div class="history-item"><div>${rec.date}</div><div>⚖️${rec.weight?rec.weight+'kg':'-'} 📏${rec.height?rec.height+'cm':'-'}</div><button class="delete-btn" onclick="deleteBabyRecord(${rec.id})">🗑️</button></div>`).join(''); }
-    window.deleteBabyRecord = async (id)=>{ if(confirm("删除?")){ await deleteData('baby_records',id); loadBabyHistory(); drawBabyWeightChart(); } };
-    function drawBabyWeightChart() {
+    window.deleteBabyRecord = async (id)=>{ if(confirm("删除?")){ await deleteData('baby_records',id); loadBabyHistory(); updateBabyWeightChart(); } };
+    let babyWeightChart = null;
+    function updateBabyWeightChart() {
         getAllData('baby_records').then(records => {
-            const canvas = document.getElementById('babyWeightChart');
-            if(!canvas) return;
-            const container = canvas.parentElement;
-            const containerWidth = container.clientWidth - 32;
-            const containerHeight = 220;
-            canvas.width = containerWidth;
-            canvas.height = containerHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+            const container = document.getElementById('babyWeightChartContainer');
+            if (!container) return;
+            if (!babyWeightChart) babyWeightChart = echarts.init(container);
             let valid = records.filter(r=>r.weight!==null).sort((a,b)=>new Date(a.date)-new Date(b.date));
-            if(valid.length<2){ ctx.fillText("至少2次体重记录", 20, 50); return; }
-
-            const minW = Math.min(...valid.map(v=>v.weight)) - 0.2;
-            const maxW = Math.max(...valid.map(v=>v.weight)) + 0.2;
-            const padLeft = 50, padRight = 30, padTop = 20, padBottom = 30;
-            const graphW = canvas.width - padLeft - padRight;
-            const graphH = canvas.height - padTop - padBottom;
-
-            ctx.strokeStyle = '#ddd';
-            ctx.lineWidth = 0.5;
-            for (let i = 0; i <= 4; i++) {
-                const y = padTop + (graphH / 4) * i;
-                ctx.beginPath();
-                ctx.moveTo(padLeft, y);
-                ctx.lineTo(canvas.width - padRight, y);
-                ctx.stroke();
+            if(valid.length<2) {
+                babyWeightChart.clear();
+                babyWeightChart.setOption({ title: { text: '至少2次体重记录', left: 'center', top: 'center', textStyle: { fontSize: 12, color: '#999' } } });
+                return;
             }
-            const step = Math.max(1, Math.floor(valid.length / 5));
-            for (let i = 0; i < valid.length; i += step) {
-                const x = padLeft + (graphW / (valid.length - 1)) * i;
-                ctx.beginPath();
-                ctx.moveTo(x, padTop);
-                ctx.lineTo(x, canvas.height - padBottom);
-                ctx.stroke();
-            }
-
-            ctx.fillStyle = '#333';
-            ctx.font = '11px sans-serif';
-            for (let i = 0; i <= 4; i++) {
-                const value = minW + (maxW - minW) * (i / 4);
-                const y = padTop + graphH - (graphH * (i / 4));
-                ctx.fillText(value.toFixed(1) + 'kg', 5, y + 3);
-            }
-
-            ctx.fillStyle = '#333';
-            ctx.font = '10px sans-serif';
-            for (let i = 0; i < valid.length; i += step) {
-                const x = padLeft + (graphW / (valid.length - 1)) * i;
-                const dateStr = valid[i].date.slice(5);
-                ctx.fillText(dateStr, x - 15, canvas.height - padBottom + 15);
-            }
-
-            ctx.beginPath();
-            ctx.strokeStyle = '#ff6b6b';
-            ctx.lineWidth = 2;
-            valid.forEach((v, idx) => {
-                const x = padLeft + (graphW / (valid.length - 1)) * idx;
-                const y = padTop + graphH - ((v.weight - minW) / (maxW - minW)) * graphH;
-                if (idx === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            });
-            ctx.stroke();
-
-            valid.forEach((v, idx) => {
-                const x = padLeft + (graphW / (valid.length - 1)) * idx;
-                const y = padTop + graphH - ((v.weight - minW) / (maxW - minW)) * graphH;
-                ctx.fillStyle = '#ff6b6b';
-                ctx.beginPath();
-                ctx.arc(x, y, 4, 0, 2 * Math.PI);
-                ctx.fill();
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                ctx.arc(x, y, 2, 0, 2 * Math.PI);
-                ctx.fill();
-                ctx.fillStyle = '#ff6b6b';
-                ctx.font = '10px sans-serif';
-                ctx.fillText(v.weight.toFixed(2), x + 5, y - 5);
-            });
-
-            ctx.fillStyle = '#333';
-            ctx.font = '12px sans-serif';
-            ctx.fillText("宝宝体重趋势", padLeft, padTop - 5);
+            const dates = valid.map(v => v.date.slice(5));
+            const weights = valid.map(v => v.weight);
+            const option = {
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['体重 (kg)'], left: 'left', top: 0 },
+                grid: { left: '8%', right: '5%', top: '15%', bottom: '5%', containLabel: true },
+                xAxis: { type: 'category', data: dates, axisLabel: { rotate: 30, fontSize: 10, interval: 'auto' } },
+                yAxis: { type: 'value', name: '体重 (kg)', nameLocation: 'middle', nameGap: 40 },
+                series: [{ name: '体重 (kg)', type: 'line', data: weights, smooth: false, lineStyle: { color: '#ff6b6b', width: 2 }, symbol: 'circle', symbolSize: 6, areaStyle: { opacity: 0.1, color: '#ff6b6b' } }]
+            };
+            babyWeightChart.setOption(option, true);
         });
     }
 
@@ -725,70 +473,36 @@
     async function loadVaccines() { let list = await getAllData('vaccines'); list.sort((a,b)=>new Date(b.date)-new Date(a.date)); let container = document.getElementById('vaccineList'); if(!list.length){ container.innerHTML='<div class="empty-state">暂无疫苗记录</div>'; return; } container.innerHTML = list.map(v=>`<div class="vaccine-item"><div><strong>${v.name}</strong> ${v.date}</div><div>${v.next?`下次提醒: ${v.next}`:''}</div><button class="delete-btn" onclick="deleteVaccine(${v.id})">删除</button></div>`).join(''); }
     window.deleteVaccine = async (id)=>{ if(confirm("删除疫苗记录?")){ await deleteData('vaccines',id); loadVaccines(); } };
     window.showAddFoodModal = ()=>document.getElementById('foodModal').classList.add('active');
-    window.addFoodRecord = async ()=>{ let date = document.getElementById('foodDate').value||getLocalDateString(); let type = document.getElementById('foodType').value; let amount = document.getElementById('foodAmount').value; await addData('baby_food', { date, type, amount, timestamp:Date.now() }); closeModal('foodModal'); drawFoodExcreteChart(); document.getElementById('foodDate').value=''; document.getElementById('foodAmount').value=''; };
+    window.addFoodRecord = async ()=>{ let date = document.getElementById('foodDate').value||getLocalDateString(); let type = document.getElementById('foodType').value; let amount = document.getElementById('foodAmount').value; await addData('baby_food', { date, type, amount, timestamp:Date.now() }); closeModal('foodModal'); updateFoodExcreteChart(); document.getElementById('foodDate').value=''; document.getElementById('foodAmount').value=''; };
     window.showAddExcretionModal = ()=>document.getElementById('excreteModal').classList.add('active');
-    window.addExcreteRecord = async ()=>{ let date = document.getElementById('excreteDate').value||getLocalDateString(); let type = document.getElementById('excreteType').value; let count = parseInt(document.getElementById('excreteCount').value); await addData('baby_excrete', { date, type, count, timestamp:Date.now() }); closeModal('excreteModal'); drawFoodExcreteChart(); document.getElementById('excreteDate').value=''; document.getElementById('excreteCount').value=''; };
-    function drawFoodExcreteChart() {
+    window.addExcreteRecord = async ()=>{ let date = document.getElementById('excreteDate').value||getLocalDateString(); let type = document.getElementById('excreteType').value; let count = parseInt(document.getElementById('excreteCount').value); await addData('baby_excrete', { date, type, count, timestamp:Date.now() }); closeModal('excreteModal'); updateFoodExcreteChart(); document.getElementById('excreteDate').value=''; document.getElementById('excreteCount').value=''; };
+    let foodExcreteChart = null;
+    function updateFoodExcreteChart() {
         Promise.all([getAllData('baby_food'), getAllData('baby_excrete')]).then(([foods, excrets]) => {
-            const canvas = document.getElementById('foodExcreteChart');
-            if(!canvas) return;
-            const container = canvas.parentElement;
-            const containerWidth = container.clientWidth - 32;
-            const containerHeight = 200;
-            canvas.width = containerWidth;
-            canvas.height = containerHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+            const container = document.getElementById('foodExcreteChartContainer');
+            if (!container) return;
+            if (!foodExcreteChart) foodExcreteChart = echarts.init(container);
             let foodCount = foods.length, excreteCount = excrets.length;
             let total = foodCount + excreteCount;
             if(total === 0) {
-                ctx.fillText("暂无数据", canvas.width/2-40, canvas.height/2);
+                foodExcreteChart.clear();
+                foodExcreteChart.setOption({ title: { text: '暂无数据', left: 'center', top: 'center', textStyle: { fontSize: 12, color: '#999' } } });
                 return;
             }
-            let foodAngle = (foodCount / total) * 2 * Math.PI;
-            let excreteAngle = (excreteCount / total) * 2 * Math.PI;
-            let centerX = canvas.width / 2;
-            let centerY = canvas.height / 2 - 10;
-            let radius = Math.min(canvas.width, canvas.height) / 2 - 30;
-            ctx.beginPath();
-            ctx.fillStyle = '#ff9a9e';
-            ctx.moveTo(centerX, centerY);
-            ctx.arc(centerX, centerY, radius, 0, foodAngle);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.fillStyle = '#4ecdc4';
-            ctx.moveTo(centerX, centerY);
-            ctx.arc(centerX, centerY, radius, foodAngle, foodAngle + excreteAngle);
-            ctx.fill();
-
-            ctx.font = '12px sans-serif';
-            ctx.fillStyle = '#333';
-            ctx.fillRect(centerX - radius - 20, centerY - radius - 10, 12, 12);
-            ctx.fillStyle = '#ff9a9e';
-            ctx.fillRect(centerX - radius - 20, centerY - radius - 10, 12, 12);
-            ctx.fillStyle = '#333';
-            ctx.fillText(`饭食 ${foodCount}次 (${((foodCount/total)*100).toFixed(1)}%)`, centerX - radius - 15, centerY - radius - 2);
-
-            ctx.fillStyle = '#4ecdc4';
-            ctx.fillRect(centerX - radius - 20, centerY - radius + 10, 12, 12);
-            ctx.fillStyle = '#333';
-            ctx.fillText(`排泄 ${excreteCount}次 (${((excreteCount/total)*100).toFixed(1)}%)`, centerX - radius - 15, centerY - radius + 18);
-
-            ctx.fillStyle = 'white';
-            ctx.font = 'bold 14px sans-serif';
-            if (foodCount > 0) {
-                let angleMid = foodAngle / 2;
-                let x = centerX + Math.cos(angleMid) * radius * 0.7;
-                let y = centerY + Math.sin(angleMid) * radius * 0.7;
-                ctx.fillText(`${((foodCount/total)*100).toFixed(0)}%`, x-12, y+5);
-            }
-            if (excreteCount > 0) {
-                let angleMid = foodAngle + excreteAngle / 2;
-                let x = centerX + Math.cos(angleMid) * radius * 0.7;
-                let y = centerY + Math.sin(angleMid) * radius * 0.7;
-                ctx.fillText(`${((excreteCount/total)*100).toFixed(0)}%`, x-12, y+5);
-            }
+            const option = {
+                tooltip: { trigger: 'item', formatter: '{a}<br/>{b}: {d}% ({c}次)' },
+                legend: { orient: 'vertical', left: 'left', data: [`饭食 (${foodCount}次)`, `排泄 (${excreteCount}次)`] },
+                series: [{
+                    name: '记录统计', type: 'pie', radius: '55%', center: ['50%', '50%'],
+                    data: [
+                        { value: foodCount, name: `饭食 (${foodCount}次)`, itemStyle: { color: '#ff9a9e' } },
+                        { value: excreteCount, name: `排泄 (${excreteCount}次)`, itemStyle: { color: '#4ecdc4' } }
+                    ],
+                    label: { show: true, formatter: '{b}: {d}%' },
+                    emphasis: { scale: true }
+                }]
+            };
+            foodExcreteChart.setOption(option, true);
         });
     }
 
@@ -800,7 +514,7 @@
     async function showDiaryDetail(id) { let list = await getAllData('diaries'), d = list.find(x=>x.id===id); if(!d) return; let moodMap = { happy:'😊 开心', calm:'😌 平静', tired:'😴 疲惫', sad:'😢 难过', excited:'🤩 兴奋', angry:'😠 生气' }; document.getElementById('modalBody').innerHTML = `<div><strong>${d.date}</strong>${d.mood?`<span> ${moodMap[d.mood]}</span>`:''}</div><h3>${d.title}</h3><p style="white-space:pre-wrap;">${d.content}</p><button class="btn btn-primary" onclick="deleteDiary(${d.id})" style="background:#ffebee;color:#c62828;">删除日记</button>`; document.getElementById('diaryModal').classList.add('active'); }
     async function deleteDiary(id) { if(confirm('确定删除？')) { await deleteData('diaries', id); closeModal(); loadDiaries(); } }
 
-    // ========== 纪念日模块（农历转换 + 保留原始输入字符串，增加年份校验） ==========
+    // ========== 纪念日模块（农历转换） ==========
     const lunarCalendar = {
         lunarInfo: [0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x09ad0,0x055d2,0x04ae0,0x0a5b6,0x0a4d0,0x0d250,0x1d255,0x0b540,0x0d6a0,0x0ada2,0x095b0,0x14977,0x04970,0x0a4b0,0x0b4b5,0x06a50,0x06d40,0x1ab54,0x02b60,0x09570,0x052f2,0x04970,0x06566,0x0d4a0,0x0ea50,0x06e95,0x05ad0,0x02b60,0x186e3,0x092e0,0x1c8d7,0x0c950,0x0d4a0,0x1d8a6,0x0b550,0x056a0,0x1a5b4,0x025d0,0x092d0,0x0d2b2,0x0a950,0x0b557,0x06ca0,0x0b550,0x15355,0x04da0,0x0a5d0,0x14573,0x052d0,0x0a9a8,0x0e950,0x06aa0,0x0aea6,0x0ab50,0x04b60,0x0aae4,0x0a570,0x05260,0x0f263,0x0d950,0x05b57,0x056a0,0x096d0,0x04dd5,0x04ad0,0x0a4d0,0x0d4d4,0x0d250,0x0d558,0x0b540,0x0b5a0,0x195a6,0x095b0,0x049b0,0x0a974,0x0a4b0,0x0b27a,0x06a50,0x06d40,0x0af46,0x0ab60,0x09570,0x04af5,0x04970,0x064b0,0x074a3,0x0ea50,0x06b58,0x055c0,0x0ab60,0x096d5,0x092e0,0x0c960,0x0d954,0x0d4a0,0x0da50,0x07552,0x056a0,0x0abb7,0x025d0,0x092d0,0x0cab5,0x0a950,0x0b4a0,0x0baa4,0x0ad50,0x055d9,0x04ba0,0x0a5b0,0x15176,0x052b0,0x0a930,0x07954,0x06aa0,0x0ad50,0x05b52,0x04b60,0x0a6e6,0x0a4e0,0x0d260,0x0ea65,0x0d530,0x05aa0,0x076a3,0x096d0,0x04bd7,0x04ad0,0x0a4d0,0x1d0b6,0x0d250,0x0d520,0x0dd45,0x0b5a0,0x056d0,0x055b2,0x049b0,0x0a577,0x0a4b0,0x0aa50,0x1b255,0x06d20,0x0ada0],
         getLunarYearDays(y) { let sum=348; for(let i=0x8000;i>0x8;i>>=1) sum+=(this.lunarInfo[y]&i)?1:0; return sum+this.getLeapDays(y); },
@@ -817,10 +531,7 @@
         let month = parseInt(parts[1]);
         let day = parseInt(parts[2]);
         if(isNaN(year) || isNaN(month) || isNaN(day)) return null;
-        if(year < 1900 || year > 2100) {
-            alert("农历年份请填写 1900–2100 之间的数字");
-            return null;
-        }
+        if(year < 1900 || year > 2100) { alert("农历年份请填写 1900–2100 之间的数字"); return null; }
         if(month<1 || month>12 || day<1 || day>30) return null;
         return { month, day };
     }
@@ -909,7 +620,7 @@
     // ========== 导出/导入/清空 ==========
     async function exportData() {
         try { alert('正在准备导出数据...'); let stores = ['outfits','weight','periods','diaries','closetCategories','clothes','pregnancy_records','pregnancy_settings','baby_records','vaccines','baby_food','baby_excrete','couple_info']; let exportObj = {}; for(let s of stores) { let data = await getAllData(s); if(s === 'clothes') { data = await Promise.all(data.map(async item => { if(item.imageBlob && item.imageBlob instanceof Blob) { let base64 = await blobToBase64(item.imageBlob); return {...item, imageBlob: base64}; } return item; })); } exportObj[s] = data; } exportObj.exportDate = new Date().toISOString(); let blob = new Blob([JSON.stringify(exportObj, null, 2)], {type:'application/json'}); let url = URL.createObjectURL(blob); let a = document.createElement('a'); a.href = url; a.download = `beautiful_mood_${getLocalDateString()}.json`; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); alert('导出成功！'); } catch(e) { alert('导出失败：'+e.message); } }
-    async function importData(input) { let file = input.files[0]; if(!file) return; let reader = new FileReader(); reader.onload = async e => { try { let imported = JSON.parse(e.target.result); if(!imported.outfits || !imported.weight || !imported.periods || !imported.diaries) { alert('无效的数据文件'); return; } if(!confirm('导入将覆盖当前所有数据，确定继续？')) return; let stores = ['outfits','weight','periods','diaries','closetCategories','clothes','pregnancy_records','pregnancy_settings','baby_records','vaccines','baby_food','baby_excrete','couple_info']; for(let s of stores) await clearStore(s); for(let s of stores) { for(let item of imported[s] || []) { let {id, ...rest} = item; if(s === 'clothes' && rest.imageBlob && typeof rest.imageBlob === 'string') rest.imageBlob = await base64ToBlob(rest.imageBlob); await addData(s, rest); } } alert('导入成功！'); let active = document.querySelector('.nav-tab.active').dataset.section; if(active === 'outfit') loadOutfitHistory(); if(active === 'weight') loadWeightData(); if(active === 'period') loadPeriodData(); if(active === 'diary') loadDiaries(); if(active === 'pregnancy') { updatePregnancyHeader(); refreshCurrentStagePanel(); loadBabyHistory(); drawBabyWeightChart(); loadVaccines(); drawFoodExcreteChart(); } if(active === 'more') renderAnniversary(); } catch(err) { alert('导入失败：'+err.message); } finally { input.value = ''; } }; reader.readAsText(file); }
+    async function importData(input) { let file = input.files[0]; if(!file) return; let reader = new FileReader(); reader.onload = async e => { try { let imported = JSON.parse(e.target.result); if(!imported.outfits || !imported.weight || !imported.periods || !imported.diaries) { alert('无效的数据文件'); return; } if(!confirm('导入将覆盖当前所有数据，确定继续？')) return; let stores = ['outfits','weight','periods','diaries','closetCategories','clothes','pregnancy_records','pregnancy_settings','baby_records','vaccines','baby_food','baby_excrete','couple_info']; for(let s of stores) await clearStore(s); for(let s of stores) { for(let item of imported[s] || []) { let {id, ...rest} = item; if(s === 'clothes' && rest.imageBlob && typeof rest.imageBlob === 'string') rest.imageBlob = await base64ToBlob(rest.imageBlob); await addData(s, rest); } } alert('导入成功！'); let active = document.querySelector('.nav-tab.active').dataset.section; if(active === 'outfit') loadOutfitHistory(); if(active === 'weight') loadWeightData(); if(active === 'period') loadPeriodData(); if(active === 'diary') loadDiaries(); if(active === 'pregnancy') { updatePregnancyHeader(); refreshCurrentStagePanel(); loadBabyHistory(); updateBabyWeightChart(); loadVaccines(); updateFoodExcreteChart(); } if(active === 'more') renderAnniversary(); } catch(err) { alert('导入失败：'+err.message); } finally { input.value = ''; } }; reader.readAsText(file); }
     async function clearAllData() { if(!confirm('确定清空所有数据？不可恢复！')) return; let stores = ['outfits','weight','periods','diaries','closetCategories','clothes','pregnancy_records','pregnancy_settings','baby_records','vaccines','baby_food','baby_excrete','couple_info']; for(let s of stores) await clearStore(s); alert('数据已清空'); location.reload(); }
 
     // ========== 衣橱管理 ==========
@@ -935,8 +646,15 @@
         if(section==='period') loadPeriodData();
         if(section==='diary') loadDiaries();
         if(section==='outfit') loadOutfitHistory();
-        if(section==='pregnancy') { updatePregnancyHeader(); refreshCurrentStagePanel(); loadBabyHistory(); drawBabyWeightChart(); loadVaccines(); drawFoodExcreteChart(); }
+        if(section==='pregnancy') { updatePregnancyHeader(); refreshCurrentStagePanel(); loadBabyHistory(); updateBabyWeightChart(); loadVaccines(); updateFoodExcreteChart(); }
         if(section==='more') renderAnniversary();
+        // 图表容器 resize
+        setTimeout(() => {
+            if (weightChart) weightChart.resize();
+            if (pregWeightChart) pregWeightChart.resize();
+            if (babyWeightChart) babyWeightChart.resize();
+            if (foodExcreteChart) foodExcreteChart.resize();
+        }, 100);
     }
     document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>switchSection(t.dataset.section)));
     document.querySelectorAll('.nav-item').forEach(i=>i.addEventListener('click',()=>switchSection(i.dataset.section)));
@@ -951,10 +669,10 @@
             let panelId = stage==='baby'?'baby-panel':`${stage}-panel`;
             document.getElementById(panelId).style.display = 'block';
             if(stage==='preconception') loadPreconceptionHistory();
-            if(stage==='pregnancy') { loadPregnancyHistory(); drawPregWeightChart(); }
+            if(stage==='pregnancy') { loadPregnancyHistory(); updatePregWeightChart(); }
             if(stage==='delivery') loadDeliveryHistory();
             if(stage==='postpartum') loadPostpartumHistory();
-            if(stage==='baby') { loadBabyHistory(); drawBabyWeightChart(); loadVaccines(); drawFoodExcreteChart(); }
+            if(stage==='baby') { loadBabyHistory(); updateBabyWeightChart(); loadVaccines(); updateFoodExcreteChart(); }
         });
     });
 
@@ -968,16 +686,18 @@
 
     // 监听窗口大小变化重新绘制图表
     window.addEventListener('resize', () => {
+        if (weightChart) weightChart.resize();
+        if (pregWeightChart) pregWeightChart.resize();
+        if (babyWeightChart) babyWeightChart.resize();
+        if (foodExcreteChart) foodExcreteChart.resize();
+        // 数据重绘
         if(document.getElementById('weight-section').classList.contains('active')) {
-            getAllData('weight').then(recs => {
-                let chartData = recs.slice().sort((a,b)=>new Date(a.date)-new Date(b.date));
-                drawWeightChart(chartData);
-            });
+            getAllData('weight').then(recs => updateWeightChart(recs.slice().sort((a,b)=>new Date(a.date)-new Date(b.date))));
         }
         if(document.getElementById('pregnancy-section').classList.contains('active')) {
-            drawPregWeightChart();
-            drawBabyWeightChart();
-            drawFoodExcreteChart();
+            updatePregWeightChart();
+            updateBabyWeightChart();
+            updateFoodExcreteChart();
         }
     });
 
@@ -993,7 +713,7 @@
         await initDB();
         loadOutfitHistory(); loadWeightData(); loadPeriodData(); loadDiaries(); updatePregnancyHeader();
         loadPreconceptionHistory(); loadPregnancyHistory(); loadDeliveryHistory(); loadPostpartumHistory();
-        loadBabyHistory(); drawBabyWeightChart(); loadVaccines(); drawFoodExcreteChart();
+        loadBabyHistory(); updateBabyWeightChart(); loadVaccines(); updateFoodExcreteChart();
         let info = await getCoupleInfo();
         if(info) {
             document.getElementById('maleName').value = info.maleName || '';
