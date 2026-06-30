@@ -131,6 +131,47 @@
         .photo-modal-content img { max-width: 100%; max-height: 80vh; border-radius: var(--radius); }
         .photo-modal-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.8); border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; cursor: pointer; }
         .echarts-chart { width: 100%; height: 100%; }
+		/* 穿搭历史记录优化样式 */
+		.history-item-content {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			flex: 1;
+			min-width: 0; /* 防止文字撑开 */
+		}
+		.history-thumb {
+			width: 56px;
+			height: 56px;
+			object-fit: cover;
+			border-radius: 10px;
+			cursor: pointer;
+			flex-shrink: 0;
+			transition: transform 0.2s;
+			background: #f0f0f0;
+		}
+		.history-thumb:hover {
+			transform: scale(1.05);
+		}
+		.history-actions {
+			display: flex;
+			gap: 6px;
+			align-items: center;
+			flex-shrink: 0;
+		}
+
+		/* 大图查看模态框优化 */
+		.photo-modal-content {
+			background: rgba(0, 0, 0, 0.85); /* 改为深色背景，突出图片 */
+			padding: 20px;
+			border-radius: 16px;
+		}
+		.photo-modal-content img {
+			max-width: 100%;
+			max-height: 80vh;
+			border-radius: 12px;
+			box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+			object-fit: contain;
+		}
     </style>
 </head>
 <body>
@@ -183,9 +224,9 @@
         <div class="section" id="more-section">
             <div class="card"><div class="card-title">💕 纪念日提醒 · 自定义信息</div>
                 <div class="form-group"><label class="form-label">男方姓名</label><input type="text" id="maleName" class="form-input" placeholder="先生"></div>
-                <div class="form-group"><label class="form-label">男方农历生日（格式：年-月-日，例：1994-10-02 代表农历1994年十月初二）</label><input type="text" id="maleBirthLunar" class="form-input" placeholder="1994-10-02"></div>
+                <div class="form-group"><label class="form-label">男方农历生日（格式：年-月-日，例：1999-09-09 代表农历1999年九月初九）</label><input type="text" id="maleBirthLunar" class="form-input" placeholder="1999-09-09"></div>
                 <div class="form-group"><label class="form-label">女方姓名</label><input type="text" id="femaleName" class="form-input" placeholder="女士"></div>
-                <div class="form-group"><label class="form-label">女方农历生日（格式：年-月-日，例：1995-04-29 代表农历1995年四月廿九）</label><input type="text" id="femaleBirthLunar" class="form-input" placeholder="1995-04-29"></div>
+                <div class="form-group"><label class="form-label">女方农历生日（格式：年-月-日，例：1999-09-09 代表农历1999年九月初九）</label><input type="text" id="femaleBirthLunar" class="form-input" placeholder="1999-09-09"></div>
                 <div class="form-group"><label class="form-label">初次相遇（公历）</label><input type="date" id="meetDate" class="form-input"></div>
                 <div class="form-group"><label class="form-label">订婚纪念日（公历）</label><input type="date" id="engageDate" class="form-input"></div>
                 <div class="form-group"><label class="form-label">结婚纪念日（公历）</label><input type="date" id="marryDate" class="form-input"></div>
@@ -268,8 +309,19 @@
     const getDataByIndex = (store, idx, val) => new Promise((res,rej) => { let tx = db.transaction(store,'readonly'); let r = tx.objectStore(store).index(idx).getAll(val); r.onsuccess = () => res(r.result); r.onerror = rej; });
     const getDataById = (store, id) => new Promise((res,rej) => { let tx = db.transaction(store,'readonly'); let r = tx.objectStore(store).get(id); r.onsuccess = () => res(r.result); r.onerror = rej; });
 
-    // ========== 穿搭模块 ==========
-    const outfitSuggestions = { cold:{emoji:'🧥', desc:'寒冷天气 - 羽绒服/大衣', items:['羽绒服','毛衣','围巾','手套']}, cool:{emoji:'🧥', desc:'凉爽天气 - 外套/夹克', items:['风衣','长袖','牛仔裤']}, mild:{emoji:'👕', desc:'舒适天气 - 长袖T恤/薄外套', items:['长袖T恤','薄外套','长裤']}, warm:{emoji:'👔', desc:'温暖天气 - 短袖/衬衫', items:['短袖','衬衫','休闲裤']}, hot:{emoji:'👗', desc:'炎热天气 - 短袖/裙子', items:['短袖','短裤','裙子','凉鞋']} };
+    // ========== 穿搭模块 (优化版：Blob存储 + 缩略图 + 删除) ==========
+    
+    // 临时保存当前选中的图片 Blob 对象
+    let currentOutfitBlob = null; 
+
+    const outfitSuggestions = {
+        cold:{emoji:'🧥', desc:'寒冷天气 - 羽绒服/大衣', items:['羽绒服','毛衣','围巾','手套']},
+        cool:{emoji:'🧥', desc:'凉爽天气 - 外套/夹克', items:['风衣','长袖','牛仔裤']},
+        mild:{emoji:'👕', desc:'舒适天气 - 长袖T恤/薄外套', items:['长袖T恤','薄外套','长裤']},
+        warm:{emoji:'👔', desc:'温暖天气 - 短袖/衬衫', items:['短袖','衬衫','休闲裤']},
+        hot:{emoji:'👗', desc:'炎热天气 - 短袖/裙子', items:['短袖','短裤','裙子','凉鞋']}
+    };
+
     function generateOutfit() {
         let temp = parseFloat(document.getElementById('tempInput').value);
         if(isNaN(temp)) { alert('请输入有效的温度'); return; }
@@ -285,18 +337,121 @@
         document.getElementById('outfitDesc').textContent = sug.desc;
         document.getElementById('outfitTemp').textContent = `温度: ${temp}°C | 建议: ${sug.items.join(', ')}`;
     }
-    function previewOutfitPhoto(input) { if(input.files && input.files[0]) { let reader = new FileReader(); reader.onload = e => { document.getElementById('outfitImg').src = e.target.result; document.getElementById('outfitPreview').style.display = 'block'; }; reader.readAsDataURL(input.files[0]); } }
-    async function saveOutfitRecord() {
-        let photo = document.getElementById('outfitImg').src, note = document.getElementById('outfitNote').value, temp = document.getElementById('tempInput').value;
-        if(!photo && !note) { alert('请上传照片或填写备注'); return; }
-        await addData('outfits', { date: getLocalDateString(), photo: photo||'', note: note||'', temp: temp||'', timestamp: Date.now() });
-        alert('穿搭记录已保存！'); loadOutfitHistory();
-        document.getElementById('outfitPhoto').value = ''; document.getElementById('outfitNote').value = ''; document.getElementById('outfitPreview').style.display = 'none';
+
+    // 优化：预览时直接生成 Blob URL，不再转 Base64
+    async function previewOutfitPhoto(input) {
+        if(input.files && input.files[0]) {
+            try {
+                // 调用你原有的压缩方法，直接返回压缩后的 File(Blob) 对象
+                currentOutfitBlob = await compressImage(input.files[0], 800, 0.8);
+                
+                // 释放上一次预览的内存
+                const oldSrc = document.getElementById('outfitImg').src;
+                if (oldSrc && oldSrc.startsWith('blob:')) {
+                    URL.revokeObjectURL(oldSrc);
+                }
+
+                // 生成本地预览地址 (不占用内存，只是个指针)
+                const previewUrl = URL.createObjectURL(currentOutfitBlob);
+                document.getElementById('outfitImg').src = previewUrl;
+                document.getElementById('outfitPreview').style.display = 'block';
+            } catch (e) {
+                console.error("图片处理失败", e);
+                alert("图片处理失败，请重试");
+            }
+        }
     }
+
+    // 优化：直接将 Blob 存入 IndexedDB
+    async function saveOutfitRecord() {
+        let note = document.getElementById('outfitNote').value;
+        let temp = document.getElementById('tempInput').value;
+        
+        if(!currentOutfitBlob && !note) { 
+            alert('请上传照片或填写备注'); 
+            return; 
+        }
+
+        const record = {
+            date: getLocalDateString(),
+            photo: currentOutfitBlob || null, // 核心：直接存 Blob 对象
+            note: note || '',
+            temp: temp || '',
+            timestamp: Date.now()
+        };
+
+        await addData('outfits', record);
+        alert('穿搭记录已保存！');
+        
+        // 重置状态
+        loadOutfitHistory();
+        document.getElementById('outfitPhoto').value = '';
+        document.getElementById('outfitNote').value = '';
+        document.getElementById('outfitPreview').style.display = 'none';
+        document.getElementById('outfitImg').src = '';
+        currentOutfitBlob = null; 
+    }
+
+    // 新增：删除穿搭记录
+    async function deleteOutfitRecord(id) {
+        if(confirm('确定要删除这条穿搭记录吗？')) {
+            await deleteData('outfits', id);
+            loadOutfitHistory(); // 刷新列表
+        }
+    }
+
+    // 优化：读取 Blob 并渲染缩略图，增加删除按钮
     async function loadOutfitHistory() {
-        let list = await getAllData('outfits'), container = document.getElementById('outfitHistory');
-        if(!list.length) { container.innerHTML = '<div class="empty-state"><div class="empty-icon">📸</div><p>暂无穿搭记录</p></div>'; return; }
-        container.innerHTML = list.reverse().slice(0,5).map(item => `<div class="history-item"><div><div class="history-date">${item.date} ${item.temp||''}</div><div style="font-size:12px;">${item.note||'无备注'}</div></div>${item.photo?`<span class="photo-icon" onclick="showOutfitPhoto('${item.photo}')">📷</span>`:''}</div>`).join('');
+        let list = await getAllData('outfits');
+        let container = document.getElementById('outfitHistory');
+        
+        if(!list.length) {
+            container.innerHTML = '<div class="empty-state"><div class="placeholder-icon">📸</div><p>暂无穿搭记录</p></div>';
+            return;
+        }
+
+        // 按时间倒序排列
+        list.sort((a, b) => b.timestamp - a.timestamp);
+
+        // 先渲染 HTML 骨架（不包含真实的图片 src）
+        container.innerHTML = list.map(item => {
+            const textInfo = `
+                <div class="history-date">${item.date} ${item.temp ? '| ' + item.temp + '°C' : ''}</div>
+                <div style="font-size:12px; color:var(--text-light); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width: 180px;">${item.note || '无备注'}</div>
+            `;
+            // 占位图标签，通过 data-id 关联
+            const imgPlaceholder = item.photo ? `<img class="history-thumb" data-id="${item.id}" src="" alt="穿搭照片">` : '';
+
+            return `
+                <div class="history-item">
+                    <div class="history-item-content">
+                        ${imgPlaceholder}
+                        <div>${textInfo}</div>
+                    </div>
+                    <div class="history-actions">
+                        <button class="delete-btn" onclick="deleteOutfitRecord(${item.id})" title="删除记录">🗑️</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // 异步将 Blob 转为 URL 填入 img 标签 (避免 base64 撑爆 DOM 渲染)
+        list.forEach(item => {
+            if (item.photo) {
+                const imgEl = container.querySelector(`img[data-id="${item.id}"]`);
+                // 兼容性处理：如果之前存的是 base64 字符串，直接赋值；如果是新存的 Blob，生成 URL
+                if (imgEl) {
+                    if (item.photo instanceof Blob) {
+                        const url = URL.createObjectURL(item.photo);
+                        imgEl.src = url;
+                        imgEl.onclick = () => showOutfitPhoto(url); // 点击缩略图看大图
+                    } else if (typeof item.photo === 'string' && item.photo.startsWith('data:')) {
+                        imgEl.src = item.photo; // 兼容旧数据
+                        imgEl.onclick = () => showOutfitPhoto(item.photo);
+                    }
+                }
+            }
+        });
     }
 
     // ========== 体重模块 ==========
@@ -731,7 +886,7 @@
 </script>
 <script>
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sv.js').then(reg => {
+    navigator.serviceWorker.register('./sw.js').then(reg => {
       console.log('Service Worker 注册成功，作用域:', reg.scope);
     }).catch(err => {
       console.error('Service Worker 注册失败:', err);
