@@ -177,14 +177,6 @@
 <body>
 <div class="app-container">
     <div class="header"><h1>美丽心情</h1><div class="date-display" id="currentDate"></div></div>
-    <div class="nav-tabs">
-        <button class="nav-tab active" data-section="outfit">👔 穿搭</button>
-        <button class="nav-tab" data-section="weight">⚖️ 体重</button>
-        <button class="nav-tab" data-section="period">🌸 生理期</button>
-        <button class="nav-tab" data-section="pregnancy">🤰 孕期全周期</button>
-        <button class="nav-tab" data-section="diary">📔 日记</button>
-        <button class="nav-tab" data-section="more">➕ 更多</button>
-    </div>
     <div class="content">
         <!-- 穿搭模块 -->
         <div class="section active" id="outfit-section">
@@ -265,6 +257,32 @@
 <div class="modal" id="excreteModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">💩 排泄记录</div><button class="modal-close" onclick="closeModal('excreteModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label>日期</label><input type="date" id="excreteDate" class="form-input"></div><div class="form-group"><label>类型</label><select id="excreteType" class="form-select"><option value="大便">大便</option><option value="小便">小便</option><option value="混合">混合</option></select></div><div class="form-group"><label>次数</label><input type="number" id="excreteCount" class="form-input" min="1"></div><button class="btn btn-primary" onclick="addExcreteRecord()">保存</button></div></div></div>
 
 <script>
+	// ========== 底部导航切换逻辑 ==========
+	document.addEventListener('DOMContentLoaded', () => {
+		const navItems = document.querySelectorAll('.bottom-nav .nav-item');
+		const sections = document.querySelectorAll('.content .section');
+
+		navItems.forEach(item => {
+			item.addEventListener('click', () => {
+				const targetSection = item.getAttribute('data-section');
+				
+				// 移除所有 active 状态
+				navItems.forEach(nav => nav.classList.remove('active'));
+				sections.forEach(sec => sec.classList.remove('active'));
+				
+				// 添加当前 active 状态
+				item.classList.add('active');
+				const targetEl = document.getElementById(`${targetSection}-section`);
+				if (targetEl) {
+					targetEl.classList.add('active');
+				}
+
+				// 滚动到顶部，防止停留在上一个模块的底部位置
+				window.scrollTo({ top: 0, behavior: 'smooth' });
+			});
+		});
+	});
+
     // ========== 工具函数 ==========
     function getLocalDateString(date = new Date()) { const y = date.getFullYear(), m = String(date.getMonth() + 1).padStart(2, '0'), d = String(date.getDate()).padStart(2, '0'); return `${y}-${m}-${d}`; }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
@@ -886,7 +904,7 @@
 </script>
 <script>
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').then(reg => {
+    navigator.serviceWorker.register('./sv.js').then(reg => {
       console.log('Service Worker 注册成功，作用域:', reg.scope);
     }).catch(err => {
       console.error('Service Worker 注册失败:', err);
