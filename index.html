@@ -123,9 +123,10 @@
         .modal-title { font-size: 18px; font-weight: 600; }
         .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-light); }
         .modal-body { padding: 24px; }
-        .photo-modal-content { background: transparent; max-width: 90%; text-align: center; }
-        .photo-modal-content img { max-width: 100%; max-height: 80vh; border-radius: var(--radius); }
-        .photo-modal-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.8); border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; cursor: pointer; }
+        /* 图片查看模态框 */
+        .photo-modal-content { background: rgba(0, 0, 0, 0.85); padding: 20px; border-radius: 16px; text-align: center; }
+        .photo-modal-content img { max-width: 100%; max-height: 80vh; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); object-fit: contain; }
+        .photo-modal-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.8); border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; cursor: pointer; z-index: 10; }
         .echarts-chart { width: 100%; height: 100%; }
 
         .history-item-content {
@@ -154,195 +155,8 @@
             align-items: center;
             flex-shrink: 0;
         }
-
-        .photo-modal-content {
-            background: rgba(0, 0, 0, 0.85);
-            padding: 20px;
-            border-radius: 16px;
-        }
-        .photo-modal-content img {
-            max-width: 100%;
-            max-height: 80vh;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            object-fit: contain;
-        }
-
-        /* ===== 全屏图片查看器 ===== */
-        .photo-viewer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.92);
-            z-index: 3000;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            touch-action: pan-y; /* 允许垂直滚动，但水平由js控制 */
-        }
-        .photo-viewer.active {
-            display: flex;
-        }
-        .photo-viewer .viewer-close {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.15);
-            border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s;
-            backdrop-filter: blur(4px);
-        }
-        .photo-viewer .viewer-close:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-        .photo-viewer .viewer-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 44px;
-            height: 44px;
-            background: rgba(255, 255, 255, 0.12);
-            border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s;
-            backdrop-filter: blur(4px);
-        }
-        .photo-viewer .viewer-nav:hover {
-            background: rgba(255, 255, 255, 0.25);
-        }
-        .photo-viewer .viewer-prev { left: 12px; }
-        .photo-viewer .viewer-next { right: 12px; }
-        .photo-viewer .viewer-nav.disabled {
-            opacity: 0.2;
-            pointer-events: none;
-        }
-
-        .photo-viewer .viewer-slider {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-            touch-action: none;
-        }
-        .photo-viewer .viewer-track {
-            display: flex;
-            transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            height: 100%;
-            align-items: center;
-            will-change: transform;
-        }
-        .photo-viewer .viewer-track.no-transition {
-            transition: none !important;
-        }
-        .photo-viewer .viewer-slide {
-            min-width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            flex-shrink: 0;
-        }
-        .photo-viewer .viewer-slide img {
-            max-width: 100%;
-            max-height: 75vh;
-            object-fit: contain;
-            border-radius: 8px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            user-select: none;
-            -webkit-user-drag: none;
-        }
-
-        .photo-viewer .viewer-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 20px 24px 30px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.6));
-            color: white;
-            text-align: center;
-        }
-        .photo-viewer .viewer-counter {
-            font-size: 14px;
-            font-weight: 500;
-            opacity: 0.8;
-            margin-bottom: 4px;
-        }
-        .photo-viewer .viewer-meta {
-            font-size: 13px;
-            opacity: 0.7;
-        }
-        .photo-viewer .viewer-meta .date { margin-right: 12px; }
-        .photo-viewer .viewer-meta .note { opacity: 0.6; }
-
-        .photo-viewer .viewer-dots {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            margin-top: 8px;
-        }
-        .photo-viewer .viewer-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.25);
-            transition: all 0.3s;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-        }
-        .photo-viewer .viewer-dot.active {
-            background: white;
-            width: 20px;
-            border-radius: 4px;
-        }
-
-        .viewer-slide .loading-placeholder {
-            width: 60px;
-            height: 60px;
-            border: 3px solid rgba(255,255,255,0.1);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
         @media (max-width: 480px) {
-            .photo-viewer .viewer-nav {
-                width: 36px;
-                height: 36px;
-                font-size: 16px;
-            }
-            .photo-viewer .viewer-prev { left: 6px; }
-            .photo-viewer .viewer-next { right: 6px; }
-            .photo-viewer .viewer-slide img { max-height: 70vh; }
-            .photo-viewer .viewer-info { padding: 14px 16px 24px; }
-            .photo-viewer .viewer-counter { font-size: 13px; }
-            .photo-viewer .viewer-meta { font-size: 12px; }
+            .photo-modal-content { padding: 10px; }
         }
     </style>
 </head>
@@ -424,28 +238,18 @@
 <div class="modal" id="addClothesModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">添加衣物</div><button class="modal-close" onclick="closeModalById('addClothesModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label class="form-label">选择分类</label><select class="form-input" id="clothesCategory"></select></div><div class="form-group"><label class="form-label">衣物代码</label><input type="text" class="form-input" id="clothesCode"></div><div class="form-group"><label class="form-label">拍照或上传照片</label><input type="file" class="form-input" id="clothesImage" accept="image/*" capture="environment"></div><button class="btn btn-primary" onclick="addClothes()">保存</button></div></div></div>
 <div class="modal" id="editWeightModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">编辑体重记录</div><button class="modal-close" onclick="closeModalById('editWeightModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label class="form-label">日期</label><input type="text" class="form-input" id="editWeightDate" readonly disabled></div><div class="form-group"><label class="form-label">体重 (kg)</label><input type="number" step="0.1" class="form-input" id="editWeightValue"></div><div class="form-group"><label class="form-label">体脂率 (%)</label><input type="number" step="0.1" class="form-input" id="editBodyFatValue"></div><input type="hidden" id="editWeightId"><button class="btn btn-primary" onclick="updateWeight()">保存修改</button></div></div></div>
 <div class="modal" id="diaryModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">日记详情</div><button class="modal-close" onclick="closeModal()">&times;</button></div><div class="modal-body" id="modalBody"></div></div></div>
-<div class="modal" id="photoModal" style="display:none;"><div class="modal-content photo-modal-content"><img id="photoModalImg" src=""><button class="photo-modal-close" onclick="closePhotoModal()">&times;</button></div></div>
+
+<!-- 图片查看模态框（单张放大） -->
+<div class="modal" id="photoModal">
+    <div class="modal-content photo-modal-content" style="position:relative; max-width:90%;">
+        <button class="photo-modal-close" onclick="closePhotoModal()">&times;</button>
+        <img id="photoModalImg" src="" style="display:block; margin:0 auto;">
+    </div>
+</div>
+
 <div class="modal" id="vaccineModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">💉 添加疫苗</div><button class="modal-close" onclick="closeModal('vaccineModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label>疫苗名称</label><input type="text" id="vaccineName" class="form-input"></div><div class="form-group"><label>接种日期</label><input type="date" id="vaccineDate" class="form-input"></div><div class="form-group"><label>下次提醒(可选)</label><input type="text" id="vaccineNext" class="form-input"></div><button class="btn btn-primary" onclick="addVaccine()">保存</button></div></div></div>
 <div class="modal" id="foodModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">🍚 饭食记录</div><button class="modal-close" onclick="closeModal('foodModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label>日期</label><input type="date" id="foodDate" class="form-input"></div><div class="form-group"><label>类型</label><select id="foodType" class="form-select"><option value="母乳">母乳</option><option value="奶粉">奶粉</option><option value="辅食">辅食</option><option value="正餐">正餐</option></select></div><div class="form-group"><label>量(ml/碗)</label><input type="text" id="foodAmount" class="form-input"></div><button class="btn btn-primary" onclick="addFoodRecord()">保存</button></div></div></div>
 <div class="modal" id="excreteModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">💩 排泄记录</div><button class="modal-close" onclick="closeModal('excreteModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label>日期</label><input type="date" id="excreteDate" class="form-input"></div><div class="form-group"><label>类型</label><select id="excreteType" class="form-select"><option value="大便">大便</option><option value="小便">小便</option><option value="混合">混合</option></select></div><div class="form-group"><label>次数</label><input type="number" id="excreteCount" class="form-input" min="1"></div><button class="btn btn-primary" onclick="addExcreteRecord()">保存</button></div></div></div>
-
-<!-- ===== 全屏图片查看器 ===== -->
-<div class="photo-viewer" id="photoViewer">
-    <button class="viewer-close" id="viewerClose" title="关闭">✕</button>
-    <button class="viewer-nav viewer-prev" id="viewerPrev" title="上一张">‹</button>
-    <button class="viewer-nav viewer-next" id="viewerNext" title="下一张">›</button>
-    <div class="viewer-slider" id="viewerSlider">
-        <div class="viewer-track" id="viewerTrack"></div>
-    </div>
-    <div class="viewer-info">
-        <div class="viewer-counter" id="viewerCounter">1 / 10</div>
-        <div class="viewer-meta" id="viewerMeta">
-            <span class="date"></span>
-            <span class="note"></span>
-        </div>
-        <div class="viewer-dots" id="viewerDots"></div>
-    </div>
-</div>
 
 <script>
     // ========== 底部导航切换逻辑 ==========
@@ -489,6 +293,12 @@
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
     function closeModalById(id) { document.getElementById(id).classList.remove('active'); }
     function closePhotoModal() { document.getElementById('photoModal').classList.remove('active'); }
+    function showOutfitPhoto(url) {
+        if (url) {
+            document.getElementById('photoModalImg').src = url;
+            document.getElementById('photoModal').classList.add('active');
+        }
+    }
     function dataURLToBlob(dataURL) { const arr = dataURL.split(','), mime = arr[0].match(/:(.*?);/)[1]; const bstr = atob(arr[1]), u8 = new Uint8Array(bstr.length); for (let i=0;i<bstr.length;i++) u8[i] = bstr.charCodeAt(i); return new Blob([u8], {type:mime}); }
     function blobToBase64(blob) { return new Promise((res) => { let f = new FileReader(); f.onload = () => res(f.result); f.readAsDataURL(blob); }); }
     function base64ToBlob(base64) { return new Promise(res => { let arr = base64.split(','), mime = arr[0].match(/:(.*?);/)[1]; let bstr = atob(arr[1]), n = bstr.length, u8 = new Uint8Array(n); while(n--) u8[n] = bstr.charCodeAt(n); res(new Blob([u8], {type:mime})); }); }
@@ -608,267 +418,25 @@
         }
     }
 
-    // ===== 全屏滑动查看器（优化版：跟手滑动） =====
-    let viewerImages = [];
-    let viewerCurrentIndex = 0;
-    let viewerTouchStartX = 0;
-    let viewerTouchStartY = 0;
-    let viewerIsDragging = false;
-    let viewerDragOffset = 0; // 当前拖拽偏移量（像素）
-    let viewerSlideWidth = 0;
-
-    function openPhotoViewer(images, startIndex) {
-        if (!images || images.length === 0) return;
-        viewerImages = images;
-        viewerCurrentIndex = Math.min(startIndex, images.length - 1);
-        viewerDragOffset = 0;
-
-        const viewer = document.getElementById('photoViewer');
-        const track = document.getElementById('viewerTrack');
-        const counter = document.getElementById('viewerCounter');
-        const meta = document.getElementById('viewerMeta');
-        const dots = document.getElementById('viewerDots');
-
-        track.innerHTML = images.map((img, idx) => `
-            <div class="viewer-slide" data-index="${idx}">
-                <img src="${img.url}" alt="图片 ${idx+1}" loading="${idx === startIndex ? 'eager' : 'lazy'}" onerror="this.style.display='none'">
-            </div>
-        `).join('');
-
-        // 获取单张幻灯片宽度
-        viewerSlideWidth = viewer.clientWidth || window.innerWidth;
-
-        updateViewerUI(false);
-        viewer.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function updateViewerUI(animate = true) {
-        const track = document.getElementById('viewerTrack');
-        const total = viewerImages.length;
-        const idx = viewerCurrentIndex;
-        // 计算目标位移：-idx * 100%，再加上拖拽偏移百分比
-        const offsetPercent = viewerSlideWidth > 0 ? (viewerDragOffset / viewerSlideWidth) * 100 : 0;
-        const translateX = -idx * 100 + offsetPercent;
-        track.style.transform = `translateX(${translateX}%)`;
-        if (!animate) {
-            track.classList.add('no-transition');
-            // 强制重排
-            void track.offsetHeight;
-            track.classList.remove('no-transition');
-        }
-
-        // 更新计数器、元信息、导航按钮、圆点
-        const counter = document.getElementById('viewerCounter');
-        const meta = document.getElementById('viewerMeta');
-        const dots = document.getElementById('viewerDots');
-        const prevBtn = document.getElementById('viewerPrev');
-        const nextBtn = document.getElementById('viewerNext');
-
-        counter.textContent = `${idx + 1} / ${total}`;
-        const img = viewerImages[idx];
-        meta.querySelector('.date').textContent = img.date || '';
-        meta.querySelector('.note').textContent = img.note ? `📝 ${img.note}` : '';
-
-        prevBtn.classList.toggle('disabled', idx === 0);
-        nextBtn.classList.toggle('disabled', idx === total - 1);
-
-        dots.innerHTML = viewerImages.map((_, i) =>
-            `<button class="viewer-dot ${i === idx ? 'active' : ''}" data-index="${i}" aria-label="跳转到第 ${i+1} 张"></button>`
-        ).join('');
-        dots.querySelectorAll('.viewer-dot').forEach(dot => {
-            dot.addEventListener('click', () => {
-                const index = parseInt(dot.dataset.index);
-                if (index !== viewerCurrentIndex) {
-                    viewerCurrentIndex = index;
-                    viewerDragOffset = 0;
-                    updateViewerUI(true);
-                }
-            });
-        });
-    }
-
-    function closePhotoViewer() {
-        document.getElementById('photoViewer').classList.remove('active');
-        document.body.style.overflow = '';
-        viewerImages.forEach(img => {
-            if (img.url && img.url.startsWith('blob:')) URL.revokeObjectURL(img.url);
-        });
-        viewerImages = [];
-        viewerDragOffset = 0;
-    }
-
-    // 查看器事件绑定
-    document.getElementById('viewerClose').addEventListener('click', closePhotoViewer);
-    document.getElementById('viewerPrev').addEventListener('click', () => {
-        if (viewerCurrentIndex > 0) {
-            viewerCurrentIndex--;
-            viewerDragOffset = 0;
-            updateViewerUI(true);
-        }
-    });
-    document.getElementById('viewerNext').addEventListener('click', () => {
-        if (viewerCurrentIndex < viewerImages.length - 1) {
-            viewerCurrentIndex++;
-            viewerDragOffset = 0;
-            updateViewerUI(true);
-        }
-    });
-
-    document.addEventListener('keydown', (e) => {
-        if (!document.getElementById('photoViewer').classList.contains('active')) return;
-        if (e.key === 'Escape') closePhotoViewer();
-        if (e.key === 'ArrowLeft') document.getElementById('viewerPrev').click();
-        if (e.key === 'ArrowRight') document.getElementById('viewerNext').click();
-    });
-
-    // 触摸事件：跟手滑动
-    const viewerSlider = document.getElementById('viewerSlider');
-    const viewerTrack = document.getElementById('viewerTrack');
-
-    viewerSlider.addEventListener('touchstart', (e) => {
-        if (viewerImages.length <= 1) return;
-        const touch = e.touches[0];
-        viewerTouchStartX = touch.clientX;
-        viewerTouchStartY = touch.clientY;
-        viewerIsDragging = true;
-        viewerDragOffset = 0;
-        // 取消正在进行的过渡
-        viewerTrack.classList.add('no-transition');
-        // 记录当前滑动距离百分比（从当前 transform 计算）
-        const currentTransform = viewerTrack.style.transform;
-        if (currentTransform) {
-            const match = currentTransform.match(/translateX\(([^%]+)%\)/);
-            if (match) {
-                const currentPercent = parseFloat(match[1]);
-                // 理论上当前应为 -viewerCurrentIndex * 100
-                viewerDragOffset = (currentPercent + viewerCurrentIndex * 100) / 100 * viewerSlideWidth;
-            }
-        }
-        // 防止滚动干扰
-        e.preventDefault();
-    }, { passive: false });
-
-    viewerSlider.addEventListener('touchmove', (e) => {
-        if (!viewerIsDragging || viewerImages.length <= 1) return;
-        const touch = e.touches[0];
-        const deltaX = touch.clientX - viewerTouchStartX;
-        // 限制水平滑动，忽略垂直滑动
-        const deltaY = touch.clientY - viewerTouchStartY;
-        if (Math.abs(deltaX) < 20 && Math.abs(deltaY) > 20) {
-            // 垂直滑动，不处理
-            return;
-        }
-        e.preventDefault();
-
-        viewerDragOffset = deltaX;
-        // 边界阻尼（超出边界时阻力增大）
-        const maxOffset = viewerSlideWidth * 0.3;
-        if (viewerDragOffset > maxOffset) viewerDragOffset = maxOffset;
-        if (viewerDragOffset < -maxOffset) viewerDragOffset = -maxOffset;
-
-        // 实时更新位置（无过渡）
-        updateViewerUI(false);
-    }, { passive: false });
-
-    viewerSlider.addEventListener('touchend', (e) => {
-        if (!viewerIsDragging || viewerImages.length <= 1) {
-            viewerIsDragging = false;
-            return;
-        }
-        viewerIsDragging = false;
-        // 移除无过渡状态
-        viewerTrack.classList.remove('no-transition');
-
-        const threshold = viewerSlideWidth * 0.2;
-        const diff = viewerDragOffset;
-        let targetIndex = viewerCurrentIndex;
-
-        if (diff < -threshold && viewerCurrentIndex < viewerImages.length - 1) {
-            targetIndex = viewerCurrentIndex + 1;
-        } else if (diff > threshold && viewerCurrentIndex > 0) {
-            targetIndex = viewerCurrentIndex - 1;
-        }
-
-        viewerCurrentIndex = targetIndex;
-        viewerDragOffset = 0;
-        updateViewerUI(true);
-    }, { passive: false });
-
-    // 鼠标拖拽支持（桌面端）
-    let mouseDown = false;
-    let mouseStartX = 0;
-    viewerSlider.addEventListener('mousedown', (e) => {
-        if (viewerImages.length <= 1) return;
-        mouseDown = true;
-        mouseStartX = e.clientX;
-        viewerDragOffset = 0;
-        viewerTrack.classList.add('no-transition');
-        e.preventDefault();
-    });
-    window.addEventListener('mousemove', (e) => {
-        if (!mouseDown) return;
-        const deltaX = e.clientX - mouseStartX;
-        viewerDragOffset = deltaX;
-        const maxOffset = viewerSlideWidth * 0.3;
-        if (viewerDragOffset > maxOffset) viewerDragOffset = maxOffset;
-        if (viewerDragOffset < -maxOffset) viewerDragOffset = -maxOffset;
-        updateViewerUI(false);
-    });
-    window.addEventListener('mouseup', (e) => {
-        if (!mouseDown) return;
-        mouseDown = false;
-        viewerTrack.classList.remove('no-transition');
-        const threshold = viewerSlideWidth * 0.2;
-        const diff = viewerDragOffset;
-        let targetIndex = viewerCurrentIndex;
-        if (diff < -threshold && viewerCurrentIndex < viewerImages.length - 1) {
-            targetIndex = viewerCurrentIndex + 1;
-        } else if (diff > threshold && viewerCurrentIndex > 0) {
-            targetIndex = viewerCurrentIndex - 1;
-        }
-        viewerCurrentIndex = targetIndex;
-        viewerDragOffset = 0;
-        updateViewerUI(true);
-    });
-
-    // 点击查看器背景关闭
-    document.getElementById('photoViewer').addEventListener('click', (e) => {
-        if (e.target === document.getElementById('photoViewer') || e.target === document.getElementById('viewerSlider')) {
-            closePhotoViewer();
-        }
-    });
-
-    // 窗口变化时更新宽度
-    window.addEventListener('resize', () => {
-        if (document.getElementById('photoViewer').classList.contains('active')) {
-            viewerSlideWidth = document.getElementById('photoViewer').clientWidth;
-        }
-    });
-
-    // ===== 穿搭图片查看 =====
-    async function showOutfitPhoto(clickedId) {
+    // 单张图片查看（穿搭历史）
+    async function viewOutfitPhotoById(clickedId) {
         const allRecords = await getAllData('outfits');
-        const imageRecords = allRecords.filter(r => r.photo).sort((a, b) => b.timestamp - a.timestamp);
-        if (imageRecords.length === 0) { alert('没有可查看的图片'); return; }
-
-        const images = [];
-        let startIndex = 0;
-        for (let i = 0; i < imageRecords.length; i++) {
-            const r = imageRecords[i];
-            let url = null;
-            if (r.photo instanceof Blob) {
-                url = URL.createObjectURL(r.photo);
-            } else if (typeof r.photo === 'string' && r.photo.startsWith('data:')) {
-                url = r.photo;
-            }
-            if (url) {
-                images.push({ id: r.id, url: url, date: r.date, note: r.note || '', temp: r.temp || '' });
-                if (r.id === clickedId) startIndex = images.length - 1;
-            }
+        const record = allRecords.find(r => r.id === clickedId);
+        if (!record || !record.photo) {
+            alert('图片不存在');
+            return;
         }
-        if (images.length === 0) { alert('图片加载失败'); return; }
-        openPhotoViewer(images, startIndex);
+        let url = null;
+        if (record.photo instanceof Blob) {
+            url = URL.createObjectURL(record.photo);
+        } else if (typeof record.photo === 'string' && record.photo.startsWith('data:')) {
+            url = record.photo;
+        }
+        if (url) {
+            showOutfitPhoto(url);
+        } else {
+            alert('图片无法显示');
+        }
     }
 
     async function loadOutfitHistory() {
@@ -910,14 +478,14 @@
                     }
                     if (url) {
                         imgEl.src = url;
-                        imgEl.onclick = () => showOutfitPhoto(item.id);
+                        imgEl.onclick = () => viewOutfitPhotoById(item.id);
                     }
                 }
             }
         });
     }
 
-    // ========== 衣橱管理（含图片滑动浏览） ==========
+    // ========== 衣橱管理（单张大图查看） ==========
     let currentCategoryId = null;
     window.openClosetModal = async function() { await loadClosetCategories(); document.getElementById('closetModal').classList.add('active'); };
     window.closeClosetModal = function() { document.getElementById('closetModal').classList.remove('active'); };
@@ -939,7 +507,7 @@
         let html = clothes.map(item => {
             let url = item.imageBlob ? URL.createObjectURL(item.imageBlob) : '';
             return `<div class="closet-item-card">
-                <img src="${url||'https://via.placeholder.com/70'}" onclick="viewClothesImagesByCategory(${cid}, ${item.id})">
+                <img src="${url||'https://via.placeholder.com/70'}" onclick="viewClothesImage(${item.id})">
                 <div class="closet-item-code">${item.code}</div>
                 <button class="remove-item" onclick="deleteClothes(${item.id})">✕</button>
             </div>`;
@@ -947,22 +515,15 @@
         cont.innerHTML = html;
     }
 
-    window.viewClothesImagesByCategory = async function(categoryId, clickedId) {
-        const clothes = await getDataByIndex('clothes', 'categoryId', categoryId);
-        const imageItems = clothes.filter(item => item.imageBlob);
-        if (imageItems.length === 0) {
-            alert('该分类下没有可查看的图片');
+    // 单张衣橱图片放大
+    window.viewClothesImage = async function(id) {
+        const item = await getDataById('clothes', id);
+        if (!item || !item.imageBlob) {
+            alert('图片不存在');
             return;
         }
-        const images = [];
-        let startIndex = 0;
-        for (let i = 0; i < imageItems.length; i++) {
-            const item = imageItems[i];
-            const url = URL.createObjectURL(item.imageBlob);
-            images.push({ url: url, date: '', note: item.code || '衣物' });
-            if (item.id === clickedId) startIndex = i;
-        }
-        openPhotoViewer(images, startIndex);
+        const url = URL.createObjectURL(item.imageBlob);
+        showOutfitPhoto(url);
     };
 
     window.showAddCategory = function() { document.getElementById('addCategoryModal').classList.add('active'); };
@@ -1382,17 +943,13 @@
         if (pregWeightChart) pregWeightChart.resize();
         if (babyWeightChart) babyWeightChart.resize();
         if (foodExcreteChart) foodExcreteChart.resize();
-        if (document.getElementById('weight-section').classList.contains('active')) {
+        if(document.getElementById('weight-section').classList.contains('active')) {
             getAllData('weight').then(recs => updateWeightChart(recs.slice().sort((a,b)=>new Date(a.date)-new Date(b.date))));
         }
-        if (document.getElementById('pregnancy-section').classList.contains('active')) {
+        if(document.getElementById('pregnancy-section').classList.contains('active')) {
             updatePregWeightChart();
             updateBabyWeightChart();
             updateFoodExcreteChart();
-        }
-        // 更新查看器宽度
-        if (document.getElementById('photoViewer').classList.contains('active')) {
-            viewerSlideWidth = document.getElementById('photoViewer').clientWidth;
         }
     });
 
