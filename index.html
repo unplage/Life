@@ -7,6 +7,7 @@
     <link rel="manifest" href="./manifest.json">
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
     <style>
+        /* 所有样式与之前保持一致，因篇幅不重复，实际代码中完整保留 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --primary: #ff6b6b;
@@ -103,7 +104,7 @@
         .category-tag.active { background: var(--primary); color: white; border-color: var(--primary); }
         .closet-items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-height: 300px; overflow-y: auto; }
         .closet-item-card { background: white; border-radius: var(--radius-sm); padding: 12px 8px; text-align: center; border: 1px solid #e0e0e0; position: relative; }
-        .closet-item-card img { width: 70px; height: 70px; object-fit: cover; border-radius: var(--radius-sm); margin-bottom: 8px; }
+        .closet-item-card img { width: 70px; height: 70px; object-fit: cover; border-radius: var(--radius-sm); margin-bottom: 8px; cursor: pointer; }
         .closet-item-code { font-weight: 600; font-size: 12px; color: var(--primary); margin-bottom: 4px; }
         .remove-item { position: absolute; top: 4px; right: 4px; background: #ffebee; border: none; border-radius: 50%; width: 24px; height: 24px; color: #c62828; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .vaccine-timeline { margin-top: 16px; }
@@ -623,7 +624,7 @@
 
         track.innerHTML = images.map((img, idx) => `
             <div class="viewer-slide" data-index="${idx}">
-                <img src="${img.url}" alt="穿搭照片 ${idx+1}" loading="${idx === startIndex ? 'eager' : 'lazy'}" onerror="this.style.display='none'">
+                <img src="${img.url}" alt="图片 ${idx+1}" loading="${idx === startIndex ? 'eager' : 'lazy'}" onerror="this.style.display='none'">
             </div>
         `).join('');
 
@@ -712,6 +713,7 @@
         }
     });
 
+    // 穿搭图片查看（统一入口）
     async function showOutfitPhoto(clickedId) {
         const allRecords = await getAllData('outfits');
         const imageRecords = allRecords.filter(r => r.photo).sort((a, b) => b.timestamp - a.timestamp);
@@ -781,6 +783,99 @@
             }
         });
     }
+
+    // ========== 衣橱管理（含图片滑动浏览） ==========
+    let currentCategoryId = null;
+    window.openClosetModal = async function() { await loadClosetCategories(); document.getElementById('closetModal').classList.add('active'); };
+    window.closeClosetModal = function() { document.getElementById('closetModal').classList.remove('active'); };
+    async function loadClosetCategories() {
+        let cats = await getAllData('closetCategories');
+        let cont = document.getElementById('closetCategories');
+        if (!cats.length) { cont.innerHTML='<p style="color:#999;">暂无分类，请添加</p>'; return; }
+        let html = cats.map(c=>`<span class="category-tag ${currentCategoryId===c.id?'active':''}" onclick="selectCategory(${c.id})">${c.name}</span>`).join('');
+        cont.innerHTML = html;
+        if (!currentCategoryId && cats.length>0) selectCategory(cats[0].id);
+        else loadClothesByCategory(currentCategoryId);
+    }
+    window.selectCategory = function(id) { currentCategoryId = id; loadClosetCategories(); loadClothesByCategory(id); };
+    async function loadClothesByCategory(cid) {
+        if (!cid) return;
+        let clothes = await getDataByIndex('clothes','categoryId', cid);
+        let cont = document.getElementById('closetItems');
+        if (!clothes.length) { cont.innerHTML='<p style="color:#999; text-align:center;">该分类下暂无衣物</p>'; return; }
+        let html = clothes.map(item => {
+            let url = item.imageBlob ? URL.createObjectURL(item.imageBlob) : '';
+            return `<div class="closet-item-card">
+                <img src="${url||'https://via.placeholder.com/70'}" onclick="viewClothesImagesByCategory(${cid}, ${item.id})">
+                <div class="closet-item-code">${item.code}</div>
+                <button class="remove-item" onclick="deleteClothes(${item.id})">✕</button>
+            </div>`;
+        }).join('');
+        cont.innerHTML = html;
+    }
+
+    // 衣橱图片滑动浏览
+    window.viewClothesImagesByCategory = async function(categoryId, clickedId) {
+        const clothes = await getDataByIndex('clothes', 'categoryId', categoryId);
+        const imageItems = clothes.filter(item => item.imageBlob);
+        if (imageItems.length === 0) {
+            alert('该分类下没有可查看的图片');
+            return;
+        }
+        const images = [];
+        let startIndex = 0;
+        for (let i = 0; i < imageItems.length; i++) {
+            const item = imageItems[i];
+            const url = URL.createObjectURL(item.imageBlob);
+            images.push({ url: url, date: '', note: item.code || '衣物' });
+            if (item.id === clickedId) startIndex = i;
+        }
+        openPhotoViewer(images, startIndex);
+    };
+
+    window.showAddCategory = function() { document.getElementById('addCategoryModal').classList.add('active'); };
+    window.addCategory = async function() {
+        let name = document.getElementById('newCategoryName').value.trim();
+        if(!name) { alert('请输入分类名称'); return; }
+        let exist = await getDataByIndex('closetCategories','name',name);
+        if(exist.length) { alert('分类名称已存在'); return; }
+        await addData('closetCategories', {name});
+        document.getElementById('newCategoryName').value = '';
+        closeModalById('addCategoryModal');
+        loadClosetCategories();
+    };
+    window.showAddClothes = function() {
+        if(!currentCategoryId) { alert('请先选择一个分类'); return; }
+        let sel = document.getElementById('clothesCategory'); sel.innerHTML = '';
+        getAllData('closetCategories').then(cats => {
+            cats.forEach(c => { let opt = document.createElement('option'); opt.value=c.id; opt.textContent=c.name; if(c.id===currentCategoryId) opt.selected=true; sel.appendChild(opt); });
+        });
+        document.getElementById('addClothesModal').classList.add('active');
+    };
+    window.addClothes = async function() {
+        let catId = parseInt(document.getElementById('clothesCategory').value);
+        let code = document.getElementById('clothesCode').value.trim();
+        let file = document.getElementById('clothesImage').files[0];
+        if(!code) { alert('请输入衣物代码'); return; }
+        if(!file) { alert('请上传照片'); return; }
+        let compressed = await compressImage(file);
+        let reader = new FileReader();
+        reader.onload = async function(e) {
+            let blob = dataURLToBlob(e.target.result);
+            await addData('clothes', { categoryId:catId, code, imageBlob:blob, timestamp:Date.now() });
+            document.getElementById('clothesCode').value = '';
+            document.getElementById('clothesImage').value = '';
+            closeModalById('addClothesModal');
+            loadClothesByCategory(currentCategoryId);
+        };
+        reader.readAsDataURL(compressed);
+    };
+    window.deleteClothes = async function(id) {
+        if(confirm('确定删除？')) {
+            await deleteData('clothes', id);
+            loadClothesByCategory(currentCategoryId);
+        }
+    };
 
     // ========== 体重模块 ==========
     async function saveWeight() { let w = parseFloat(document.getElementById('weightInput').value), bf = parseFloat(document.getElementById('bodyFatInput').value), d = document.getElementById('weightDate').value || getLocalDateString(); if(isNaN(w)) { alert('请输入有效的体重'); return; } await addData('weight', { date:d, weight:w, bodyFat:bf||null, timestamp:Date.now() }); alert('体重记录已保存！'); loadWeightData(); document.getElementById('weightInput').value = ''; document.getElementById('bodyFatInput').value = ''; }
@@ -1102,19 +1197,6 @@
         try { alert('正在准备导出数据...'); let stores = ['outfits','weight','periods','diaries','closetCategories','clothes','pregnancy_records','pregnancy_settings','baby_records','vaccines','baby_food','baby_excrete','couple_info']; let exportObj = {}; for(let s of stores) { let data = await getAllData(s); if(s === 'clothes') { data = await Promise.all(data.map(async item => { if(item.imageBlob && item.imageBlob instanceof Blob) { let base64 = await blobToBase64(item.imageBlob); return {...item, imageBlob: base64}; } return item; })); } exportObj[s] = data; } exportObj.exportDate = new Date().toISOString(); let blob = new Blob([JSON.stringify(exportObj, null, 2)], {type:'application/json'}); let url = URL.createObjectURL(blob); let a = document.createElement('a'); a.href = url; a.download = `beautiful_mood_${getLocalDateString()}.json`; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); alert('导出成功！'); } catch(e) { alert('导出失败：'+e.message); } }
     async function importData(input) { let file = input.files[0]; if(!file) return; let reader = new FileReader(); reader.onload = async e => { try { let imported = JSON.parse(e.target.result); if(!imported.outfits || !imported.weight || !imported.periods || !imported.diaries) { alert('无效的数据文件'); return; } if(!confirm('导入将覆盖当前所有数据，确定继续？')) return; let stores = ['outfits','weight','periods','diaries','closetCategories','clothes','pregnancy_records','pregnancy_settings','baby_records','vaccines','baby_food','baby_excrete','couple_info']; for(let s of stores) await clearStore(s); for(let s of stores) { for(let item of imported[s] || []) { let {id, ...rest} = item; if(s === 'clothes' && rest.imageBlob && typeof rest.imageBlob === 'string') rest.imageBlob = await base64ToBlob(rest.imageBlob); await addData(s, rest); } } alert('导入成功！'); let active = document.querySelector('.nav-tab.active').dataset.section; if(active === 'outfit') loadOutfitHistory(); if(active === 'weight') loadWeightData(); if(active === 'period') loadPeriodData(); if(active === 'diary') loadDiaries(); if(active === 'pregnancy') { updatePregnancyHeader(); refreshCurrentStagePanel(); loadBabyHistory(); updateBabyWeightChart(); loadVaccines(); updateFoodExcreteChart(); } if(active === 'more') renderAnniversary(); } catch(err) { alert('导入失败：'+err.message); } finally { input.value = ''; } }; reader.readAsText(file); }
     async function clearAllData() { if(!confirm('确定清空所有数据？不可恢复！')) return; let stores = ['outfits','weight','periods','diaries','closetCategories','clothes','pregnancy_records','pregnancy_settings','baby_records','vaccines','baby_food','baby_excrete','couple_info']; for(let s of stores) await clearStore(s); alert('数据已清空'); location.reload(); }
-
-    // ========== 衣橱管理 ==========
-    let currentCategoryId = null;
-    window.openClosetModal = async function() { await loadClosetCategories(); document.getElementById('closetModal').classList.add('active'); };
-    window.closeClosetModal = function() { document.getElementById('closetModal').classList.remove('active'); };
-    async function loadClosetCategories() { let cats = await getAllData('closetCategories'), cont = document.getElementById('closetCategories'); if(!cats.length) { cont.innerHTML='<p style="color:#999;">暂无分类，请添加</p>'; return; } let html = cats.map(c=>`<span class="category-tag ${currentCategoryId===c.id?'active':''}" onclick="selectCategory(${c.id})">${c.name}</span>`).join(''); cont.innerHTML = html; if(!currentCategoryId && cats.length>0) selectCategory(cats[0].id); else loadClothesByCategory(currentCategoryId); }
-    window.selectCategory = function(id) { currentCategoryId=id; loadClosetCategories(); loadClothesByCategory(id); };
-    async function loadClothesByCategory(cid) { if(!cid) return; let clothes = await getDataByIndex('clothes','categoryId',cid), cont = document.getElementById('closetItems'); if(!clothes.length) { cont.innerHTML='<p style="color:#999; text-align:center;">该分类下暂无衣物</p>'; return; } let html = clothes.map(item => { let url = item.imageBlob ? URL.createObjectURL(item.imageBlob) : ''; return `<div class="closet-item-card"><img src="${url||'https://via.placeholder.com/70'}"><div class="closet-item-code">${item.code}</div><button class="remove-item" onclick="deleteClothes(${item.id})">✕</button></div>`; }).join(''); cont.innerHTML = html; }
-    window.showAddCategory = function() { document.getElementById('addCategoryModal').classList.add('active'); };
-    window.addCategory = async function() { let name = document.getElementById('newCategoryName').value.trim(); if(!name) { alert('请输入分类名称'); return; } let exist = await getDataByIndex('closetCategories','name',name); if(exist.length) { alert('分类名称已存在'); return; } await addData('closetCategories', {name}); document.getElementById('newCategoryName').value = ''; closeModalById('addCategoryModal'); loadClosetCategories(); };
-    window.showAddClothes = function() { if(!currentCategoryId) { alert('请先选择一个分类'); return; } let sel = document.getElementById('clothesCategory'); sel.innerHTML = ''; getAllData('closetCategories').then(cats => { cats.forEach(c => { let opt = document.createElement('option'); opt.value=c.id; opt.textContent=c.name; if(c.id===currentCategoryId) opt.selected=true; sel.appendChild(opt); }); }); document.getElementById('addClothesModal').classList.add('active'); };
-    window.addClothes = async function() { let catId = parseInt(document.getElementById('clothesCategory').value); let code = document.getElementById('clothesCode').value.trim(); let file = document.getElementById('clothesImage').files[0]; if(!code) { alert('请输入衣物代码'); return; } if(!file) { alert('请上传照片'); return; } let compressed = await compressImage(file); let reader = new FileReader(); reader.onload = async function(e) { let blob = dataURLToBlob(e.target.result); await addData('clothes', { categoryId:catId, code, imageBlob:blob, timestamp:Date.now() }); document.getElementById('clothesCode').value = ''; document.getElementById('clothesImage').value = ''; closeModalById('addClothesModal'); loadClothesByCategory(currentCategoryId); }; reader.readAsDataURL(compressed); };
-    window.deleteClothes = async function(id) { if(confirm('确定删除？')) { await deleteData('clothes',id); loadClothesByCategory(currentCategoryId); } };
 
     // ========== 页面切换与初始化 ==========
     function switchSection(section) {
