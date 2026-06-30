@@ -489,15 +489,73 @@
     let currentCategoryId = null;
     window.openClosetModal = async function() { await loadClosetCategories(); document.getElementById('closetModal').classList.add('active'); };
     window.closeClosetModal = function() { document.getElementById('closetModal').classList.remove('active'); };
-    async function loadClosetCategories() {
-        let cats = await getAllData('closetCategories');
-        let cont = document.getElementById('closetCategories');
-        if (!cats.length) { cont.innerHTML='<p style="color:#999;">暂无分类，请添加</p>'; return; }
-        let html = cats.map(c=>`<span class="category-tag ${currentCategoryId===c.id?'active':''}" onclick="selectCategory(${c.id})">${c.name}</span>`).join('');
-        cont.innerHTML = html;
-        if (!currentCategoryId && cats.length>0) selectCategory(cats[0].id);
-        else loadClothesByCategory(currentCategoryId);
-    }
+	// 修改后的 loadClosetCategories 函数
+	async function loadClosetCategories() {
+		let cats = await getAllData('closetCategories');
+		let cont = document.getElementById('closetCategories');
+		if (!cats.length) {
+			cont.innerHTML = '<p style="color:#999;">暂无分类，请添加</p>';
+			return;
+		}
+		// 每个分类显示为：标签名 + 编辑按钮 + 删除按钮
+		let html = cats.map(c => `
+			<span class="category-tag ${currentCategoryId === c.id ? 'active' : ''}" 
+				  onclick="selectCategory(${c.id})">
+				${c.name}
+				<button onclick="event.stopPropagation(); editCategory(${c.id}, '${c.name}')" 
+						style="margin-left:6px; background:none; border:none; cursor:pointer; color:#4ecdc4;">✏️</button>
+				<button onclick="event.stopPropagation(); deleteCategory(${c.id})" 
+						style="margin-left:2px; background:none; border:none; cursor:pointer; color:#f43f5e;">🗑️</button>
+			</span>
+		`).join('');
+		cont.innerHTML = html;
+		if (!currentCategoryId && cats.length > 0) selectCategory(cats[0].id);
+		else loadClothesByCategory(currentCategoryId);
+	}
+
+	// 编辑分类
+	window.editCategory = async function(id, oldName) {
+		let newName = prompt('修改分类名称：', oldName);
+		if (newName === null || newName.trim() === '') return; // 取消或空值
+		newName = newName.trim();
+		// 检查重名
+		let all = await getAllData('closetCategories');
+		if (all.some(c => c.name === newName && c.id !== id)) {
+			alert('分类名称已存在，请换一个');
+			return;
+		}
+		// 更新数据库
+		let cat = all.find(c => c.id === id);
+		if (cat) {
+			cat.name = newName;
+			await updateData('closetCategories', cat);
+			// 刷新界面
+			loadClosetCategories();
+			// 如果当前选中的是该分类，可能需要更新衣物列表（但名称变了，不影响）
+			if (currentCategoryId === id) {
+				// 重新加载该分类的衣物（名称不变，不影响，但为了安全可刷新）
+				loadClothesByCategory(id);
+			}
+		}
+	};
+
+	// 删除分类
+	window.deleteCategory = async function(id) {
+		// 检查该分类下是否有衣物
+		let clothes = await getDataByIndex('clothes', 'categoryId', id);
+		if (clothes.length > 0) {
+			alert(`该分类下还有 ${clothes.length} 件衣物，请先删除或转移衣物后再删除分类。`);
+			return;
+		}
+		if (confirm('确定要删除这个分类吗？')) {
+			await deleteData('closetCategories', id);
+			// 如果当前选中的是该分类，则清空选中状态并刷新
+			if (currentCategoryId === id) {
+				currentCategoryId = null;
+			}
+			loadClosetCategories();
+		}
+	};
     window.selectCategory = function(id) { currentCategoryId = id; loadClosetCategories(); loadClothesByCategory(id); };
     async function loadClothesByCategory(cid) {
         if (!cid) return;
