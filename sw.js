@@ -5,17 +5,18 @@
 // 获取当前 sw.js 所在的目录路径（例如 '/pwa1/'）
 const BASE_PATH = self.location.pathname.replace(/[^/]+$/, '');
 // 构建带项目标识的缓存名称，避免多项目冲突
-// 例如 '/pwa1/' -> 'pwa-cache-pwa1-v1'
-const CACHE_NAME = `pwa-cache${BASE_PATH.replace(/\//g, '-')}v4`;
+// 例如 '/Life/' -> 'pwa-cache-Life-v4'
+const CACHE_NAME = `pwa-cache${BASE_PATH.replace(/\//g, '-')}v5`;
+// 本项目缓存前缀（不含版本号，用于只清理本项目旧版本）
+const PROJECT_CACHE_PREFIX = `pwa-cache${BASE_PATH.replace(/\//g, '-')}`;
 
 // 预缓存资源列表（全部使用相对于当前 sw.js 的路径）
 const PRECACHE_URLS = [
-  BASE_PATH,                 // 例如 '/pwa1/'
+  BASE_PATH,
   `${BASE_PATH}index.html`,
   `${BASE_PATH}manifest.json`,
-  // 如果有图标，可以追加，例如：
-  // `${BASE_PATH}favicon.ico`,
-  // `${BASE_PATH}logo192.png`,
+  `${BASE_PATH}echarts.min.js`,
+  `${BASE_PATH}offline.html`,
 ];
 
 // 静态资源扩展名（用于判断是否缓存优先）
@@ -54,8 +55,8 @@ self.addEventListener('activate', (event) => {
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cache => {
-          // 只删除以 'pwa-cache-' 开头且不属于当前项目的缓存
-          if (cache.startsWith('pwa-cache-') && cache !== CACHE_NAME) {
+          // 只删除本项目的旧版本缓存，不影响其它项目
+          if (cache.startsWith(PROJECT_CACHE_PREFIX) && cache !== CACHE_NAME) {
             console.log('[SW] 删除旧缓存:', cache);
             return caches.delete(cache);
           }
