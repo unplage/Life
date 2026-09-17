@@ -59,7 +59,7 @@
         .avatar { width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 2em; background: rgba(255,255,255,0.8); }
         .progress-bar { width: 100%; height: 6px; background: #e0e0e0; border-radius: 3px; margin-top: 8px; overflow: hidden; }
         .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #ff9ec0); width: 0%; }
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 20px; }
         .stat-card { background: rgba(255,255,255,0.5); border-radius: 16px; padding: 12px; text-align: center; }
         .stat-number { font-size: 1.2em; font-weight: 700; color: var(--primary); }
         .timeline-item { display: flex; align-items: center; margin-bottom: 16px; background: rgba(255,255,255,0.5); border-radius: 40px; padding: 8px 16px; }
@@ -215,6 +215,7 @@
                 <div class="form-group"><label class="form-label">初次相遇（公历）</label><input type="date" id="meetDate" class="form-input"></div>
                 <div class="form-group"><label class="form-label">订婚纪念日（公历）</label><input type="date" id="engageDate" class="form-input"></div>
                 <div class="form-group"><label class="form-label">结婚纪念日（公历）</label><input type="date" id="marryDate" class="form-input"></div>
+                <div class="form-group"><label class="form-label">领证纪念日（公历）</label><input type="date" id="certificateDate" class="form-input"></div>
                 <button class="btn btn-primary" onclick="saveCoupleInfo()">保存信息</button>
                 <div id="lunarPreview" style="margin-top:12px; font-size:13px; color:var(--primary);"></div>
             </div>
@@ -888,7 +889,8 @@
             femaleBirthLunarRaw: femaleRaw,
             meetDate: document.getElementById('meetDate').value,
             engageDate: document.getElementById('engageDate').value,
-            marryDate: document.getElementById('marryDate').value
+            marryDate: document.getElementById('marryDate').value,
+            certificateDate: document.getElementById('certificateDate').value
         };
         let now = new Date(), y = now.getFullYear();
         let preview = '';
@@ -922,16 +924,21 @@
         let meet = info.meetDate ? new Date(info.meetDate) : null;
         let engage = info.engageDate ? new Date(info.engageDate) : null;
         let marry = info.marryDate ? new Date(info.marryDate) : null;
+        let certificate = info.certificateDate ? new Date(info.certificateDate) : null;
         let meetNext = meet ? new Date(y, meet.getMonth(), meet.getDate()) : null; if(meetNext && meetNext < now) meetNext.setFullYear(y+1);
         let engageNext = engage ? new Date(y, engage.getMonth(), engage.getDate()) : null; if(engageNext && engageNext < now) engageNext.setFullYear(y+1);
         let marryNext = marry ? new Date(y, marry.getMonth(), marry.getDate()) : null; if(marryNext && marryNext < now) marryNext.setFullYear(y+1);
+        let certificateNext = certificate ? new Date(y, certificate.getMonth(), certificate.getDate()) : null; if(certificateNext && certificateNext < now) certificateNext.setFullYear(y+1);
         document.getElementById('coupleNames').innerHTML = `<div class="person-card"><div class="avatar">👨</div><div class="person-name">${escapeHtml(info.maleName)}</div><div class="birthday-countdown">🎂 ${maleBD?calculateCountdown(maleBD).text:'未设置'}</div><div class="progress-bar"><div class="progress-fill" style="width:${maleBD?Math.min(100,Math.max(0,100-(Math.floor((maleBD-now)/86400000)/365)*100)):0}%"></div></div></div><div class="person-card"><div class="avatar">👩</div><div class="person-name">${escapeHtml(info.femaleName)}</div><div class="birthday-countdown">🎂 ${femaleBD?calculateCountdown(femaleBD).text:'未设置'}</div><div class="progress-bar"><div class="progress-fill" style="width:${femaleBD?Math.min(100,Math.max(0,100-(Math.floor((femaleBD-now)/86400000)/365)*100)):0}%"></div></div></div>`;
-        let togetherDays = meet ? daysBetween(now, meet) : 0, engagedDays = engage ? daysBetween(now, engage) : 0, marriedDays = marry ? daysBetween(now, marry) : 0, nextAnniversary = marryNext ? daysBetween(marryNext, now) : 0;
-        document.getElementById('statsGrid').innerHTML = `<div class="stat-card"><div class="stat-number">${togetherDays}</div><div>相识</div></div><div class="stat-card"><div class="stat-number">${engagedDays}</div><div>订婚</div></div><div class="stat-card"><div class="stat-number">${marriedDays}</div><div>结婚</div></div><div class="stat-card"><div class="stat-number">${nextAnniversary}</div><div>下次纪念</div></div>`;
+        let togetherDays = meet ? daysBetween(now, meet) : 0, engagedDays = engage ? daysBetween(now, engage) : 0, marriedDays = marry ? daysBetween(now, marry) : 0, certificateDays = certificate ? daysBetween(now, certificate) : 0;
+        let nearestAnniversary = [meetNext, engageNext, marryNext, certificateNext].filter(Boolean).sort((a,b)=>a-b)[0];
+        let nextAnniversary = nearestAnniversary ? daysBetween(nearestAnniversary, now) : 0;
+        document.getElementById('statsGrid').innerHTML = `<div class="stat-card"><div class="stat-number">${togetherDays}</div><div>相识</div></div><div class="stat-card"><div class="stat-number">${engagedDays}</div><div>订婚</div></div><div class="stat-card"><div class="stat-number">${marriedDays}</div><div>结婚</div></div><div class="stat-card"><div class="stat-number">${certificateDays}</div><div>领证</div></div><div class="stat-card"><div class="stat-number">${nextAnniversary}</div><div>下次纪念</div></div>`;
         let timelineHtml = '';
         if(meet) timelineHtml += `<div class="timeline-item"><div class="timeline-date">${info.meetDate}</div><div>初次相遇 · ${togetherDays}天</div></div>`;
         if(engage) timelineHtml += `<div class="timeline-item"><div class="timeline-date">${info.engageDate}</div><div>订婚 · ${engagedDays}天</div></div>`;
         if(marry) timelineHtml += `<div class="timeline-item"><div class="timeline-date">${info.marryDate}</div><div>结婚 · ${marriedDays}天</div></div>`;
+        if(certificate) timelineHtml += `<div class="timeline-item"><div class="timeline-date">${info.certificateDate}</div><div>领证 · ${certificateDays}天</div></div>`;
         document.getElementById('timelineEvents').innerHTML = timelineHtml;
         let events = [];
         if(maleBD) events.push({date: maleBD, name: `${info.maleName}生日`});
@@ -939,6 +946,7 @@
         if(meetNext) events.push({date: meetNext, name: '相识纪念'});
         if(engageNext) events.push({date: engageNext, name: '订婚纪念'});
         if(marryNext) events.push({date: marryNext, name: '结婚纪念'});
+        if(certificateNext) events.push({date: certificateNext, name: '领证纪念'});
         let qixi = lunarCalendar.lunarToSolar(y, 7, 7); if(qixi < now) qixi = lunarCalendar.lunarToSolar(y+1, 7, 7);
         let valentine = new Date(y, 1, 14); if(valentine < now) valentine.setFullYear(y+1);
         events.push({date: qixi, name: '七夕'}, {date: valentine, name: '情人节'});
@@ -1041,6 +1049,7 @@
             document.getElementById('meetDate').value = info.meetDate || '';
             document.getElementById('engageDate').value = info.engageDate || '';
             document.getElementById('marryDate').value = info.marryDate || '';
+            document.getElementById('certificateDate').value = info.certificateDate || '';
         }
         renderAnniversary();
         checkAnniversaryReminder();
@@ -1064,6 +1073,7 @@
             checkDate(info.meetDate, '相识纪念日');
             checkDate(info.engageDate, '订婚纪念日');
             checkDate(info.marryDate, '结婚纪念日');
+            checkDate(info.certificateDate, '领证纪念日');
             if (info.maleLunarMonth && info.maleLunarDay) {
                 const bd = getLunarBirthdaySolar(info.maleLunarMonth, info.maleLunarDay, y);
                 if (bd >= now) checkDate(getLocalDateString(bd), info.maleName + '生日');
