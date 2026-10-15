@@ -6,7 +6,9 @@
     <meta name="theme-color" content="#ff6b6b">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="./icon-192.png">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png">
+    <link rel="icon" type="image/svg+xml" href="./icon.svg">
     <title>美丽心情 · 生活管理</title>
     <link rel="manifest" href="./manifest.json">
     <script src="./echarts.min.js"></script>
@@ -43,6 +45,33 @@
         .btn-primary { background: linear-gradient(135deg, var(--primary), #ff8e8e); color: white; box-shadow: 0 4px 15px rgba(255,107,107,0.4); }
         .btn-primary:hover { transform: translateY(-2px); }
         .btn-small { padding: 8px 16px; font-size: 14px; width: auto; }
+        .btn-secondary { background: white; color: var(--primary); border: 2px solid var(--primary); box-shadow: none; }
+        .btn-secondary:hover { background: #fff5f5; }
+        .weather-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .weather-bar .card-title { flex: 1; margin-bottom: 0; }
+        .icon-btn { background: var(--light); border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 16px; cursor: pointer; flex-shrink: 0; }
+        .icon-btn:hover { background: #ececec; }
+        .weather-detail { font-size: 14px; color: var(--text-light); margin: 10px 0; line-height: 1.6; }
+        .manual-toggle { font-size: 13px; color: var(--text-light); background: none; border: none; cursor: pointer; padding: 4px 0; text-decoration: underline; }
+        .todo-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+        .todo-tab { flex: 1; padding: 8px; border: none; border-radius: var(--radius-sm); background: var(--light); cursor: pointer; font-weight: 500; font-size: 14px; }
+        .todo-tab.active { background: var(--primary); color: white; }
+        .todo-add { display: flex; gap: 8px; margin-bottom: 12px; }
+        .todo-add .form-input { flex: 1; }
+        .todo-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+        .todo-item.done .todo-title { text-decoration: line-through; color: var(--text-light); }
+        .todo-item.overdue .todo-due { color: #c62828; font-weight: 600; }
+        .todo-title { flex: 1; min-width: 0; font-size: 15px; }
+        .todo-due { font-size: 12px; color: var(--text-light); }
+        .notify-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .reminder-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+        .reminder-item .diff { margin-left: auto; color: var(--primary); font-weight: 600; flex-shrink: 0; }
+        .switch { position: relative; width: 48px; height: 28px; flex-shrink: 0; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background: #ccc; border-radius: 28px; transition: .3s; }
+        .slider:before { content: ''; position: absolute; height: 20px; width: 20px; left: 4px; bottom: 4px; background: white; border-radius: 50%; transition: .3s; }
+        .switch input:checked + .slider { background: var(--primary); }
+        .switch input:checked + .slider:before { transform: translateX(20px); }
         .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: white; display: flex; justify-content: space-around; padding: 12px 0 calc(24px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -4px 20px rgba(0,0,0,0.08); z-index: 1000; }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; color: var(--text-light); transition: 0.3s; }
         .nav-item.active { color: var(--primary); }
@@ -174,7 +203,21 @@
         <!-- 穿搭模块 -->
         <div class="section active" id="outfit-section">
             <div class="outfit-display"><span class="outfit-emoji" id="outfitEmoji">👕</span><div id="outfitDesc">今日穿搭建议</div><div id="outfitTemp">请输入温度获取建议</div></div>
-            <div class="card"><div class="card-title">🌡️ 天气设置</div><div class="weather-input"><input type="number" id="tempInput" class="form-input" placeholder="温度 (°C)"><select id="weatherCondition" class="form-input"><option value="sunny">☀️ 晴天</option><option value="cloudy">☁️ 多云</option><option value="rainy">🌧️ 雨天</option><option value="snowy">❄️ 雪天</option></select></div><button class="btn btn-primary" onclick="generateOutfit()">生成穿搭建议</button></div>
+            <div class="card">
+                <div class="weather-bar">
+                    <div class="card-title">🌡️ 天气</div>
+                    <button class="icon-btn" onclick="locateOutfitWeather()" title="重新定位">📍</button>
+                    <button class="icon-btn" onclick="refreshOutfitWeather()" title="刷新天气">⟳</button>
+                    <button class="icon-btn" onclick="openWeatherConfig()" title="天气设置">⚙️</button>
+                </div>
+                <div id="weatherStatusLine" class="weather-detail">配置天气后自动获取，或手动输入温度</div>
+                <button class="manual-toggle" id="manualToggleBtn" type="button" onclick="toggleManualWeather()">✍️ 手动输入温度/天气</button>
+                <div id="manualWeatherBox" class="weather-input" style="display:none; margin-top:12px;">
+                    <input type="number" id="tempInput" class="form-input" placeholder="温度 (°C)">
+                    <select id="weatherCondition" class="form-input"><option value="sunny">☀️ 晴天</option><option value="cloudy">☁️ 多云</option><option value="rainy">🌧️ 雨天</option><option value="snowy">❄️ 雪天</option></select>
+                </div>
+                <button class="btn btn-primary" style="margin-top:12px;" onclick="generateOutfit()">生成穿搭建议</button>
+            </div>
             <div class="card"><div class="card-title">👚 衣橱管理</div><p style="color: var(--text-light); margin-bottom: 16px;">管理你的衣物，方便每日穿搭选择</p><button class="btn btn-primary btn-small" onclick="openClosetModal()">打开衣橱</button></div>
             <div class="card"><div class="card-title">📸 我的穿搭记录</div><div class="form-group"><label class="form-label">拍照或上传今日穿搭照片</label><input type="file" class="form-input" id="outfitPhoto" accept="image/*" capture="environment" onchange="previewOutfitPhoto(this)"></div><div id="outfitPreview" style="margin-top: 12px; display: none;"><img id="outfitImg" style="width: 100%; border-radius: 12px; max-height: 300px; object-fit: cover;"></div><div class="form-group"><label class="form-label">穿搭备注</label><input type="text" class="form-input" id="outfitNote" placeholder="记录今天的穿搭心得..."></div><button class="btn btn-primary" onclick="saveOutfitRecord()">保存穿搭记录</button><div class="history-list" id="outfitHistory" style="margin-top: 20px;"></div></div>
         </div>
@@ -226,6 +269,18 @@
                 <div class="upcoming-events"><h3>📅 即将到来</h3><div id="upcomingList"></div></div>
                 <div class="holiday-grid"><div class="holiday-card"><div id="qixiDate"></div><div>七夕</div><div id="qixiCountdown"></div></div><div class="holiday-card"><div id="valentineDate"></div><div>情人节</div><div id="valentineCountdown"></div></div></div>
             </div>
+            <div class="card"><div class="card-title">🌤️ 天气</div><div id="moreWeatherLine" style="color:var(--text-light); margin-bottom:12px; font-size:14px;">暂无天气数据</div><button class="btn btn-secondary btn-small" onclick="window.open('https://unplage.github.io/weather/','_blank')">完整天气 →</button></div>
+            <div class="card"><div class="card-title">🔔 提醒中心</div>
+                <div class="notify-row"><span>启用通知提醒</span><label class="switch"><input type="checkbox" id="notifyToggle" onchange="toggleNotify(this.checked)"><span class="slider"></span></label></div>
+                <div id="notifyPermStatus" style="font-size:13px; color:var(--text-light); margin-bottom:12px;"></div>
+                <div id="reminderPreviewList"></div>
+            </div>
+            <div class="card"><div class="card-title">✅ 待办清单 <span id="todoCount" style="margin-left:auto; font-size:13px; font-weight:400; color:var(--text-light);"></span></div>
+                <div class="todo-tabs"><button class="todo-tab active" data-todo-tab="todo" onclick="switchTodoTab('todo')">📋 待办</button><button class="todo-tab" data-todo-tab="shop" onclick="switchTodoTab('shop')">🛒 购物</button></div>
+                <div class="todo-add"><input type="text" id="todoInput" class="form-input" placeholder="添加待办..." onkeydown="if(event.key==='Enter')addTodo()"><button class="btn btn-primary btn-small" onclick="addTodo()">+</button></div>
+                <div class="form-group" id="todoDueGroup" style="margin-bottom:12px;"><input type="date" id="todoDue" class="form-input" style="padding:8px 12px; font-size:14px;" title="截止日期（可选）"></div>
+                <div id="todoList"></div>
+            </div>
             <div class="card"><div class="card-title">🎯 其他功能</div><div class="placeholder-grid"><div class="placeholder-card" onclick="alert('饮水记录功能即将上线，敬请期待！')"><div class="placeholder-icon">💧</div><div class="placeholder-title">饮水记录</div></div><div class="placeholder-card" onclick="alert('睡眠追踪功能即将上线，敬请期待！')"><div class="placeholder-icon">😴</div><div class="placeholder-title">睡眠追踪</div></div><div class="placeholder-card" onclick="alert('运动健身功能即将上线，敬请期待！')"><div class="placeholder-icon">🏃</div><div class="placeholder-title">运动健身</div></div><div class="placeholder-card" onclick="alert('饮食记录功能即将上线，敬请期待！')"><div class="placeholder-icon">🥗</div><div class="placeholder-title">饮食记录</div></div></div></div>
             <div class="card"><div class="card-title">⚙️ 数据管理</div><button class="btn btn-secondary" onclick="exportData()" style="margin-bottom: 12px;">📥 导出所有数据</button><button class="btn btn-secondary" onclick="document.getElementById('importFile').click()" style="margin-bottom: 12px;">📤 导入数据</button><input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(this)"><button class="btn btn-secondary" onclick="clearAllData()" style="background: #ffebee; color: #c62828;">🗑️ 清空所有数据</button></div>
         </div>
@@ -258,6 +313,7 @@
 <div class="modal" id="vaccineModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">💉 添加疫苗</div><button class="modal-close" onclick="closeModal('vaccineModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label>疫苗名称</label><input type="text" id="vaccineName" class="form-input"></div><div class="form-group"><label>接种日期</label><input type="date" id="vaccineDate" class="form-input"></div><div class="form-group"><label>下次提醒(可选)</label><input type="text" id="vaccineNext" class="form-input"></div><button class="btn btn-primary" onclick="addVaccine()">保存</button></div></div></div>
 <div class="modal" id="foodModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">🍚 饭食记录</div><button class="modal-close" onclick="closeModal('foodModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label>日期</label><input type="date" id="foodDate" class="form-input"></div><div class="form-group"><label>类型</label><select id="foodType" class="form-select"><option value="母乳">母乳</option><option value="奶粉">奶粉</option><option value="辅食">辅食</option><option value="正餐">正餐</option></select></div><div class="form-group"><label>量(ml/碗)</label><input type="text" id="foodAmount" class="form-input"></div><button class="btn btn-primary" onclick="addFoodRecord()">保存</button></div></div></div>
 <div class="modal" id="excreteModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">💩 排泄记录</div><button class="modal-close" onclick="closeModal('excreteModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label>日期</label><input type="date" id="excreteDate" class="form-input"></div><div class="form-group"><label>类型</label><select id="excreteType" class="form-select"><option value="大便">大便</option><option value="小便">小便</option><option value="混合">混合</option></select></div><div class="form-group"><label>次数</label><input type="number" id="excreteCount" class="form-input" min="1"></div><button class="btn btn-primary" onclick="addExcreteRecord()">保存</button></div></div></div>
+<div class="modal" id="weatherConfigModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">⚙️ 和风天气设置</div><button class="modal-close" onclick="closeModal('weatherConfigModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label class="form-label">API Host（专属域名）</label><input type="text" id="weatherApiHost" class="form-input" placeholder="例如: https://m33wt3jj26.re.qweatherapi.com" autocomplete="off" spellcheck="false"></div><div class="form-group"><label class="form-label">API Key</label><input type="password" id="weatherApiKey" class="form-input" placeholder="您的和风天气 Key" autocomplete="off"></div><div id="weatherConfigMsg" style="font-size:13px; margin-bottom:12px; min-height:18px;"></div><div style="display:flex; gap:10px;"><button class="btn btn-secondary" onclick="closeModal('weatherConfigModal')">取消</button><button class="btn btn-primary" onclick="saveWeatherConfig()">保存</button></div><p style="font-size:12px; color:var(--text-light); margin-top:12px;">从 <a href="https://console.qweather.com/setting/" target="_blank" rel="noopener noreferrer">和风天气控制台</a> 获取专属域名与 Key。若你已使用「随行天气」App，配置会自动共享。</p></div></div></div>
 
 <script>
     // ========== 工具函数 ==========
@@ -308,7 +364,8 @@
 
     // ========== 数据库 ==========
     const DB_NAME = 'LifeFlowDB';
-    const DB_VERSION = 13;
+    const DB_VERSION = 14;
+    const ALL_STORES = ['outfits','weight','periods','diaries','closetCategories','clothes','pregnancy_records','pregnancy_settings','baby_records','vaccines','baby_food','baby_excrete','couple_info','todos'];
     let db;
     const initDB = () => new Promise((resolve,reject) => {
         const req = indexedDB.open(DB_NAME, DB_VERSION);
@@ -329,6 +386,7 @@
             if (!db.objectStoreNames.contains('baby_food')) db.createObjectStore('baby_food', {keyPath:'id',autoIncrement:true});
             if (!db.objectStoreNames.contains('baby_excrete')) db.createObjectStore('baby_excrete', {keyPath:'id',autoIncrement:true});
             if (!db.objectStoreNames.contains('couple_info')) db.createObjectStore('couple_info', {keyPath:'id',autoIncrement:true});
+            if (!db.objectStoreNames.contains('todos')) db.createObjectStore('todos', {keyPath:'id',autoIncrement:true});
         };
     });
     const addData = (store, data) => new Promise((res,rej) => { let tx = db.transaction(store,'readwrite'); let r = tx.objectStore(store).add(data); r.onsuccess = () => res(r.result); r.onerror = e => { if (e.target.error && e.target.error.name === 'QuotaExceededError') { alert('⚠️ 存储空间不足，建议导出数据并清理旧记录。'); } rej(e.target.error); }; });
@@ -338,6 +396,311 @@
     const clearStore = store => new Promise((res,rej) => { let tx = db.transaction(store,'readwrite'); let r = tx.objectStore(store).clear(); r.onsuccess = res; r.onerror = rej; });
     const filterBy = async (store, key, val) => (await getAllData(store)).filter(item => item[key] === val);
     const getDataById = (store, id) => new Promise((res,rej) => { let tx = db.transaction(store,'readonly'); let r = tx.objectStore(store).get(id); r.onsuccess = () => res(r.result); r.onerror = rej; });
+
+    // ========== 天气（和风，与「随行天气」App 同源共享配置） ==========
+    const WEATHER_CACHE_KEY = 'life_weather_cache';
+    const WEATHER_CITY_KEY = 'life_last_weather_city';
+    const WEATHER_CACHE_TTL = 5 * 60 * 1000;
+    let weatherQuotaCooldownUntil = 0;
+    let weatherLoadSeq = 0;
+    let outfitWeatherManualOpen = false;
+
+    function getQweatherHost() {
+        const raw = (localStorage.getItem('qweather_host') || '').trim();
+        if (!raw) return '';
+        if (!/^https?:\/\//i.test(raw)) return 'https://' + raw.replace(/^\/+/, '');
+        return raw.replace(/\/+$/, '');
+    }
+    function getQweatherKey() { return (localStorage.getItem('qweather_key') || '').trim(); }
+
+    function buildApiUrl(base, path, params = {}) {
+        let u;
+        try {
+            let href;
+            if (path.startsWith('http')) href = path;
+            else {
+                let b = String(base || '').trim().replace(/\/+$/, '');
+                if (b === 'https:' || b === 'http:') b += '//';
+                if (b && !/^https?:\/\//i.test(b)) b = 'https://' + b.replace(/^\/+/, '');
+                href = b + path;
+            }
+            u = new URL(href);
+        } catch (e) { return path; }
+        Object.entries(params).forEach(([k, v]) => { if (v != null && v !== '') u.searchParams.set(k, String(v)); });
+        const key = getQweatherKey();
+        if (key) u.searchParams.set('key', key);
+        return u.href;
+    }
+
+    async function weatherFetchJson(url) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 12000);
+        try {
+            const res = await fetch(url, { signal: controller.signal });
+            if (res.status === 429) weatherQuotaCooldownUntil = Date.now() + 60000;
+            if (!res.ok) {
+                let body;
+                try { body = await res.json(); } catch { body = { code: String(res.status), msg: res.statusText }; }
+                return body || { code: String(res.status) };
+            }
+            return await res.json();
+        } catch (e) {
+            return { code: 'network_error', msg: e && e.name === 'AbortError' ? '请求超时' : '网络错误' };
+        } finally { clearTimeout(timer); }
+    }
+
+    function outOfChina(lat, lon) { return lon < 72.004 || lon > 137.8347 || lat < 0.8293 || lat > 55.8271; }
+    function transformLat(x, y) {
+        let ret = -100 + 2 * x + 3 * y + 0.2 * y * y + 0.1 * x * y + 0.2 * Math.sqrt(Math.abs(x));
+        ret += (20 * Math.sin(6 * x * Math.PI) + 20 * Math.sin(2 * x * Math.PI)) * 2 / 3;
+        ret += (20 * Math.sin(y * Math.PI) + 40 * Math.sin(y / 3 * Math.PI)) * 2 / 3;
+        ret += (160 * Math.sin(y / 12 * Math.PI) + 320 * Math.sin(y * Math.PI / 30)) * 2 / 3;
+        return ret;
+    }
+    function transformLon(x, y) {
+        let ret = 300 + x + 2 * y + 0.1 * x * x + 0.1 * x * y + 0.1 * Math.sqrt(Math.abs(x));
+        ret += (20 * Math.sin(6 * x * Math.PI) + 20 * Math.sin(2 * x * Math.PI)) * 2 / 3;
+        ret += (20 * Math.sin(x * Math.PI) + 40 * Math.sin(x / 3 * Math.PI)) * 2 / 3;
+        ret += (150 * Math.sin(x / 12 * Math.PI) + 300 * Math.sin(x / 30 * Math.PI)) * 2 / 3;
+        return ret;
+    }
+    function wgs84ToGcj02(lat, lon) {
+        if (outOfChina(lat, lon)) return { lat, lon };
+        const a = 6378245.0, ee = 0.00669342162296594323;
+        let dLat = transformLat(lon - 105.0, lat - 35.0);
+        let dLon = transformLon(lon - 105.0, lat - 35.0);
+        const radLat = lat / 180.0 * Math.PI;
+        let magic = Math.sin(radLat);
+        magic = 1 - ee * magic * magic;
+        const sqrtMagic = Math.sqrt(magic);
+        dLat = (dLat * 180.0) / ((a * (1 - ee)) / (magic * sqrtMagic) * Math.PI);
+        dLon = (dLon * 180.0) / (a / sqrtMagic * Math.cos(radLat) * Math.PI);
+        return { lat: lat + dLat, lon: lon + dLon };
+    }
+    function coord2(v) { return Math.round(parseFloat(v) * 100) / 100; }
+
+    function conditionCodeToCategory(code) {
+        const c = parseInt(code, 10);
+        if (isNaN(c)) return 'cloudy';
+        const h = Math.floor(c / 100);
+        if (h === 1) return 'sunny';
+        if (h === 5) return 'rainy';
+        if (h === 6) return 'snowy';
+        return 'cloudy';
+    }
+
+    function readWeatherCache() {
+        try {
+            const raw = localStorage.getItem(WEATHER_CACHE_KEY);
+            if (!raw) return null;
+            const c = JSON.parse(raw);
+            return c && typeof c === 'object' ? c : null;
+        } catch { return null; }
+    }
+    function writeWeatherCache(c) {
+        try { localStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify(c)); } catch {}
+    }
+    function readLastCity() {
+        for (const key of [WEATHER_CITY_KEY, 'lastCity']) {
+            try {
+                const raw = localStorage.getItem(key);
+                if (!raw) continue;
+                const c = JSON.parse(raw);
+                if (c && c.lat != null && c.lon != null) return { lat: parseFloat(c.lat), lon: parseFloat(c.lon), name: c.name || '当前位置' };
+            } catch {}
+        }
+        return null;
+    }
+    function saveLastCity(city) {
+        try { localStorage.setItem(WEATHER_CITY_KEY, JSON.stringify(city)); } catch {}
+    }
+
+    async function probeQweather(host, key) {
+        let base = (host || '').trim().replace(/\/+$/, '');
+        if (base && !/^https?:\/\//i.test(base)) base = 'https://' + base.replace(/^\/+/, '');
+        if (!base || !key) return { ok: false, msg: '请填写 Host 与 Key' };
+        let u;
+        try {
+            u = new URL(base + '/geo/v2/city/lookup');
+            u.searchParams.set('location', '116.41,39.92');
+            u.searchParams.set('lang', 'zh-hans');
+            u.searchParams.set('key', key.trim());
+        } catch { return { ok: false, msg: 'Host 无效' }; }
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 8000);
+        try {
+            const res = await fetch(u.href, { signal: controller.signal });
+            let body;
+            try { body = await res.json(); } catch { body = {}; }
+            if (res.status === 429) return { ok: false, msg: '请求过于频繁' };
+            if (body && body.code && String(body.code) !== '200') return { ok: false, msg: body.msg || 'Key 无效或无权限' };
+            return { ok: true };
+        } catch (e) {
+            return { ok: false, msg: e.name === 'AbortError' ? '探测超时' : '网络或 CORS 失败' };
+        } finally { clearTimeout(timer); }
+    }
+
+    async function fetchCityName(lat, lon) {
+        const host = getQweatherHost();
+        if (!host || !getQweatherKey()) return '';
+        const c = wgs84ToGcj02(lat, lon);
+        const url = buildApiUrl(host, '/geo/v2/city/lookup', { location: `${coord2(c.lon)},${coord2(c.lat)}`, lang: 'zh-hans' });
+        const data = await weatherFetchJson(url);
+        if (data && data.code === '200' && data.location && data.location.length) return data.location[0].name;
+        return '';
+    }
+
+    async function fetchOutfitWeather(force) {
+        const host = getQweatherHost();
+        const key = getQweatherKey();
+        if (!host || !key) return { error: 'no_key' };
+        if (!force && Date.now() < weatherQuotaCooldownUntil) return { error: 'cooldown' };
+        const city = readLastCity();
+        if (!city) return { error: 'no_city' };
+        const seq = ++weatherLoadSeq;
+        const g = wgs84ToGcj02(city.lat, city.lon);
+        const latPath = coord2(g.lat), lonPath = coord2(g.lon);
+        const [nowData, idxData] = await Promise.all([
+            weatherFetchJson(buildApiUrl(host, `/weather/v1/current/${latPath}/${lonPath}`, { lang: 'zh-hans' })),
+            weatherFetchJson(buildApiUrl(host, '/v7/indices/1d', { location: `${lonPath},${latPath}`, type: '3', lang: 'zh-hans' }))
+        ]);
+        if (seq !== weatherLoadSeq) return { error: 'stale' };
+        if (!nowData || nowData.code !== '200' || !nowData.temperature) {
+            return { error: 'fetch', code: nowData && nowData.code != null ? nowData.code : 'unknown' };
+        }
+        const cond = nowData.condition || {};
+        const result = {
+            city: city.name,
+            temp: nowData.temperature.value != null ? parseFloat(nowData.temperature.value) : null,
+            feelsLike: nowData.feelsLike && nowData.feelsLike.value != null ? parseFloat(nowData.feelsLike.value) : null,
+            code: cond.code || '',
+            text: cond.text || '',
+            windScale: nowData.wind && nowData.wind.scale != null ? parseFloat(nowData.wind.scale) : null,
+            clothingText: '',
+            at: Date.now()
+        };
+        if (idxData && idxData.code === '200' && idxData.daily && idxData.daily.length) {
+            result.clothingText = idxData.daily[0].text || '';
+        }
+        writeWeatherCache(result);
+        return result;
+    }
+
+    function setWeatherStatus(text, sub) {
+        const el = document.getElementById('weatherStatusLine');
+        if (el) el.innerHTML = sub ? `${escapeHtml(text)}<br><span style="font-size:12px;">${escapeHtml(sub)}</span>` : escapeHtml(text);
+    }
+
+    function setManualWeatherOpen(open) {
+        outfitWeatherManualOpen = open;
+        const box = document.getElementById('manualWeatherBox');
+        const btn = document.getElementById('manualToggleBtn');
+        if (box) box.style.display = open ? 'flex' : 'none';
+        if (btn) btn.textContent = open ? '收起手动输入' : '✍️ 手动输入温度/天气';
+    }
+
+    function renderCachedWeatherOnMore() {
+        const el = document.getElementById('moreWeatherLine');
+        if (!el) return;
+        const c = readWeatherCache();
+        if (c && c.temp != null) {
+            el.textContent = `${c.city || '未知'} · ${c.temp}°C${c.text ? ' ' + c.text : ''}${c.feelsLike != null ? ' · 体感 ' + c.feelsLike + '°C' : ''}`;
+        } else {
+            el.textContent = '暂无天气数据，可在穿搭页配置后自动获取';
+        }
+    }
+
+    function applyAutoWeatherToOutfit(w) {
+        const useTemp = w.feelsLike != null ? w.feelsLike : w.temp;
+        if (useTemp == null) return;
+        document.getElementById('tempInput').value = useTemp;
+        document.getElementById('weatherCondition').value = conditionCodeToCategory(w.code);
+        generateOutfit({ clothingText: w.clothingText, windScale: w.windScale, source: 'auto' });
+    }
+
+    async function loadOutfitWeather(force) {
+        const host = getQweatherHost();
+        const key = getQweatherKey();
+        if (!host || !key) {
+            setWeatherStatus('未配置天气，可点击 ⚙️ 配置自动获取', '或展开手动输入温度');
+            setManualWeatherOpen(true);
+            return;
+        }
+        const cached = readWeatherCache();
+        if (!force && cached && Date.now() - (cached.at || 0) < WEATHER_CACHE_TTL) {
+            setWeatherStatus(`${cached.city || ''} ${cached.temp != null ? cached.temp + '°C' : ''} ${cached.text || ''}（缓存）`, cached.feelsLike != null ? `体感 ${cached.feelsLike}°C` : '');
+            applyAutoWeatherToOutfit(cached);
+            return;
+        }
+        if (!force && Date.now() < weatherQuotaCooldownUntil) {
+            if (cached) { applyAutoWeatherToOutfit(cached); setWeatherStatus('请求冷却中，展示缓存数据'); }
+            else setWeatherStatus('请求过于频繁，请稍后再试');
+            return;
+        }
+        if (!readLastCity()) {
+            setWeatherStatus('未获取到城市，点击 📍 定位获取天气');
+            return;
+        }
+        setWeatherStatus('天气获取中...');
+        const w = await fetchOutfitWeather(force);
+        if (w.error === 'stale') return;
+        if (w.error) {
+            const msgMap = { no_key: '未配置 API', no_city: '无城市信息', cooldown: '请求冷却中' };
+            if (cached) { applyAutoWeatherToOutfit(cached); setWeatherStatus('获取失败，已展示缓存', msgMap[w.error] || w.code || ''); }
+            else setWeatherStatus('天气获取失败', msgMap[w.error] || (w.code ? `错误 ${w.code}，检查配置` : '请检查网络'));
+            return;
+        }
+        setWeatherStatus(`${w.city} ${w.temp != null ? w.temp + '°C' : ''} ${w.text || ''}`, [
+            w.feelsLike != null ? `体感 ${w.feelsLike}°C` : '',
+            w.clothingText ? `指数: ${w.clothingText}` : ''
+        ].filter(Boolean).join(' · '));
+        applyAutoWeatherToOutfit(w);
+        renderCachedWeatherOnMore();
+    }
+
+    window.locateOutfitWeather = async function() {
+        if (!getQweatherHost() || !getQweatherKey()) {
+            openWeatherConfig();
+            return;
+        }
+        setWeatherStatus('定位中...');
+        if (!navigator.geolocation) { setWeatherStatus('当前浏览器不支持定位'); return; }
+        navigator.geolocation.getCurrentPosition(async pos => {
+            const lat = pos.coords.latitude, lon = pos.coords.longitude;
+            const city = { lat, lon, name: '当前位置' };
+            saveLastCity(city);
+            setWeatherStatus('定位成功，获取天气中...');
+            const name = await fetchCityName(lat, lon);
+            if (name) { city.name = name; saveLastCity(city); }
+            await loadOutfitWeather(true);
+        }, () => { setWeatherStatus('定位失败，请检查权限后重试'); }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 });
+    };
+
+    window.openWeatherConfig = function() {
+        document.getElementById('weatherApiHost').value = localStorage.getItem('qweather_host') || '';
+        document.getElementById('weatherApiKey').value = localStorage.getItem('qweather_key') || '';
+        document.getElementById('weatherConfigMsg').textContent = '';
+        document.getElementById('weatherConfigModal').classList.add('active');
+    };
+
+    window.saveWeatherConfig = async function() {
+        const host = document.getElementById('weatherApiHost').value.trim();
+        const key = document.getElementById('weatherApiKey').value.trim();
+        const msg = document.getElementById('weatherConfigMsg');
+        if (!host || !key) { msg.style.color = '#c62828'; msg.textContent = '请填写 Host 与 Key'; return; }
+        msg.style.color = 'var(--text-light)';
+        msg.textContent = '正在校验...';
+        const r = await probeQweather(host, key);
+        if (!r.ok) { msg.style.color = '#c62828'; msg.textContent = '校验失败：' + (r.msg || '请检查配置'); return; }
+        localStorage.setItem('qweather_host', host.replace(/\/+$/, ''));
+        localStorage.setItem('qweather_key', key);
+        msg.style.color = '#2e7d32';
+        msg.textContent = '✓ 已保存并校验通过';
+        setTimeout(() => { closeModal('weatherConfigModal'); loadOutfitWeather(true); }, 600);
+    };
+
+    window.refreshOutfitWeather = function() { loadOutfitWeather(true); };
+    window.toggleManualWeather = function() { setManualWeatherOpen(!outfitWeatherManualOpen); };
 
     // ========== 穿搭模块 ==========
     let currentOutfitBlob = null;
@@ -352,7 +715,7 @@
         hot:{emoji:'👗', desc:'炎热天气 - 短袖/裙子', items:['短袖','短裤','裙子','凉鞋']}
     };
 
-    function generateOutfit() {
+    function generateOutfit(opts = {}) {
         let temp = parseFloat(document.getElementById('tempInput').value);
         if(isNaN(temp)) { alert('请输入有效的温度'); return; }
         let cond = document.getElementById('weatherCondition').value, sug;
@@ -363,9 +726,17 @@
         else sug = outfitSuggestions.hot;
         if(cond==='rainy') sug = {...sug, emoji:'☔', desc:sug.desc+' + 雨具'};
         else if(cond==='snowy') sug = outfitSuggestions.cold;
+        if(opts.windScale != null && opts.windScale >= 5) sug = {...sug, desc:sug.desc+' + 防风'};
         document.getElementById('outfitEmoji').textContent = sug.emoji;
-        document.getElementById('outfitDesc').textContent = sug.desc;
-        document.getElementById('outfitTemp').textContent = `温度: ${temp}°C | 建议: ${sug.items.join(', ')}`;
+        document.getElementById('outfitDesc').textContent = opts.clothingText || sug.desc;
+        const sourceTag = opts.source === 'auto' ? '自动天气' : '手动';
+        document.getElementById('outfitTemp').textContent = `温度: ${temp}°C | 建议: ${sug.items.join(', ')}（${sourceTag}）`;
+    }
+
+    function formatOutfitTemp(t) {
+        if (t == null || t === '') return '';
+        if (typeof t === 'object') return (t.temp != null ? t.temp + '°C' : '') + (t.text ? ' ' + t.text : '');
+        return t + '°C';
     }
 
     async function previewOutfitPhoto(input) {
@@ -388,7 +759,11 @@
         let note = document.getElementById('outfitNote').value;
         let temp = document.getElementById('tempInput').value;
         if (!currentOutfitBlob && !note) { alert('请上传照片或填写备注'); return; }
-        const record = { date: getLocalDateString(), photo: currentOutfitBlob || null, note: note || '', temp: temp || '', timestamp: Date.now() };
+        const wCache = readWeatherCache();
+        const tempField = wCache && wCache.temp != null
+            ? { temp: wCache.temp, feelsLike: wCache.feelsLike, code: wCache.code, text: wCache.text, city: wCache.city }
+            : (temp || '');
+        const record = { date: getLocalDateString(), photo: currentOutfitBlob || null, note: note || '', temp: tempField, timestamp: Date.now() };
         await addData('outfits', record);
         alert('穿搭记录已保存！');
         loadOutfitHistory();
@@ -439,7 +814,7 @@
         list.sort((a, b) => b.timestamp - a.timestamp);
         container.innerHTML = list.map(item => {
             const textInfo = `
-                <div class="history-date">${item.date} ${item.temp ? '| ' + item.temp + '°C' : ''}</div>
+                <div class="history-date">${item.date} ${item.temp ? '| ' + formatOutfitTemp(item.temp) : ''}</div>
                 <div style="font-size:12px; color:var(--text-light); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width: 180px;">${item.note || '无备注'}</div>
             `;
             const imgPlaceholder = item.photo ? `<img class="history-thumb" data-id="${item.id}" src="" alt="穿搭照片">` : '';
@@ -478,6 +853,7 @@
 
     // ========== 衣橱管理（单张大图查看） ==========
     let currentCategoryId = null;
+    const CLOTHES_PLACEHOLDER = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="70" height="70"><rect width="70" height="70" fill="#f0f0f0"/><text x="35" y="44" font-size="28" text-anchor="middle">👕</text></svg>');
     window.openClosetModal = async function() { await loadClosetCategories(); document.getElementById('closetModal').classList.add('active'); };
     window.closeClosetModal = function() { document.getElementById('closetModal').classList.remove('active'); };
 	// 修改后的 loadClosetCategories 函数
@@ -559,7 +935,7 @@
             let url = item.imageBlob ? URL.createObjectURL(item.imageBlob) : '';
             if (url && url.startsWith('blob:')) _closetObjectURLs.push(url);
             return `<div class="closet-item-card">
-                <img src="${url||'https://via.placeholder.com/70'}" onclick="viewClothesImage(${item.id})">
+                <img src="${url||CLOTHES_PLACEHOLDER}" onclick="viewClothesImage(${item.id})">
                 <div class="closet-item-code">${escapeHtml(item.code)}</div>
                 <button class="remove-item" onclick="deleteClothes(${item.id})">✕</button>
             </div>`;
@@ -959,11 +1335,122 @@
         document.getElementById('valentineCountdown').innerHTML = calculateCountdown(valentine).text;
     }
 
+    // ========== 待办/购物清单 ==========
+    let currentTodoTab = 'todo';
+    window.switchTodoTab = function(tab) {
+        currentTodoTab = tab;
+        document.querySelectorAll('.todo-tab').forEach(t => t.classList.toggle('active', t.dataset.todoTab === tab));
+        document.getElementById('todoDueGroup').style.display = tab === 'todo' ? 'block' : 'none';
+        document.getElementById('todoInput').placeholder = tab === 'todo' ? '添加待办...' : '添加购物项...';
+        loadTodos();
+    };
+    window.addTodo = async function() {
+        const input = document.getElementById('todoInput');
+        const title = input.value.trim();
+        if (!title) { alert('请输入内容'); return; }
+        const due = currentTodoTab === 'todo' ? (document.getElementById('todoDue').value || null) : null;
+        await addData('todos', { title, type: currentTodoTab, done: false, due, timestamp: Date.now() });
+        input.value = '';
+        document.getElementById('todoDue').value = '';
+        loadTodos();
+    };
+    window.toggleTodo = async function(id) {
+        const item = await getDataById('todos', id);
+        if (!item) return;
+        item.done = !item.done;
+        await updateData('todos', item);
+        loadTodos();
+    };
+    window.deleteTodo = async function(id) {
+        if (!confirm('确定删除？')) return;
+        await deleteData('todos', id);
+        loadTodos();
+    };
+    async function loadTodos() {
+        const list = await getAllData('todos');
+        const todos = list.filter(t => (t.type || 'todo') === 'todo');
+        const shops = list.filter(t => t.type === 'shop');
+        const countEl = document.getElementById('todoCount');
+        if (countEl) countEl.textContent = `待办 ${todos.filter(t => !t.done).length} · 购物 ${shops.filter(t => !t.done).length}`;
+        const items = list.filter(t => (t.type || 'todo') === currentTodoTab);
+        items.sort((a, b) => {
+            if (a.done !== b.done) return a.done ? 1 : -1;
+            if (currentTodoTab === 'todo' && a.due && b.due) return a.due < b.due ? -1 : 1;
+            if (currentTodoTab === 'todo' && a.due) return -1;
+            if (currentTodoTab === 'todo' && b.due) return 1;
+            return b.timestamp - a.timestamp;
+        });
+        const cont = document.getElementById('todoList');
+        if (!items.length) {
+            cont.innerHTML = `<div class="empty-state" style="padding:20px;">${currentTodoTab === 'todo' ? '🎉 暂无待办' : '🛒 清单是空的'}</div>`;
+            return;
+        }
+        const today = getLocalDateString();
+        cont.innerHTML = items.map(t => {
+            const overdue = !t.done && t.due && t.due < today;
+            return `<div class="todo-item ${t.done ? 'done' : ''} ${overdue ? 'overdue' : ''}">
+                <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTodo(${t.id})">
+                <div class="todo-title">${escapeHtml(t.title)}${t.due ? ` <span class="todo-due">${t.due}${overdue ? ' 逾期' : ''}</span>` : ''}</div>
+                <button class="delete-btn" onclick="deleteTodo(${t.id})">🗑️</button>
+            </div>`;
+        }).join('');
+    }
+
     // ========== 导出/导入/清空 ==========
-    async function exportData() {
-        try { alert('正在准备导出数据...'); let stores = ['outfits','weight','periods','diaries','closetCategories','clothes','pregnancy_records','pregnancy_settings','baby_records','vaccines','baby_food','baby_excrete','couple_info']; let exportObj = {}; for(let s of stores) { let data = await getAllData(s); if(s === 'clothes') { data = await Promise.all(data.map(async item => { if(item.imageBlob && item.imageBlob instanceof Blob) { let base64 = await blobToBase64(item.imageBlob); return {...item, imageBlob: base64}; } return item; })); } if(s === 'outfits') { data = await Promise.all(data.map(async item => { if(item.photo && item.photo instanceof Blob) { let base64 = await blobToBase64(item.photo); return {...item, photo: base64}; } return item; })); } exportObj[s] = data; } exportObj.exportDate = new Date().toISOString(); let blob = new Blob([JSON.stringify(exportObj, null, 2)], {type:'application/json'}); let url = URL.createObjectURL(blob); let a = document.createElement('a'); a.href = url; a.download = `beautiful_mood_${getLocalDateString()}.json`; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); alert('导出成功！'); } catch(e) { alert('导出失败：'+e.message); } }
-    async function importData(input) { let file = input.files[0]; if(!file) return; let reader = new FileReader(); reader.onload = async e => { try { let imported = JSON.parse(e.target.result); if(!imported.outfits || !imported.weight || !imported.periods || !imported.diaries) { alert('无效的数据文件'); return; } if(!confirm('导入将覆盖当前所有数据，确定继续？')) return; let stores = ['outfits','weight','periods','diaries','closetCategories','clothes','pregnancy_records','pregnancy_settings','baby_records','vaccines','baby_food','baby_excrete','couple_info']; for(let s of stores) await clearStore(s); for(let s of stores) { for(let item of imported[s] || []) { let {id, ...rest} = item; if(s === 'clothes' && rest.imageBlob && typeof rest.imageBlob === 'string') rest.imageBlob = await base64ToBlob(rest.imageBlob); if(s === 'outfits' && rest.photo && typeof rest.photo === 'string' && rest.photo.startsWith('data:')) rest.photo = await base64ToBlob(rest.photo); await addData(s, rest); } } alert('导入成功！'); loadOutfitHistory(); loadWeightData(); loadPeriodData(); loadDiaries(); updatePregnancyHeader(); refreshCurrentStagePanel(); loadBabyHistory(); updateBabyWeightChart(); loadVaccines(); updateFoodExcreteChart(); renderAnniversary(); } catch(err) { alert('导入失败：'+err.message); } finally { input.value = ''; } }; reader.readAsText(file); }
-    async function clearAllData() { if(!confirm('确定清空所有数据？不可恢复！')) return; let stores = ['outfits','weight','periods','diaries','closetCategories','clothes','pregnancy_records','pregnancy_settings','baby_records','vaccines','baby_food','baby_excrete','couple_info']; for(let s of stores) await clearStore(s); alert('数据已清空'); location.reload(); }
+    async function exportData(isBackup = false) {
+        try {
+            if (!isBackup) alert('正在准备导出数据...');
+            let exportObj = {};
+            for (let s of ALL_STORES) {
+                let data = await getAllData(s);
+                if (s === 'clothes') { data = await Promise.all(data.map(async item => { if (item.imageBlob && item.imageBlob instanceof Blob) { let base64 = await blobToBase64(item.imageBlob); return {...item, imageBlob: base64}; } return item; })); }
+                if (s === 'outfits') { data = await Promise.all(data.map(async item => { if (item.photo && item.photo instanceof Blob) { let base64 = await blobToBase64(item.photo); return {...item, photo: base64}; } return item; })); }
+                exportObj[s] = data;
+            }
+            exportObj.exportDate = new Date().toISOString();
+            let blob = new Blob([JSON.stringify(exportObj, null, 2)], {type:'application/json'});
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = isBackup ? `beautiful_mood_backup_${getLocalDateString()}.json` : `beautiful_mood_${getLocalDateString()}.json`;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+            if (!isBackup) alert('导出成功！');
+        } catch(e) { alert('导出失败：'+e.message); }
+    }
+    async function importData(input) {
+        let file = input.files[0];
+        if (!file) return;
+        let reader = new FileReader();
+        reader.onload = async e => {
+            try {
+                let imported = JSON.parse(e.target.result);
+                if (!imported.outfits || !imported.weight || !imported.periods || !imported.diaries) { alert('无效的数据文件'); return; }
+                if (!confirm('导入将覆盖当前数据（将先自动备份当前数据）。确定继续？')) return;
+                try { await exportData(true); } catch { if (!confirm('自动备份失败，仍要继续导入吗？')) return; }
+                for (let s of ALL_STORES) {
+                    if (!(s in imported)) continue;
+                    await clearStore(s);
+                    for (let item of imported[s] || []) {
+                        let {id, ...rest} = item;
+                        if (s === 'clothes' && rest.imageBlob && typeof rest.imageBlob === 'string') rest.imageBlob = await base64ToBlob(rest.imageBlob);
+                        if (s === 'outfits' && rest.photo && typeof rest.photo === 'string' && rest.photo.startsWith('data:')) rest.photo = await base64ToBlob(rest.photo);
+                        await addData(s, rest);
+                    }
+                }
+                alert('导入成功！');
+                loadOutfitHistory(); loadWeightData(); loadPeriodData(); loadDiaries(); updatePregnancyHeader();
+                refreshCurrentStagePanel(); loadBabyHistory(); updateBabyWeightChart(); loadVaccines(); updateFoodExcreteChart();
+                renderAnniversary(); loadTodos(); renderCachedWeatherOnMore();
+            } catch(err) { alert('导入失败：'+err.message); }
+            finally { input.value = ''; }
+        };
+        reader.readAsText(file);
+    }
+    async function clearAllData() {
+        if (!confirm('确定清空所有数据？不可恢复！')) return;
+        for (let s of ALL_STORES) await clearStore(s);
+        alert('数据已清空'); location.reload();
+    }
 
     // ========== 页面切换与初始化 ==========
     function switchSection(section) {
@@ -973,9 +1460,9 @@
         if(section==='weight') loadWeightData();
         if(section==='period') loadPeriodData();
         if(section==='diary') loadDiaries();
-        if(section==='outfit') loadOutfitHistory();
+        if(section==='outfit') { loadOutfitHistory(); loadOutfitWeather(false); }
         if(section==='pregnancy') { updatePregnancyHeader(); refreshCurrentStagePanel(); loadBabyHistory(); updateBabyWeightChart(); loadVaccines(); updateFoodExcreteChart(); }
-        if(section==='more') renderAnniversary();
+        if(section==='more') { renderAnniversary(); renderCachedWeatherOnMore(); updateNotifyPermStatus(); scheduleReminders(); loadTodos(); }
         setTimeout(() => {
             if (weightChart) weightChart.resize();
             if (pregWeightChart) pregWeightChart.resize();
@@ -1009,6 +1496,7 @@
     document.getElementById('editWeightModal').addEventListener('click',e=>{if(e.target===document.getElementById('editWeightModal')) closeModalById('editWeightModal');});
     document.getElementById('diaryModal').addEventListener('click',e=>{if(e.target===document.getElementById('diaryModal')) closeModal();});
     document.getElementById('photoModal').addEventListener('click',e=>{if(e.target===document.getElementById('photoModal')) closePhotoModal();});
+    document.getElementById('weatherConfigModal').addEventListener('click',e=>{if(e.target===document.getElementById('weatherConfigModal')) closeModal('weatherConfigModal');});
 
     window.addEventListener('resize', () => {
         if (weightChart) weightChart.resize();
@@ -1052,43 +1540,123 @@
             document.getElementById('certificateDate').value = info.certificateDate || '';
         }
         renderAnniversary();
-        checkAnniversaryReminder();
+        updateNotifyPermStatus();
+        scheduleReminders();
+        loadTodos();
+        loadOutfitWeather(false);
+        document.addEventListener('visibilitychange', () => { if (!document.hidden) scheduleReminders(); });
     });
-    function checkAnniversaryReminder() {
-        if (!('Notification' in window)) return;
-        if (Notification.permission === 'denied') return;
-        getCoupleInfo().then(info => {
-            if (!info) return;
-            const now = new Date();
-            const y = now.getFullYear();
-            const reminders = [];
-            const checkDate = (date, label) => {
-                if (!date) return;
-                const target = new Date(date);
-                const next = new Date(y, target.getMonth(), target.getDate());
-                if (next < now) next.setFullYear(y + 1);
-                const diff = Math.ceil((next - now) / 86400000);
-                if (diff <= 7 && diff >= 0) reminders.push(`${label}：${diff === 0 ? '今天！' : diff + '天后 (' + getLocalDateString(next) + ')'}`);
-            };
-            checkDate(info.meetDate, '相识纪念日');
-            checkDate(info.engageDate, '订婚纪念日');
-            checkDate(info.marryDate, '结婚纪念日');
-            checkDate(info.certificateDate, '领证纪念日');
+
+    // ========== 提醒中心（SW 通知，统一纪念日/疫苗/生理期） ==========
+    const NOTIFY_ENABLED_KEY = 'life_notify_enabled';
+    function notifyEnabled() { return localStorage.getItem(NOTIFY_ENABLED_KEY) === '1'; }
+
+    async function collectUpcomingReminders() {
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+        const y = now.getFullYear();
+        const items = [];
+        const pushDate = (date, emoji, label) => {
+            if (!date) return;
+            const d = date instanceof Date ? date : parseLocalDate(date);
+            if (isNaN(d)) return;
+            let next = new Date(y, d.getMonth(), d.getDate());
+            if (next < now) next.setFullYear(y + 1);
+            const diff = Math.round((next - now) / 86400000);
+            if (diff >= 0 && diff <= 7) items.push({ emoji, label, date: getLocalDateString(next), diff });
+        };
+        const info = await getCoupleInfo();
+        if (info) {
+            pushDate(info.meetDate, '💕', '相识纪念日');
+            pushDate(info.engageDate, '💍', '订婚纪念日');
+            pushDate(info.marryDate, '💒', '结婚纪念日');
+            pushDate(info.certificateDate, '📜', '领证纪念日');
             if (info.maleLunarMonth && info.maleLunarDay) {
-                const bd = getLunarBirthdaySolar(info.maleLunarMonth, info.maleLunarDay, y);
-                if (bd >= now) checkDate(getLocalDateString(bd), info.maleName + '生日');
+                pushDate(getLunarBirthdaySolar(info.maleLunarMonth, info.maleLunarDay, y), '🎂', (info.maleName || '先生') + '生日');
             }
             if (info.femaleLunarMonth && info.femaleLunarDay) {
-                const bd = getLunarBirthdaySolar(info.femaleLunarMonth, info.femaleLunarDay, y);
-                if (bd >= now) checkDate(getLocalDateString(bd), info.femaleName + '生日');
+                pushDate(getLunarBirthdaySolar(info.femaleLunarMonth, info.femaleLunarDay, y), '🎂', (info.femaleName || '女士') + '生日');
             }
-            if (reminders.length === 0) return;
-            const showNotification = () => {
-                new Notification('💕 纪念日提醒', { body: reminders.join('\n'), icon: './icon-192.png' });
-            };
-            if (Notification.permission === 'granted') { showNotification(); }
-            else if (Notification.permission === 'default') { Notification.requestPermission().then(p => { if (p === 'granted') showNotification(); }); }
-        });
+        }
+        const vaccines = await getAllData('vaccines');
+        vaccines.forEach(v => { if (v.next) pushDate(v.next, '💉', (v.name || '疫苗') + '疫苗'); });
+        try {
+            const periods = (await getAllData('periods')).filter(p => p.startDate);
+            if (periods.length) {
+                const starts = periods.map(p => parseLocalDate(p.startDate)).sort((a, b) => a - b);
+                let cycle = 28;
+                if (starts.length >= 2) {
+                    const gaps = [];
+                    for (let i = Math.max(1, starts.length - 5); i < starts.length; i++) {
+                        gaps.push(Math.round((starts[i] - starts[i - 1]) / 86400000));
+                    }
+                    const valid = gaps.filter(g => g >= 20 && g <= 45);
+                    if (valid.length) cycle = Math.round(valid.reduce((a, b) => a + b, 0) / valid.length);
+                }
+                let nextStart = starts[starts.length - 1];
+                do { nextStart = new Date(nextStart.getTime() + cycle * 86400000); } while (nextStart < now);
+                pushDate(nextStart, '🌸', '预计生理期');
+            }
+        } catch {}
+        items.sort((a, b) => a.diff - b.diff);
+        return items;
+    }
+
+    async function scheduleReminders() {
+        const items = await collectUpcomingReminders();
+        const cont = document.getElementById('reminderPreviewList');
+        if (cont) {
+            cont.innerHTML = items.length
+                ? items.map(r => `<div class="reminder-item">${r.emoji} <span>${escapeHtml(r.label)}</span><span style="color:var(--text-light); font-size:12px;">${r.date}</span><span class="diff">${r.diff === 0 ? '今天' : r.diff + '天后'}</span></div>`).join('')
+                : '<p style="color:var(--text-light); font-size:14px;">未来 7 天暂无提醒</p>';
+        }
+        if (!notifyEnabled()) return;
+        if (!('Notification' in window)) return;
+        if (Notification.permission === 'denied') return;
+        if (items.length === 0) return;
+        const body = items.map(r => `${r.label}：${r.diff === 0 ? '今天！' : r.diff + '天后'}`).join('\n');
+        const show = () => {
+            const opts = { body, icon: './icon-192.png', tag: 'life-reminders' };
+            if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                navigator.serviceWorker.ready.then(reg => reg.showNotification('💕 Life 提醒', opts)).catch(() => {
+                    try { new Notification('💕 Life 提醒', opts); } catch {}
+                });
+            } else {
+                try { new Notification('💕 Life 提醒', opts); } catch {}
+            }
+        };
+        if (Notification.permission === 'granted') show();
+        else if (Notification.permission === 'default') Notification.requestPermission().then(p => { if (p === 'granted') show(); });
+    }
+
+    window.toggleNotify = async function(on) {
+        const toggle = document.getElementById('notifyToggle');
+        if (on) {
+            if (!('Notification' in window)) { alert('当前浏览器不支持通知'); toggle.checked = false; return; }
+            const p = await Notification.requestPermission();
+            if (p !== 'granted') {
+                alert('通知权限未授予，无法启用提醒');
+                toggle.checked = false;
+                localStorage.removeItem(NOTIFY_ENABLED_KEY);
+                updateNotifyPermStatus();
+                return;
+            }
+            localStorage.setItem(NOTIFY_ENABLED_KEY, '1');
+        } else {
+            localStorage.removeItem(NOTIFY_ENABLED_KEY);
+        }
+        updateNotifyPermStatus();
+        if (on) scheduleReminders();
+    };
+
+    function updateNotifyPermStatus() {
+        const el = document.getElementById('notifyPermStatus');
+        const toggle = document.getElementById('notifyToggle');
+        if (!el || !toggle) return;
+        toggle.checked = notifyEnabled();
+        if (!('Notification' in window)) { el.textContent = '当前浏览器不支持通知，可在此查看提醒预览'; return; }
+        const map = { granted: '通知权限：已授权', denied: '通知权限：已被拒绝（需在浏览器设置中开启）', default: '通知权限：未请求' };
+        el.textContent = map[Notification.permission] || '';
     }
 </script>
 <script>

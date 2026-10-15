@@ -6,7 +6,7 @@
 const BASE_PATH = self.location.pathname.replace(/[^/]+$/, '');
 // 构建带项目标识的缓存名称，避免多项目冲突
 // 例如 '/Life/' -> 'pwa-cache-Life-v4'
-const CACHE_NAME = `pwa-cache${BASE_PATH.replace(/\//g, '-')}v5`;
+const CACHE_NAME = `pwa-cache${BASE_PATH.replace(/\//g, '-')}v7`;
 // 本项目缓存前缀（不含版本号，用于只清理本项目旧版本）
 const PROJECT_CACHE_PREFIX = `pwa-cache${BASE_PATH.replace(/\//g, '-')}`;
 
@@ -17,6 +17,11 @@ const PRECACHE_URLS = [
   `${BASE_PATH}manifest.json`,
   `${BASE_PATH}echarts.min.js`,
   `${BASE_PATH}offline.html`,
+  `${BASE_PATH}icon-192.png`,
+  `${BASE_PATH}icon-512.png`,
+  `${BASE_PATH}icon-maskable-192.png`,
+  `${BASE_PATH}icon-maskable-512.png`,
+  `${BASE_PATH}apple-touch-icon.png`,
 ];
 
 // 静态资源扩展名（用于判断是否缓存优先）
@@ -63,6 +68,19 @@ self.addEventListener('activate', (event) => {
         })
       );
     }).then(() => self.clients.claim()) // 立即控制所有页面
+  );
+});
+
+// ---------- 4.5 通知点击（提醒中心） ----------
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
+      for (const client of list) {
+        if ('focus' in client) return client.focus();
+      }
+      return self.clients.openWindow(BASE_PATH);
+    })
   );
 });
 
