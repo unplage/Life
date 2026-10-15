@@ -53,6 +53,9 @@
         .icon-btn:hover { background: #ececec; }
         .weather-detail { font-size: 14px; color: var(--text-light); margin: 10px 0; line-height: 1.6; }
         .manual-toggle { font-size: 13px; color: var(--text-light); background: none; border: none; cursor: pointer; padding: 4px 0; text-decoration: underline; }
+        .weather-links { display: flex; gap: 16px; }
+        .city-result { padding: 10px 4px; border-bottom: 1px solid #f0f0f0; cursor: pointer; font-size: 14px; }
+        .city-result:hover { background: var(--light); }
         .todo-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
         .todo-tab { flex: 1; padding: 8px; border: none; border-radius: var(--radius-sm); background: var(--light); cursor: pointer; font-weight: 500; font-size: 14px; }
         .todo-tab.active { background: var(--primary); color: white; }
@@ -211,7 +214,17 @@
                     <button class="icon-btn" onclick="openWeatherConfig()" title="天气设置">⚙️</button>
                 </div>
                 <div id="weatherStatusLine" class="weather-detail">配置天气后自动获取，或手动输入温度</div>
-                <button class="manual-toggle" id="manualToggleBtn" type="button" onclick="toggleManualWeather()">✍️ 手动输入温度/天气</button>
+                <div class="weather-links">
+                    <button class="manual-toggle" id="manualToggleBtn" type="button" onclick="toggleManualWeather()">✍️ 手动输入</button>
+                    <button class="manual-toggle" id="searchToggleBtn" type="button" onclick="toggleWeatherSearch()">🔍 搜索城市</button>
+                </div>
+                <div id="weatherSearchBox" style="display:none; margin-top:12px;">
+                    <div class="todo-add">
+                        <input type="text" id="weatherCityInput" class="form-input" placeholder="城市名 / 拼音" onkeydown="if(event.key==='Enter')searchWeatherCity()">
+                        <button class="btn btn-primary btn-small" onclick="searchWeatherCity()">搜索</button>
+                    </div>
+                    <div id="weatherCityResults"></div>
+                </div>
                 <div id="manualWeatherBox" class="weather-input" style="display:none; margin-top:12px;">
                     <input type="number" id="tempInput" class="form-input" placeholder="温度 (°C)">
                     <select id="weatherCondition" class="form-input"><option value="sunny">☀️ 晴天</option><option value="cloudy">☁️ 多云</option><option value="rainy">🌧️ 雨天</option><option value="snowy">❄️ 雪天</option></select>
@@ -313,7 +326,7 @@
 <div class="modal" id="vaccineModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">💉 添加疫苗</div><button class="modal-close" onclick="closeModal('vaccineModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label>疫苗名称</label><input type="text" id="vaccineName" class="form-input"></div><div class="form-group"><label>接种日期</label><input type="date" id="vaccineDate" class="form-input"></div><div class="form-group"><label>下次提醒(可选)</label><input type="text" id="vaccineNext" class="form-input"></div><button class="btn btn-primary" onclick="addVaccine()">保存</button></div></div></div>
 <div class="modal" id="foodModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">🍚 饭食记录</div><button class="modal-close" onclick="closeModal('foodModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label>日期</label><input type="date" id="foodDate" class="form-input"></div><div class="form-group"><label>类型</label><select id="foodType" class="form-select"><option value="母乳">母乳</option><option value="奶粉">奶粉</option><option value="辅食">辅食</option><option value="正餐">正餐</option></select></div><div class="form-group"><label>量(ml/碗)</label><input type="text" id="foodAmount" class="form-input"></div><button class="btn btn-primary" onclick="addFoodRecord()">保存</button></div></div></div>
 <div class="modal" id="excreteModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">💩 排泄记录</div><button class="modal-close" onclick="closeModal('excreteModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label>日期</label><input type="date" id="excreteDate" class="form-input"></div><div class="form-group"><label>类型</label><select id="excreteType" class="form-select"><option value="大便">大便</option><option value="小便">小便</option><option value="混合">混合</option></select></div><div class="form-group"><label>次数</label><input type="number" id="excreteCount" class="form-input" min="1"></div><button class="btn btn-primary" onclick="addExcreteRecord()">保存</button></div></div></div>
-<div class="modal" id="weatherConfigModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">⚙️ 和风天气设置</div><button class="modal-close" onclick="closeModal('weatherConfigModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label class="form-label">API Host（专属域名）</label><input type="text" id="weatherApiHost" class="form-input" placeholder="例如: https://m33wt3jj26.re.qweatherapi.com" autocomplete="off" spellcheck="false"></div><div class="form-group"><label class="form-label">API Key</label><input type="password" id="weatherApiKey" class="form-input" placeholder="您的和风天气 Key" autocomplete="off"></div><div id="weatherConfigMsg" style="font-size:13px; margin-bottom:12px; min-height:18px;"></div><div style="display:flex; gap:10px;"><button class="btn btn-secondary" onclick="closeModal('weatherConfigModal')">取消</button><button class="btn btn-primary" onclick="saveWeatherConfig()">保存</button></div><p style="font-size:12px; color:var(--text-light); margin-top:12px;">从 <a href="https://console.qweather.com/setting/" target="_blank" rel="noopener noreferrer">和风天气控制台</a> 获取专属域名与 Key。若你已使用「随行天气」App，配置会自动共享。</p></div></div></div>
+<div class="modal" id="weatherConfigModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">⚙️ 和风天气设置</div><button class="modal-close" onclick="closeModal('weatherConfigModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label class="form-label">API Host（专属域名）</label><input type="text" id="weatherApiHost" class="form-input" placeholder="例如: https://m33wt3jj26.re.qweatherapi.com" autocomplete="off" spellcheck="false"></div><div class="form-group"><label class="form-label">API Key</label><input type="password" id="weatherApiKey" class="form-input" placeholder="您的和风天气 Key" autocomplete="off"></div><div id="weatherConfigMsg" style="font-size:13px; margin-bottom:12px; min-height:18px;"></div><div style="display:flex; gap:10px;"><button class="btn btn-secondary" onclick="closeModal('weatherConfigModal')">取消</button><button class="btn btn-primary" onclick="saveWeatherConfig()">保存</button></div><p style="font-size:12px; color:var(--text-light); margin-top:12px;">从 <a href="https://console.qweather.com/setting/" target="_blank" rel="noopener noreferrer">和风天气控制台</a> 获取专属域名与 Key。若与「随行天气」同源打开，配置会自动共享；若天气功能显示未配置或定位失败，请在此直接填写一次（iOS 已安装的 PWA 与浏览器存储相互隔离，不共享）。</p></div></div></div>
 
 <script>
     // ========== 工具函数 ==========
@@ -638,7 +651,9 @@
             return;
         }
         if (!readLastCity()) {
-            setWeatherStatus('未获取到城市，点击 📍 定位获取天气');
+            setWeatherStatus('已配置天气，但还没选城市', '点下方 🔍 搜索城市，或 📍 定位');
+            document.getElementById('weatherSearchBox').style.display = 'block';
+            document.getElementById('searchToggleBtn').textContent = '收起搜索';
             return;
         }
         setWeatherStatus('天气获取中...');
@@ -673,7 +688,10 @@
             const name = await fetchCityName(lat, lon);
             if (name) { city.name = name; saveLastCity(city); }
             await loadOutfitWeather(true);
-        }, () => { setWeatherStatus('定位失败，请检查权限后重试'); }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 });
+        }, () => {
+            if (readLastCity()) { setWeatherStatus('定位失败，已使用上次城市'); loadOutfitWeather(true); }
+            else setWeatherStatus('定位失败，请点 🔍 搜索城市', '或在「随行天气」中先选城市');
+        }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 });
     };
 
     window.openWeatherConfig = function() {
@@ -701,6 +719,43 @@
 
     window.refreshOutfitWeather = function() { loadOutfitWeather(true); };
     window.toggleManualWeather = function() { setManualWeatherOpen(!outfitWeatherManualOpen); };
+
+    window.toggleWeatherSearch = function() {
+        const box = document.getElementById('weatherSearchBox');
+        const open = box.style.display === 'none';
+        box.style.display = open ? 'block' : 'none';
+        document.getElementById('searchToggleBtn').textContent = open ? '收起搜索' : '🔍 搜索城市';
+        if (open) document.getElementById('weatherCityInput').focus();
+    };
+
+    window.searchWeatherCity = async function() {
+        const q = document.getElementById('weatherCityInput').value.trim();
+        const results = document.getElementById('weatherCityResults');
+        if (!q) { results.innerHTML = '<p style="color:var(--text-light); font-size:13px;">请输入城市名</p>'; return; }
+        const host = getQweatherHost();
+        if (!host || !getQweatherKey()) { openWeatherConfig(); return; }
+        results.innerHTML = '<p style="color:var(--text-light); font-size:13px;">搜索中...</p>';
+        const url = buildApiUrl(host, '/geo/v2/city/lookup', { location: q, number: 10, lang: 'zh-hans' });
+        const data = await weatherFetchJson(url);
+        if (!data || data.code !== '200' || !data.location || !data.location.length) {
+            results.innerHTML = '<p style="color:#c62828; font-size:13px;">未找到城市，试试拼音或更具体的名称</p>';
+            return;
+        }
+        results.innerHTML = data.location.map((r, i) =>
+            `<div class="city-result" data-i="${i}">${escapeHtml([r.name, r.adm1, r.country].filter(Boolean).join(' · '))}</div>`
+        ).join('');
+        results.querySelectorAll('.city-result').forEach(el => {
+            el.onclick = () => {
+                const r = data.location[parseInt(el.dataset.i, 10)];
+                saveLastCity({ lat: parseFloat(r.lat), lon: parseFloat(r.lon), name: r.name });
+                document.getElementById('weatherCityResults').innerHTML = '';
+                document.getElementById('weatherCityInput').value = '';
+                document.getElementById('weatherSearchBox').style.display = 'none';
+                document.getElementById('searchToggleBtn').textContent = '🔍 搜索城市';
+                loadOutfitWeather(true);
+            };
+        });
+    };
 
     // ========== 穿搭模块 ==========
     let currentOutfitBlob = null;
