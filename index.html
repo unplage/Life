@@ -326,7 +326,7 @@
 <div class="modal" id="vaccineModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">💉 添加疫苗</div><button class="modal-close" onclick="closeModal('vaccineModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label>疫苗名称</label><input type="text" id="vaccineName" class="form-input"></div><div class="form-group"><label>接种日期</label><input type="date" id="vaccineDate" class="form-input"></div><div class="form-group"><label>下次提醒(可选)</label><input type="text" id="vaccineNext" class="form-input"></div><button class="btn btn-primary" onclick="addVaccine()">保存</button></div></div></div>
 <div class="modal" id="foodModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">🍚 饭食记录</div><button class="modal-close" onclick="closeModal('foodModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label>日期</label><input type="date" id="foodDate" class="form-input"></div><div class="form-group"><label>类型</label><select id="foodType" class="form-select"><option value="母乳">母乳</option><option value="奶粉">奶粉</option><option value="辅食">辅食</option><option value="正餐">正餐</option></select></div><div class="form-group"><label>量(ml/碗)</label><input type="text" id="foodAmount" class="form-input"></div><button class="btn btn-primary" onclick="addFoodRecord()">保存</button></div></div></div>
 <div class="modal" id="excreteModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">💩 排泄记录</div><button class="modal-close" onclick="closeModal('excreteModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label>日期</label><input type="date" id="excreteDate" class="form-input"></div><div class="form-group"><label>类型</label><select id="excreteType" class="form-select"><option value="大便">大便</option><option value="小便">小便</option><option value="混合">混合</option></select></div><div class="form-group"><label>次数</label><input type="number" id="excreteCount" class="form-input" min="1"></div><button class="btn btn-primary" onclick="addExcreteRecord()">保存</button></div></div></div>
-<div class="modal" id="weatherConfigModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">⚙️ 和风天气设置</div><button class="modal-close" onclick="closeModal('weatherConfigModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label class="form-label">API Host（专属域名）</label><input type="text" id="weatherApiHost" class="form-input" placeholder="例如: https://m33wt3jj26.re.qweatherapi.com" autocomplete="off" spellcheck="false"></div><div class="form-group"><label class="form-label">API Key</label><input type="password" id="weatherApiKey" class="form-input" placeholder="您的和风天气 Key" autocomplete="off"></div><div id="weatherConfigMsg" style="font-size:13px; margin-bottom:12px; min-height:18px;"></div><div style="display:flex; gap:10px;"><button class="btn btn-secondary" onclick="closeModal('weatherConfigModal')">取消</button><button class="btn btn-primary" onclick="saveWeatherConfig()">保存</button></div><p style="font-size:12px; color:var(--text-light); margin-top:12px;">从 <a href="https://console.qweather.com/setting/" target="_blank" rel="noopener noreferrer">和风天气控制台</a> 获取专属域名与 Key。若与「随行天气」同源打开，配置会自动共享；若天气功能显示未配置或定位失败，请在此直接填写一次（iOS 已安装的 PWA 与浏览器存储相互隔离，不共享）。</p></div></div></div>
+<div class="modal" id="weatherConfigModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">⚙️ 和风天气设置</div><button class="modal-close" onclick="closeModal('weatherConfigModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label class="form-label">API Host（专属域名）</label><input type="text" id="weatherApiHost" class="form-input" placeholder="例如: https://m33wt3jj26.re.qweatherapi.com" autocomplete="off" spellcheck="false"></div><div class="form-group"><label class="form-label">API Key</label><input type="password" id="weatherApiKey" class="form-input" placeholder="您的和风天气 Key" autocomplete="off"></div><div id="weatherConfigMsg" style="font-size:13px; margin-bottom:12px; min-height:18px; line-height:1.7;"></div><button class="btn btn-secondary" style="margin-bottom:12px;" onclick="testWeatherConnection()">🔌 测试连接（诊断）</button><div style="display:flex; gap:10px;"><button class="btn btn-secondary" onclick="closeModal('weatherConfigModal')">取消</button><button class="btn btn-primary" onclick="saveWeatherConfig()">保存</button></div><p style="font-size:12px; color:var(--text-light); margin-top:12px;">从 <a href="https://console.qweather.com/setting/" target="_blank" rel="noopener noreferrer">和风天气控制台</a> 获取专属域名与 Key。若与「随行天气」同源打开，配置会自动共享；若天气功能显示未配置或定位失败，请在此直接填写一次（iOS 已安装的 PWA 与浏览器存储相互隔离，不共享）。</p></div></div></div>
 
 <script>
     // ========== 工具函数 ==========
@@ -426,7 +426,7 @@
     }
     function getQweatherKey() { return (localStorage.getItem('qweather_key') || '').trim(); }
 
-    function buildApiUrl(base, path, params = {}) {
+    function buildApiUrl(base, path, params = {}, keyOverride) {
         let u;
         try {
             let href;
@@ -440,7 +440,7 @@
             u = new URL(href);
         } catch (e) { return path; }
         Object.entries(params).forEach(([k, v]) => { if (v != null && v !== '') u.searchParams.set(k, String(v)); });
-        const key = getQweatherKey();
+        const key = keyOverride !== undefined ? keyOverride : getQweatherKey();
         if (key) u.searchParams.set('key', key);
         return u.href;
     }
@@ -563,6 +563,31 @@
         return '';
     }
 
+    function parseCurrentWeather(data, style) {
+        if (!data || String(data.code) !== '200') return null;
+        if (style === 'v7' && data.now) {
+            const n = data.now;
+            return {
+                temp: n.temp != null ? parseFloat(n.temp) : null,
+                feelsLike: n.feelsLike != null ? parseFloat(n.feelsLike) : null,
+                code: n.icon || '',
+                text: n.text || '',
+                windScale: n.windScale != null ? parseFloat(n.windScale) : null
+            };
+        }
+        if (data.temperature) {
+            const cond = data.condition || {};
+            return {
+                temp: data.temperature.value != null ? parseFloat(data.temperature.value) : null,
+                feelsLike: data.feelsLike && data.feelsLike.value != null ? parseFloat(data.feelsLike.value) : null,
+                code: cond.code || '',
+                text: cond.text || '',
+                windScale: data.wind && data.wind.scale != null ? parseFloat(data.wind.scale) : null
+            };
+        }
+        return null;
+    }
+
     async function fetchOutfitWeather(force) {
         const host = getQweatherHost();
         const key = getQweatherKey();
@@ -573,22 +598,32 @@
         const seq = ++weatherLoadSeq;
         const g = wgs84ToGcj02(city.lat, city.lon);
         const latPath = coord2(g.lat), lonPath = coord2(g.lon);
-        const [nowData, idxData] = await Promise.all([
-            weatherFetchJson(buildApiUrl(host, `/weather/v1/current/${latPath}/${lonPath}`, { lang: 'zh-hans' })),
-            weatherFetchJson(buildApiUrl(host, '/v7/indices/1d', { location: `${lonPath},${latPath}`, type: '3', lang: 'zh-hans' }))
-        ]);
+
+        const idxPromise = weatherFetchJson(buildApiUrl(host, '/v7/indices/1d', { location: `${lonPath},${latPath}`, type: '3', lang: 'zh-hans' }));
+
+        // 优先新版 v1 path 接口，失败再回退经典 v7 now（部分 Key/套餐只支持其一）
+        let parsed = null, lastErr = 'unknown';
+        const v1Data = await weatherFetchJson(buildApiUrl(host, `/weather/v1/current/${latPath}/${lonPath}`, { lang: 'zh-hans' }));
         if (seq !== weatherLoadSeq) return { error: 'stale' };
-        if (!nowData || nowData.code !== '200' || !nowData.temperature) {
-            return { error: 'fetch', code: nowData && nowData.code != null ? nowData.code : 'unknown' };
+        parsed = parseCurrentWeather(v1Data, 'v1');
+        if (!parsed) {
+            lastErr = v1Data && v1Data.code != null ? v1Data.code : 'unknown';
+            const v7Data = await weatherFetchJson(buildApiUrl(host, '/v7/weather/now', { location: `${lonPath},${latPath}`, lang: 'zh-hans' }));
+            if (seq !== weatherLoadSeq) return { error: 'stale' };
+            parsed = parseCurrentWeather(v7Data, 'v7');
+            if (!parsed) lastErr = v7Data && v7Data.code != null ? v7Data.code : lastErr;
         }
-        const cond = nowData.condition || {};
+        if (!parsed) return { error: 'fetch', code: lastErr };
+
+        const idxData = await idxPromise;
+        if (seq !== weatherLoadSeq) return { error: 'stale' };
         const result = {
             city: city.name,
-            temp: nowData.temperature.value != null ? parseFloat(nowData.temperature.value) : null,
-            feelsLike: nowData.feelsLike && nowData.feelsLike.value != null ? parseFloat(nowData.feelsLike.value) : null,
-            code: cond.code || '',
-            text: cond.text || '',
-            windScale: nowData.wind && nowData.wind.scale != null ? parseFloat(nowData.wind.scale) : null,
+            temp: parsed.temp,
+            feelsLike: parsed.feelsLike,
+            code: parsed.code,
+            text: parsed.text,
+            windScale: parsed.windScale,
             clothingText: '',
             at: Date.now()
         };
@@ -662,7 +697,7 @@
         if (w.error) {
             const msgMap = { no_key: '未配置 API', no_city: '无城市信息', cooldown: '请求冷却中' };
             if (cached) { applyAutoWeatherToOutfit(cached); setWeatherStatus('获取失败，已展示缓存', msgMap[w.error] || w.code || ''); }
-            else setWeatherStatus('天气获取失败', msgMap[w.error] || (w.code ? `错误 ${w.code}，检查配置` : '请检查网络'));
+            else setWeatherStatus('天气获取失败' + (w.code ? `（${w.code}）` : ''), msgMap[w.error] || '点 ⚙️ 后"测试连接"诊断');
             return;
         }
         setWeatherStatus(`${w.city} ${w.temp != null ? w.temp + '°C' : ''} ${w.text || ''}`, [
@@ -715,6 +750,56 @@
         msg.style.color = '#2e7d32';
         msg.textContent = '✓ 已保存并校验通过';
         setTimeout(() => { closeModal('weatherConfigModal'); loadOutfitWeather(true); }, 600);
+    };
+
+    async function diagFetch(url) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 12000);
+        try {
+            const res = await fetch(url, { signal: controller.signal });
+            let body = null;
+            try { body = await res.json(); } catch {}
+            return { status: res.status, body };
+        } catch (e) {
+            return { error: e && e.name === 'AbortError' ? '请求超时' : ((e && e.message) || '网络/CORS 错误') };
+        } finally { clearTimeout(timer); }
+    }
+    function describeDiag(r) {
+        if (r.error) return '✗ ' + r.error;
+        const code = r.body && r.body.code;
+        const msgText = r.body && r.body.msg;
+        if (r.status === 200 && (!code || String(code) === '200')) return '✓ 正常';
+        if (r.status >= 400 || (code && String(code) !== '200')) {
+            return `✗ HTTP ${r.status}` + (code ? `，code ${code}` : '') + (msgText ? `，${msgText}` : '');
+        }
+        return `？ HTTP ${r.status}` + (code ? `，code ${code}` : '');
+    }
+    window.testWeatherConnection = async function() {
+        const msg = document.getElementById('weatherConfigMsg');
+        const hostRaw = document.getElementById('weatherApiHost').value.trim();
+        const keyRaw = document.getElementById('weatherApiKey').value.trim();
+        let base = (hostRaw || getQweatherHost()).replace(/\/+$/, '');
+        if (base && !/^https?:\/\//i.test(base)) base = 'https://' + base.replace(/^\/+/, '');
+        const key = keyRaw || getQweatherKey();
+        if (!base || !key) { msg.style.color = '#c62828'; msg.textContent = '请先填写 Host 与 Key'; return; }
+        msg.style.color = 'var(--text-light)';
+        msg.textContent = '测试中...';
+        const city = readLastCity();
+        const g = city ? wgs84ToGcj02(city.lat, city.lon) : { lat: 39.9042, lon: 116.4074 };
+        const lat = coord2(g.lat), lon = coord2(g.lon);
+        const lines = [];
+        const r1 = await diagFetch(buildApiUrl(base, '/geo/v2/city/lookup', { location: `${lon},${lat}`, lang: 'zh-hans' }, key));
+        lines.push('① 城市搜索: ' + describeDiag(r1));
+        const r2 = await diagFetch(buildApiUrl(base, `/weather/v1/current/${lat}/${lon}`, { lang: 'zh-hans' }, key));
+        lines.push('② 实时天气v1: ' + describeDiag(r2));
+        const r3 = await diagFetch(buildApiUrl(base, '/v7/weather/now', { location: `${lon},${lat}`, lang: 'zh-hans' }, key));
+        lines.push('③ 实时天气v7: ' + describeDiag(r3));
+        const r4 = await diagFetch(buildApiUrl(base, '/v7/indices/1d', { location: `${lon},${lat}`, type: '3', lang: 'zh-hans' }, key));
+        lines.push('④ 穿衣指数: ' + describeDiag(r4));
+        lines.push('Host: ' + base);
+        lines.push('城市: ' + (city ? city.name : '未设置(用北京测试)'));
+        msg.style.color = '#c62828';
+        msg.innerHTML = lines.map(escapeHtml).join('<br>');
     };
 
     window.refreshOutfitWeather = function() { loadOutfitWeather(true); };
