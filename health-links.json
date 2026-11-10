@@ -1,0 +1,2896 @@
+{
+  "version": 1,
+  "source": "默沙东诊疗手册中文版（大众版）",
+  "sourceUrl": "https://www.msdmanuals.cn/home/women-s-health-issues",
+  "officialSearch": "https://www.msdmanuals.cn/home/searchresults?query=",
+  "disclaimer": "本索引仅提供官方页面链接与标题，不复制文章内容，不能替代医生诊断。默沙东诊疗手册为独立第三方网站，本应用与其无隶属或合作关系。",
+  "categories": [
+    {
+      "id": "basics",
+      "name": "女性生理基础",
+      "icon": "🧬",
+      "stages": [
+        "period",
+        "puberty"
+      ],
+      "links": [
+        {
+          "title": "女性生殖系统概述",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/biology-of-the-female-reproductive-system/overview-of-the-female-reproductive-system",
+          "tags": [
+            "period",
+            "puberty"
+          ],
+          "keywords": [
+            "内分泌",
+            "出血",
+            "多囊",
+            "女性生殖系统概述",
+            "月经",
+            "痛经",
+            "经前",
+            "经期"
+          ]
+        },
+        {
+          "title": "女性外生殖器",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/biology-of-the-female-reproductive-system/female-external-genital-organs",
+          "tags": [
+            "period",
+            "puberty"
+          ],
+          "keywords": [
+            "内分泌",
+            "出血",
+            "多囊",
+            "女性外生殖器",
+            "月经",
+            "痛经",
+            "经前",
+            "经期"
+          ]
+        },
+        {
+          "title": "内生殖器",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/biology-of-the-female-reproductive-system/female-internal-genital-organs",
+          "tags": [
+            "period",
+            "puberty"
+          ],
+          "keywords": [
+            "内分泌",
+            "内生殖器",
+            "出血",
+            "多囊",
+            "月经",
+            "痛经",
+            "经前",
+            "经期"
+          ]
+        },
+        {
+          "title": "青春期",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/biology-of-the-female-reproductive-system/puberty-in-girls",
+          "tags": [
+            "period",
+            "puberty"
+          ],
+          "keywords": [
+            "内分泌",
+            "出血",
+            "多囊",
+            "月经",
+            "痛经",
+            "经前",
+            "经期",
+            "青春期"
+          ]
+        },
+        {
+          "title": "月经周期",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/biology-of-the-female-reproductive-system/menstrual-cycle",
+          "tags": [
+            "period",
+            "puberty"
+          ],
+          "keywords": [
+            "内分泌",
+            "出血",
+            "多囊",
+            "月经",
+            "月经周期",
+            "痛经",
+            "经前",
+            "经期"
+          ]
+        },
+        {
+          "title": "年龄的影响",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/biology-of-the-female-reproductive-system/effects-of-aging-on-the-female-reproductive-system",
+          "tags": [
+            "period",
+            "puberty"
+          ],
+          "keywords": [
+            "内分泌",
+            "出血",
+            "多囊",
+            "年龄的影响",
+            "月经",
+            "痛经",
+            "经前",
+            "经期"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "symptoms",
+      "name": "妇科症状自查",
+      "icon": "🔍",
+      "stages": [
+        "period",
+        "general"
+      ],
+      "links": [
+        {
+          "title": "阴道流血",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/symptoms-of-gynecologic-disorders/vaginal-bleeding",
+          "tags": [
+            "period",
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "内分泌",
+            "出血",
+            "多囊",
+            "女性",
+            "妇科",
+            "感染",
+            "月经",
+            "检查",
+            "痛经",
+            "经前",
+            "经期",
+            "避孕",
+            "阴道流血"
+          ]
+        },
+        {
+          "title": "女性盆腔疼痛",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/symptoms-of-gynecologic-disorders/pelvic-pain-in-women",
+          "tags": [
+            "period",
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "内分泌",
+            "出血",
+            "多囊",
+            "女性",
+            "女性盆腔疼痛",
+            "妇科",
+            "感染",
+            "月经",
+            "检查",
+            "痛经",
+            "经前",
+            "经期",
+            "避孕"
+          ]
+        },
+        {
+          "title": "阴道瘙痒或阴道分泌物",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/symptoms-of-gynecologic-disorders/vaginal-itching-or-vaginal-discharge",
+          "tags": [
+            "period",
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "内分泌",
+            "出血",
+            "多囊",
+            "女性",
+            "妇科",
+            "感染",
+            "月经",
+            "检查",
+            "痛经",
+            "经前",
+            "经期",
+            "避孕",
+            "阴道瘙痒或阴道分泌物"
+          ]
+        },
+        {
+          "title": "女性盆腔肿块",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/symptoms-of-gynecologic-disorders/female-pelvic-mass",
+          "tags": [
+            "period",
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "内分泌",
+            "出血",
+            "多囊",
+            "女性",
+            "女性盆腔肿块",
+            "妇科",
+            "感染",
+            "月经",
+            "检查",
+            "痛经",
+            "经前",
+            "经期",
+            "避孕"
+          ]
+        },
+        {
+          "title": "儿童中的女性盆腔肿块",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/symptoms-of-gynecologic-disorders/female-pelvic-mass-in-children",
+          "tags": [
+            "period",
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "儿童中的女性盆腔肿块",
+            "内分泌",
+            "出血",
+            "多囊",
+            "女性",
+            "妇科",
+            "感染",
+            "月经",
+            "检查",
+            "痛经",
+            "经前",
+            "经期",
+            "避孕"
+          ]
+        },
+        {
+          "title": "婴儿和儿童中的阴道出血",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/symptoms-of-gynecologic-disorders/vaginal-bleeding-in-infants-and-children",
+          "tags": [
+            "period",
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "内分泌",
+            "出血",
+            "多囊",
+            "女性",
+            "妇科",
+            "婴儿和儿童中的阴道出血",
+            "感染",
+            "月经",
+            "检查",
+            "痛经",
+            "经前",
+            "经期",
+            "避孕"
+          ]
+        },
+        {
+          "title": "儿童中的阴道瘙痒或分泌物",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/symptoms-of-gynecologic-disorders/vaginal-itching-or-vaginal-discharge-in-children",
+          "tags": [
+            "period",
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "儿童中的阴道瘙痒或分泌物",
+            "内分泌",
+            "出血",
+            "多囊",
+            "女性",
+            "妇科",
+            "感染",
+            "月经",
+            "检查",
+            "痛经",
+            "经前",
+            "经期",
+            "避孕"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "menstrual",
+      "name": "月经与异常出血",
+      "icon": "🌸",
+      "stages": [
+        "period"
+      ],
+      "links": [
+        {
+          "title": "经前综合征 (PMS)",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/menstrual-disorders-and-abnormal-uterine-bleeding/premenstrual-syndrome-pms",
+          "tags": [
+            "period"
+          ],
+          "keywords": [
+            "内分泌",
+            "出血",
+            "多囊",
+            "月经",
+            "痛经",
+            "经前",
+            "经前综合征 (PMS)",
+            "经期"
+          ]
+        },
+        {
+          "title": "盆腔静脉疾病",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/menstrual-disorders-and-abnormal-uterine-bleeding/pelvic-venous-disorders",
+          "tags": [
+            "period"
+          ],
+          "keywords": [
+            "内分泌",
+            "出血",
+            "多囊",
+            "月经",
+            "痛经",
+            "盆腔静脉疾病",
+            "经前",
+            "经期"
+          ]
+        },
+        {
+          "title": "过早绝经",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/menstrual-disorders-and-abnormal-uterine-bleeding/premature-menopause",
+          "tags": [
+            "period"
+          ],
+          "keywords": [
+            "内分泌",
+            "出血",
+            "多囊",
+            "月经",
+            "痛经",
+            "经前",
+            "经期",
+            "过早绝经"
+          ]
+        },
+        {
+          "title": "月经周期问题概述",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/menstrual-disorders-and-abnormal-uterine-bleeding/overview-of-menstrual-cycle-problems",
+          "tags": [
+            "period"
+          ],
+          "keywords": [
+            "内分泌",
+            "出血",
+            "多囊",
+            "月经",
+            "月经周期问题概述",
+            "痛经",
+            "经前",
+            "经期"
+          ]
+        },
+        {
+          "title": "痛经",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/menstrual-disorders-and-abnormal-uterine-bleeding/menstrual-cramps",
+          "tags": [
+            "period"
+          ],
+          "keywords": [
+            "内分泌",
+            "出血",
+            "多囊",
+            "月经",
+            "痛经",
+            "经前",
+            "经期"
+          ]
+        },
+        {
+          "title": "月经周期停止",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/menstrual-disorders-and-abnormal-uterine-bleeding/absence-of-menstrual-periods",
+          "tags": [
+            "period"
+          ],
+          "keywords": [
+            "内分泌",
+            "出血",
+            "多囊",
+            "月经",
+            "月经周期停止",
+            "痛经",
+            "经前",
+            "经期"
+          ]
+        },
+        {
+          "title": "异常子宫出血 (AUB)",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/menstrual-disorders-and-abnormal-uterine-bleeding/abnormal-uterine-bleeding-aub",
+          "tags": [
+            "period"
+          ],
+          "keywords": [
+            "内分泌",
+            "出血",
+            "多囊",
+            "异常子宫出血 (AUB)",
+            "月经",
+            "痛经",
+            "经前",
+            "经期"
+          ]
+        },
+        {
+          "title": "多囊卵巢综合征 (PCOS)",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/menstrual-disorders-and-abnormal-uterine-bleeding/polyendocrine-metabolic-ovarian-syndrome-pmos",
+          "tags": [
+            "period"
+          ],
+          "keywords": [
+            "内分泌",
+            "出血",
+            "多囊",
+            "多囊卵巢综合征 (PCOS)",
+            "月经",
+            "痛经",
+            "经前",
+            "经期"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "endometriosis",
+      "name": "子宫内膜异位症",
+      "icon": "🌹",
+      "stages": [
+        "period"
+      ],
+      "links": [
+        {
+          "title": "外阴子宫内膜异位囊肿",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/endometriosis/vulvar-endometriomas",
+          "tags": [
+            "period"
+          ],
+          "keywords": [
+            "内分泌",
+            "出血",
+            "外阴子宫内膜异位囊肿",
+            "多囊",
+            "月经",
+            "痛经",
+            "经前",
+            "经期"
+          ]
+        },
+        {
+          "title": "子宫内膜异位症",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/endometriosis/endometriosis",
+          "tags": [
+            "period"
+          ],
+          "keywords": [
+            "内分泌",
+            "出血",
+            "多囊",
+            "子宫内膜异位症",
+            "月经",
+            "痛经",
+            "经前",
+            "经期"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fibroids",
+      "name": "子宫肌瘤",
+      "icon": "🩸",
+      "stages": [
+        "period"
+      ],
+      "links": [
+        {
+          "title": "子宫肌瘤",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/fibroids/uterine-fibroids",
+          "tags": [
+            "period"
+          ],
+          "keywords": [
+            "内分泌",
+            "出血",
+            "多囊",
+            "子宫肌瘤",
+            "月经",
+            "痛经",
+            "经前",
+            "经期"
+          ]
+        },
+        {
+          "title": "宫颈纤维瘤",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/fibroids/cervical-fibroids",
+          "tags": [
+            "period"
+          ],
+          "keywords": [
+            "内分泌",
+            "出血",
+            "多囊",
+            "宫颈纤维瘤",
+            "月经",
+            "痛经",
+            "经前",
+            "经期"
+          ]
+        },
+        {
+          "title": "妊娠肌瘤",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/fibroids/fibroids-in-pregnancy",
+          "tags": [
+            "period"
+          ],
+          "keywords": [
+            "内分泌",
+            "出血",
+            "多囊",
+            "妊娠肌瘤",
+            "月经",
+            "痛经",
+            "经前",
+            "经期"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "infection",
+      "name": "阴道炎与盆腔炎",
+      "icon": "🦠",
+      "stages": [
+        "general"
+      ],
+      "links": [
+        {
+          "title": "盆腔炎 (PID)",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/vaginitis-cervicitis-and-pelvic-inflammatory-disease/pelvic-inflammatory-disease-pid",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "妇科",
+            "感染",
+            "检查",
+            "盆腔炎 (PID)",
+            "避孕"
+          ]
+        },
+        {
+          "title": "阴道炎概述（阴道感染或炎症）",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/vaginitis-cervicitis-and-pelvic-inflammatory-disease/overview-of-vaginitis-vaginal-infection-or-inflammation",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "妇科",
+            "感染",
+            "检查",
+            "避孕",
+            "阴道炎概述（阴道感染或炎症）"
+          ]
+        },
+        {
+          "title": "细菌性阴道病 (BV)",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/vaginitis-cervicitis-and-pelvic-inflammatory-disease/bacterial-vaginosis-bv",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "妇科",
+            "感染",
+            "检查",
+            "细菌性阴道病 (BV)",
+            "避孕"
+          ]
+        },
+        {
+          "title": "滴虫性阴道炎",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/vaginitis-cervicitis-and-pelvic-inflammatory-disease/trichomonal-vaginitis",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "妇科",
+            "感染",
+            "检查",
+            "滴虫性阴道炎",
+            "避孕"
+          ]
+        },
+        {
+          "title": "阴道酵母菌感染（念珠菌病）",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/vaginitis-cervicitis-and-pelvic-inflammatory-disease/vaginal-yeast-infection-candidiasis",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "妇科",
+            "感染",
+            "检查",
+            "避孕",
+            "阴道酵母菌感染（念珠菌病）"
+          ]
+        },
+        {
+          "title": "子宫颈炎",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/vaginitis-cervicitis-and-pelvic-inflammatory-disease/cervicitis",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "妇科",
+            "子宫颈炎",
+            "感染",
+            "检查",
+            "避孕"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "breast",
+      "name": "乳房健康",
+      "icon": "💗",
+      "stages": [
+        "general",
+        "postpartum"
+      ],
+      "links": [
+        {
+          "title": "乳房疼痛",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/breast-disorders/breast-pain",
+          "tags": [
+            "general",
+            "postpartum"
+          ],
+          "keywords": [
+            "乳房",
+            "乳房疼痛",
+            "产后",
+            "哺乳",
+            "女性",
+            "妇科",
+            "恶露",
+            "感染",
+            "月子",
+            "检查",
+            "母乳",
+            "盆底",
+            "避孕"
+          ]
+        },
+        {
+          "title": "乳房疾病概述",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/breast-disorders/overview-of-breast-disorders",
+          "tags": [
+            "general",
+            "postpartum"
+          ],
+          "keywords": [
+            "乳房",
+            "乳房疾病概述",
+            "产后",
+            "哺乳",
+            "女性",
+            "妇科",
+            "恶露",
+            "感染",
+            "月子",
+            "检查",
+            "母乳",
+            "盆底",
+            "避孕"
+          ]
+        },
+        {
+          "title": "乳房囊肿",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/breast-disorders/breast-cysts",
+          "tags": [
+            "general",
+            "postpartum"
+          ],
+          "keywords": [
+            "乳房",
+            "乳房囊肿",
+            "产后",
+            "哺乳",
+            "女性",
+            "妇科",
+            "恶露",
+            "感染",
+            "月子",
+            "检查",
+            "母乳",
+            "盆底",
+            "避孕"
+          ]
+        },
+        {
+          "title": "乳腺纤维腺瘤",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/breast-disorders/fibroadenomas-of-the-breast",
+          "tags": [
+            "general",
+            "postpartum"
+          ],
+          "keywords": [
+            "乳房",
+            "乳腺纤维腺瘤",
+            "产后",
+            "哺乳",
+            "女性",
+            "妇科",
+            "恶露",
+            "感染",
+            "月子",
+            "检查",
+            "母乳",
+            "盆底",
+            "避孕"
+          ]
+        },
+        {
+          "title": "乳房纤维囊性变化",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/breast-disorders/fibrocystic-changes-of-the-breast",
+          "tags": [
+            "general",
+            "postpartum"
+          ],
+          "keywords": [
+            "乳房",
+            "乳房纤维囊性变化",
+            "产后",
+            "哺乳",
+            "女性",
+            "妇科",
+            "恶露",
+            "感染",
+            "月子",
+            "检查",
+            "母乳",
+            "盆底",
+            "避孕"
+          ]
+        },
+        {
+          "title": "乳房脓肿",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/breast-disorders/breast-abscess",
+          "tags": [
+            "general",
+            "postpartum"
+          ],
+          "keywords": [
+            "乳房",
+            "乳房脓肿",
+            "产后",
+            "哺乳",
+            "女性",
+            "妇科",
+            "恶露",
+            "感染",
+            "月子",
+            "检查",
+            "母乳",
+            "盆底",
+            "避孕"
+          ]
+        },
+        {
+          "title": "乳房肿块",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/breast-disorders/breast-lumps",
+          "tags": [
+            "general",
+            "postpartum"
+          ],
+          "keywords": [
+            "乳房",
+            "乳房肿块",
+            "产后",
+            "哺乳",
+            "女性",
+            "妇科",
+            "恶露",
+            "感染",
+            "月子",
+            "检查",
+            "母乳",
+            "盆底",
+            "避孕"
+          ]
+        },
+        {
+          "title": "乳头溢液",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/breast-disorders/nipple-discharge",
+          "tags": [
+            "general",
+            "postpartum"
+          ],
+          "keywords": [
+            "乳头溢液",
+            "乳房",
+            "产后",
+            "哺乳",
+            "女性",
+            "妇科",
+            "恶露",
+            "感染",
+            "月子",
+            "检查",
+            "母乳",
+            "盆底",
+            "避孕"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "checkup",
+      "name": "妇科检查",
+      "icon": "🩺",
+      "stages": [
+        "general"
+      ],
+      "links": [
+        {
+          "title": "妇产科病史",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/diagnosis-of-gynecologic-disorders/obstetric-and-gynecologic-history",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "妇产科病史",
+            "妇科",
+            "感染",
+            "检查",
+            "避孕"
+          ]
+        },
+        {
+          "title": "妇科检查和程序",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/diagnosis-of-gynecologic-disorders/gynecologic-tests-and-procedures",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "妇科",
+            "妇科检查和程序",
+            "感染",
+            "检查",
+            "避孕"
+          ]
+        },
+        {
+          "title": "女性健康就诊",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/diagnosis-of-gynecologic-disorders/well-woman-visits",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "女性健康就诊",
+            "妇科",
+            "感染",
+            "检查",
+            "避孕"
+          ]
+        },
+        {
+          "title": "盆腔检查",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/diagnosis-of-gynecologic-disorders/pelvic-examination",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "妇科",
+            "感染",
+            "检查",
+            "盆腔检查",
+            "避孕"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "contraception",
+      "name": "避孕与生育计划",
+      "icon": "🛡️",
+      "stages": [
+        "reproductive"
+      ],
+      "links": [
+        {
+          "title": "避孕概述",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/family-planning/overview-of-contraception",
+          "tags": [
+            "reproductive"
+          ],
+          "keywords": [
+            "避孕概述"
+          ]
+        },
+        {
+          "title": "绝育",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/family-planning/permanent-contraception",
+          "tags": [
+            "reproductive"
+          ],
+          "keywords": [
+            "绝育"
+          ]
+        },
+        {
+          "title": "人工流产",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/family-planning/abortion",
+          "tags": [
+            "reproductive"
+          ],
+          "keywords": [
+            "人工流产"
+          ]
+        },
+        {
+          "title": "激素避孕方法",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/family-planning/hormonal-methods-of-contraception",
+          "tags": [
+            "reproductive"
+          ],
+          "keywords": [
+            "激素避孕方法"
+          ]
+        },
+        {
+          "title": "工具避孕",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/family-planning/barrier-contraceptives",
+          "tags": [
+            "reproductive"
+          ],
+          "keywords": [
+            "工具避孕"
+          ]
+        },
+        {
+          "title": "宫内节育器 (IUD)",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/family-planning/intrauterine-devices-iuds",
+          "tags": [
+            "reproductive"
+          ],
+          "keywords": [
+            "宫内节育器 (IUD)"
+          ]
+        },
+        {
+          "title": "易受孕期知晓避孕法",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/family-planning/fertility-awareness-based-methods-of-contraception",
+          "tags": [
+            "reproductive"
+          ],
+          "keywords": [
+            "易受孕期知晓避孕法"
+          ]
+        },
+        {
+          "title": "紧急避孕措施",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/family-planning/emergency-contraception",
+          "tags": [
+            "reproductive"
+          ],
+          "keywords": [
+            "紧急避孕措施"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "infertility",
+      "name": "备孕与不孕",
+      "icon": "🌱",
+      "stages": [
+        "preconception"
+      ],
+      "links": [
+        {
+          "title": "宫颈黏液引起的不育问题",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/infertility-and-recurrent-miscarriage/infertility-problems-with-cervical-mucus",
+          "tags": [
+            "preconception"
+          ],
+          "keywords": [
+            "不孕",
+            "受孕",
+            "叶酸",
+            "备孕",
+            "宫颈黏液引起的不育问题",
+            "排卵",
+            "流产"
+          ]
+        },
+        {
+          "title": "精液问题",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/infertility-and-recurrent-miscarriage/problems-with-sperm",
+          "tags": [
+            "preconception"
+          ],
+          "keywords": [
+            "不孕",
+            "受孕",
+            "叶酸",
+            "备孕",
+            "排卵",
+            "流产",
+            "精液问题"
+          ]
+        },
+        {
+          "title": "因排卵问题引起的不孕症",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/infertility-and-recurrent-miscarriage/infertility-problems-with-ovulation",
+          "tags": [
+            "preconception"
+          ],
+          "keywords": [
+            "不孕",
+            "受孕",
+            "叶酸",
+            "因排卵问题引起的不孕症",
+            "备孕",
+            "排卵",
+            "流产"
+          ]
+        },
+        {
+          "title": "输卵管相关不育症问题与盆腔异常",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/infertility-and-recurrent-miscarriage/infertility-problems-with-the-fallopian-tubes-and-abnormalities-in-the-pelvis",
+          "tags": [
+            "preconception"
+          ],
+          "keywords": [
+            "不孕",
+            "受孕",
+            "叶酸",
+            "备孕",
+            "排卵",
+            "流产",
+            "输卵管相关不育症问题与盆腔异常"
+          ]
+        },
+        {
+          "title": "卵子相关不育症问题",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/infertility-and-recurrent-miscarriage/infertility-problems-with-eggs",
+          "tags": [
+            "preconception"
+          ],
+          "keywords": [
+            "不孕",
+            "卵子相关不育症问题",
+            "受孕",
+            "叶酸",
+            "备孕",
+            "排卵",
+            "流产"
+          ]
+        },
+        {
+          "title": "不明原因的不孕症",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/infertility-and-recurrent-miscarriage/unexplained-infertility",
+          "tags": [
+            "preconception"
+          ],
+          "keywords": [
+            "不孕",
+            "不明原因的不孕症",
+            "受孕",
+            "叶酸",
+            "备孕",
+            "排卵",
+            "流产"
+          ]
+        },
+        {
+          "title": "不孕症概述",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/infertility-and-recurrent-miscarriage/overview-of-infertility",
+          "tags": [
+            "preconception"
+          ],
+          "keywords": [
+            "不孕",
+            "不孕症概述",
+            "受孕",
+            "叶酸",
+            "备孕",
+            "排卵",
+            "流产"
+          ]
+        },
+        {
+          "title": "辅助生殖技术 (ART)",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/infertility-and-recurrent-miscarriage/assisted-reproductive-technologies-arts",
+          "tags": [
+            "preconception"
+          ],
+          "keywords": [
+            "不孕",
+            "受孕",
+            "叶酸",
+            "备孕",
+            "排卵",
+            "流产",
+            "辅助生殖技术 (ART)"
+          ]
+        },
+        {
+          "title": "反复流产",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/infertility-and-recurrent-miscarriage/recurrent-miscarriage",
+          "tags": [
+            "preconception"
+          ],
+          "keywords": [
+            "不孕",
+            "反复流产",
+            "受孕",
+            "叶酸",
+            "备孕",
+            "排卵",
+            "流产"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pregnancy",
+      "name": "正常孕期",
+      "icon": "🤰",
+      "stages": [
+        "pregnancy"
+      ],
+      "links": [
+        {
+          "title": "妊娠测试和预产期",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/normal-pregnancy/pregnancy-test-and-due-date",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "妊娠测试和预产期",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "胎儿的发育阶段",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/normal-pregnancy/stages-of-fetal-development",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "胎",
+            "胎儿的发育阶段",
+            "预产期"
+          ]
+        },
+        {
+          "title": "孕期母体变化",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/normal-pregnancy/physical-changes-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "孕期母体变化",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "孕期保健",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/normal-pregnancy/medical-care-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "孕期保健",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "孕期自我保健",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/normal-pregnancy/self-care-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "孕期自我保健",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "妊娠贫血",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/normal-pregnancy/anemia-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "妊娠贫血",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "妊娠期间感染",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/normal-pregnancy/infections-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "妊娠期间感染",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "妊娠期血栓疾病",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/normal-pregnancy/blood-clot-disorders-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "妊娠期血栓疾病",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "泌尿系统感染",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/normal-pregnancy/urinary-tract-infections-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "泌尿系统感染",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "晚期和过期妊娠",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/normal-pregnancy/late-term-and-postterm-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "晚期和过期妊娠",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "多胎妊娠",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/normal-pregnancy/multiple-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "多胎妊娠",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pregnancy-symptoms",
+      "name": "孕期不适",
+      "icon": "🤰",
+      "stages": [
+        "pregnancy"
+      ],
+      "links": [
+        {
+          "title": "早孕期间盆腔疼痛",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/symptoms-during-pregnancy/pelvic-pain-during-early-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "早孕期间盆腔疼痛",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "孕早期阴道流血",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/symptoms-during-pregnancy/vaginal-bleeding-during-early-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕早期阴道流血",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "孕早期的恶心呕吐",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/symptoms-during-pregnancy/nausea-and-vomiting-during-early-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕早期的恶心呕吐",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "孕晚期水肿",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/symptoms-during-pregnancy/swelling-during-late-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕晚期水肿",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "孕晚期阴道流血",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/symptoms-during-pregnancy/vaginal-bleeding-during-late-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕晚期阴道流血",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "怀孕期间的症状简介",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/symptoms-during-pregnancy/introduction-to-symptoms-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "怀孕期间的症状简介",
+            "胎",
+            "预产期"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pregnancy-complications",
+      "name": "妊娠并发症",
+      "icon": "⚠️",
+      "stages": [
+        "pregnancy"
+      ],
+      "links": [
+        {
+          "title": "高危妊娠概述",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-pregnancy/overview-of-high-risk-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期",
+            "高危妊娠概述"
+          ]
+        },
+        {
+          "title": "孕产妇死亡和围产期死亡",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-pregnancy/maternal-mortality-and-perinatal-mortality",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕产妇死亡和围产期死亡",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "妊娠并发症的风险因素",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-pregnancy/risk-factors-for-pregnancy-complications",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "妊娠并发症的风险因素",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "羊水相关问题",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-pregnancy/problems-with-amniotic-fluid",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "羊水相关问题",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "宫颈机能不全",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-pregnancy/cervical-insufficiency",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "宫颈机能不全",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "妊娠剧吐",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-pregnancy/hyperemesis-gravidarum",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "妊娠剧吐",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "死产",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-pregnancy/stillbirth",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "死产",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "前置胎盘",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-pregnancy/placenta-previa",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "前置胎盘",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "先兆子痫和子痫",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-pregnancy/preeclampsia-and-eclampsia",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "先兆子痫和子痫",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "胎儿和新生儿溶血性疾病",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-pregnancy/hemolytic-disease-of-the-fetus-and-newborn",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "胎",
+            "胎儿和新生儿溶血性疾病",
+            "预产期"
+          ]
+        },
+        {
+          "title": "胎膜早破 (PROM)",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-pregnancy/prelabor-rupture-of-membranes-prom",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "胎",
+            "胎膜早破 (PROM)",
+            "预产期"
+          ]
+        },
+        {
+          "title": "早产",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-pregnancy/preterm-labor",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "早产",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "妊娠性类天疱疮",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-pregnancy/pemphigoid-gestationis",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "妊娠性类天疱疮",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "胎盘早剥（胎盘早期脱离）",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-pregnancy/placental-abruption-abruptio-placentae",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "胎",
+            "胎盘早剥（胎盘早期脱离）",
+            "预产期"
+          ]
+        },
+        {
+          "title": "妊娠期多形疹",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-pregnancy/polymorphic-eruption-of-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "妊娠期多形疹",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "血管前置",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-pregnancy/vasa-previa",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "胎",
+            "血管前置",
+            "预产期"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pregnancy-disease",
+      "name": "孕期合并疾病",
+      "icon": "🩺",
+      "stages": [
+        "pregnancy"
+      ],
+      "links": [
+        {
+          "title": "COVID-19 与怀孕",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/pregnancy-complicated-by-disease/covid-19-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "COVID-19 与怀孕",
+            "产前",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "妊娠期疾病概述",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/pregnancy-complicated-by-disease/overview-of-disease-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "妊娠期疾病概述",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "孕期哮喘",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/pregnancy-complicated-by-disease/asthma-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "孕期哮喘",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "自身免疫疾病",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/pregnancy-complicated-by-disease/autoimmune-disorders-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "胎",
+            "自身免疫疾病",
+            "预产期"
+          ]
+        },
+        {
+          "title": "孕期癌症",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/pregnancy-complicated-by-disease/cancer-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "孕期癌症",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "妊娠期糖尿病",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/pregnancy-complicated-by-disease/diabetes-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "妊娠期糖尿病",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "妊娠期心脏病",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/pregnancy-complicated-by-disease/heart-disease-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "妊娠期心脏病",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "妊娠期高血压",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/pregnancy-complicated-by-disease/high-blood-pressure-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "妊娠期高血压",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "孕期肾脏疾病",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/pregnancy-complicated-by-disease/kidney-disorders-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "孕期肾脏疾病",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "孕期肝脏及胆囊疾病",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/pregnancy-complicated-by-disease/liver-and-gallbladder-disorders-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "孕期肝脏及胆囊疾病",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "孕期癫痫",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/pregnancy-complicated-by-disease/seizure-disorders-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "孕期癫痫",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "需要手术治疗的孕期疾病",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/pregnancy-complicated-by-disease/disorders-that-require-surgery-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "胎",
+            "需要手术治疗的孕期疾病",
+            "预产期"
+          ]
+        },
+        {
+          "title": "甲状腺疾病",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/pregnancy-complicated-by-disease/thyroid-disorders-during-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "甲状腺疾病",
+            "胎",
+            "预产期"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "prenatal-testing",
+      "name": "产前筛查",
+      "icon": "🧪",
+      "stages": [
+        "pregnancy"
+      ],
+      "links": [
+        {
+          "title": "妊娠前遗传咨询和基因检测",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/detection-of-genetic-disorders-before-and-during-pregnancy/genetic-counseling-and-genetic-testing-before-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "妊娠前遗传咨询和基因检测",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "基因疾病和出生缺陷的产前检查",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/detection-of-genetic-disorders-before-and-during-pregnancy/prenatal-testing-for-genetic-disorders-and-birth-defects",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "基因疾病和出生缺陷的产前检查",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "early-pregnancy",
+      "name": "早孕问题",
+      "icon": "🌱",
+      "stages": [
+        "pregnancy"
+      ],
+      "links": [
+        {
+          "title": "脓毒性流产",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/early-pregnancy-disorders/septic-abortion",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "胎",
+            "脓毒性流产",
+            "预产期"
+          ]
+        },
+        {
+          "title": "异位妊娠",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/early-pregnancy-disorders/ectopic-pregnancy",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "异位妊娠",
+            "怀孕",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "流产",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/early-pregnancy-disorders/miscarriage",
+          "tags": [
+            "pregnancy"
+          ],
+          "keywords": [
+            "产前",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "流产",
+            "胎",
+            "预产期"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "medication",
+      "name": "孕期用药",
+      "icon": "💊",
+      "stages": [
+        "pregnancy",
+        "postpartum"
+      ],
+      "links": [
+        {
+          "title": "母乳喂养期间的药物和物质使用",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/medication-and-substance-use-during-pregnancy/medication-and-substance-use-during-breastfeeding",
+          "tags": [
+            "pregnancy",
+            "postpartum"
+          ],
+          "keywords": [
+            "产前",
+            "产后",
+            "哺乳",
+            "妊娠",
+            "孕期",
+            "怀孕",
+            "恶露",
+            "月子",
+            "母乳",
+            "母乳喂养期间的药物和物质使用",
+            "盆底",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "妊娠期用药的安全性",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/medication-and-substance-use-during-pregnancy/safety-of-medications-during-pregnancy",
+          "tags": [
+            "pregnancy",
+            "postpartum"
+          ],
+          "keywords": [
+            "产前",
+            "产后",
+            "哺乳",
+            "妊娠",
+            "妊娠期用药的安全性",
+            "孕期",
+            "怀孕",
+            "恶露",
+            "月子",
+            "母乳",
+            "盆底",
+            "胎",
+            "预产期"
+          ]
+        },
+        {
+          "title": "妊娠期物质使用",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/medication-and-substance-use-during-pregnancy/substance-use-during-pregnancy",
+          "tags": [
+            "pregnancy",
+            "postpartum"
+          ],
+          "keywords": [
+            "产前",
+            "产后",
+            "哺乳",
+            "妊娠",
+            "妊娠期物质使用",
+            "孕期",
+            "怀孕",
+            "恶露",
+            "月子",
+            "母乳",
+            "盆底",
+            "胎",
+            "预产期"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "delivery",
+      "name": "分娩",
+      "icon": "👶",
+      "stages": [
+        "delivery"
+      ],
+      "links": [
+        {
+          "title": "阴道分娩",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/labor-and-delivery/vaginal-birth",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "剖宫",
+            "剖腹",
+            "待产",
+            "生产",
+            "阴道分娩"
+          ]
+        },
+        {
+          "title": "正常分娩概述",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/labor-and-delivery/overview-of-labor-and-delivery",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "剖宫",
+            "剖腹",
+            "待产",
+            "正常分娩概述",
+            "生产"
+          ]
+        },
+        {
+          "title": "分娩",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/labor-and-delivery/labor",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "剖宫",
+            "剖腹",
+            "待产",
+            "生产"
+          ]
+        },
+        {
+          "title": "催产",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/labor-and-delivery/induction-of-labor",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "剖宫",
+            "剖腹",
+            "待产",
+            "生产"
+          ]
+        },
+        {
+          "title": "阴道手术助产",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/labor-and-delivery/operative-vaginal-delivery",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "剖宫",
+            "剖腹",
+            "待产",
+            "生产",
+            "阴道手术助产"
+          ]
+        },
+        {
+          "title": "剖腹产",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/labor-and-delivery/cesarean-delivery",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "剖宫",
+            "剖腹",
+            "剖腹产",
+            "待产",
+            "生产"
+          ]
+        },
+        {
+          "title": "待产和分娩期间的胎儿心率监护",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/labor-and-delivery/fetal-heart-rate-monitoring-during-labor-and-delivery",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "剖宫",
+            "剖腹",
+            "待产",
+            "待产和分娩期间的胎儿心率监护",
+            "生产"
+          ]
+        },
+        {
+          "title": "待产和分娩时的疼痛缓解",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/labor-and-delivery/pain-relief-for-labor-and-delivery",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "剖宫",
+            "剖腹",
+            "待产",
+            "待产和分娩时的疼痛缓解",
+            "生产"
+          ]
+        },
+        {
+          "title": "分娩进展太缓慢",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/labor-and-delivery/labor-that-progresses-too-slowly",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "分娩进展太缓慢",
+            "剖宫",
+            "剖腹",
+            "待产",
+            "生产"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "delivery-complications",
+      "name": "分娩并发症",
+      "icon": "🏥",
+      "stages": [
+        "delivery"
+      ],
+      "links": [
+        {
+          "title": "分娩并发症介绍",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-labor-and-delivery/introduction-to-complications-of-labor-and-delivery",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "分娩并发症介绍",
+            "剖宫",
+            "剖腹",
+            "待产",
+            "生产"
+          ]
+        },
+        {
+          "title": "胎儿窘迫",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-labor-and-delivery/fetal-distress",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "剖宫",
+            "剖腹",
+            "待产",
+            "生产",
+            "胎儿窘迫"
+          ]
+        },
+        {
+          "title": "胎先露、胎位或轴向（包括臀先露）",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-labor-and-delivery/fetal-presentation-position-and-lie-including-breech-presentation",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "剖宫",
+            "剖腹",
+            "待产",
+            "生产",
+            "胎先露、胎位或轴向（包括臀先露）"
+          ]
+        },
+        {
+          "title": "脐带脱垂",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-labor-and-delivery/umbilical-cord-prolapse",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "剖宫",
+            "剖腹",
+            "待产",
+            "生产",
+            "脐带脱垂"
+          ]
+        },
+        {
+          "title": "羊水栓塞",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-labor-and-delivery/amniotic-fluid-embolism",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "剖宫",
+            "剖腹",
+            "待产",
+            "生产",
+            "羊水栓塞"
+          ]
+        },
+        {
+          "title": "分娩时子宫出血过多",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-labor-and-delivery/excessive-uterine-bleeding-at-delivery",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "分娩时子宫出血过多",
+            "剖宫",
+            "剖腹",
+            "待产",
+            "生产"
+          ]
+        },
+        {
+          "title": "子宫内翻",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-labor-and-delivery/uterine-inversion",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "剖宫",
+            "剖腹",
+            "子宫内翻",
+            "待产",
+            "生产"
+          ]
+        },
+        {
+          "title": "胎盘植入",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-labor-and-delivery/placenta-accreta",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "剖宫",
+            "剖腹",
+            "待产",
+            "生产",
+            "胎盘植入"
+          ]
+        },
+        {
+          "title": "子宫破裂",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-labor-and-delivery/uterine-rupture",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "剖宫",
+            "剖腹",
+            "子宫破裂",
+            "待产",
+            "生产"
+          ]
+        },
+        {
+          "title": "肩难产",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-labor-and-delivery/shoulder-dystocia",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "剖宫",
+            "剖腹",
+            "待产",
+            "生产",
+            "肩难产"
+          ]
+        },
+        {
+          "title": "羊膜腔感染",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/complications-of-labor-and-delivery/intraamniotic-infection",
+          "tags": [
+            "delivery"
+          ],
+          "keywords": [
+            "催产",
+            "分娩",
+            "剖宫",
+            "剖腹",
+            "待产",
+            "生产",
+            "羊膜腔感染"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "postpartum",
+      "name": "产后护理",
+      "icon": "🌙",
+      "stages": [
+        "postpartum",
+        "baby"
+      ],
+      "links": [
+        {
+          "title": "产后护理概述",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/postpartum-care/overview-of-postpartum-care",
+          "tags": [
+            "postpartum",
+            "baby"
+          ],
+          "keywords": [
+            "产后",
+            "产后护理概述",
+            "哺乳",
+            "恶露",
+            "月子",
+            "母乳",
+            "盆底"
+          ]
+        },
+        {
+          "title": "分娩后感染",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/postpartum-care/infections-after-childbirth",
+          "tags": [
+            "postpartum",
+            "baby"
+          ],
+          "keywords": [
+            "产后",
+            "分娩后感染",
+            "哺乳",
+            "恶露",
+            "月子",
+            "母乳",
+            "盆底"
+          ]
+        },
+        {
+          "title": "产后抑郁",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/postpartum-care/postpartum-depression",
+          "tags": [
+            "postpartum",
+            "baby"
+          ],
+          "keywords": [
+            "产后",
+            "产后抑郁",
+            "哺乳",
+            "恶露",
+            "月子",
+            "母乳",
+            "盆底"
+          ]
+        },
+        {
+          "title": "分娩后子宫感染",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/postpartum-care/infections-of-the-uterus-after-delivery",
+          "tags": [
+            "postpartum",
+            "baby"
+          ],
+          "keywords": [
+            "产后",
+            "分娩后子宫感染",
+            "哺乳",
+            "恶露",
+            "月子",
+            "母乳",
+            "盆底"
+          ]
+        },
+        {
+          "title": "产后膀胱和肾脏感染",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/postpartum-care/bladder-and-kidney-infections-after-childbirth",
+          "tags": [
+            "postpartum",
+            "baby"
+          ],
+          "keywords": [
+            "产后",
+            "产后膀胱和肾脏感染",
+            "哺乳",
+            "恶露",
+            "月子",
+            "母乳",
+            "盆底"
+          ]
+        },
+        {
+          "title": "乳腺炎",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/postpartum-care/mastitis",
+          "tags": [
+            "postpartum",
+            "baby"
+          ],
+          "keywords": [
+            "乳腺炎",
+            "产后",
+            "哺乳",
+            "恶露",
+            "月子",
+            "母乳",
+            "盆底"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pelvic-floor",
+      "name": "盆底健康",
+      "icon": "🧘",
+      "stages": [
+        "postpartum",
+        "menopause"
+      ],
+      "links": [
+        {
+          "title": "盆腔器官脱垂 (POP)",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/pelvic-organ-prolapse-pop/pelvic-organ-prolapse-pop",
+          "tags": [
+            "postpartum",
+            "menopause"
+          ],
+          "keywords": [
+            "产后",
+            "哺乳",
+            "恶露",
+            "更年期",
+            "月子",
+            "母乳",
+            "潮热",
+            "盆底",
+            "盆腔器官脱垂 (POP)",
+            "绝经"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "menopause",
+      "name": "更年期与绝经",
+      "icon": "🌙",
+      "stages": [
+        "menopause"
+      ],
+      "links": [
+        {
+          "title": "绝经",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/menopause/menopause",
+          "tags": [
+            "menopause"
+          ],
+          "keywords": [
+            "更年期",
+            "潮热",
+            "绝经"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sexual-health",
+      "name": "女性性健康",
+      "icon": "💞",
+      "stages": [
+        "general"
+      ],
+      "links": [
+        {
+          "title": "妊娠期和产后性功能障碍",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/sexual-function-and-dysfunction-in-women/sexual-dysfunction-during-pregnancy-and-postpartum",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "妇科",
+            "妊娠期和产后性功能障碍",
+            "感染",
+            "检查",
+            "避孕"
+          ]
+        },
+        {
+          "title": "女性性功能和性功能的概述",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/sexual-function-and-dysfunction-in-women/overview-of-sexual-function-and-dysfunction-in-women",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "女性性功能和性功能的概述",
+            "妇科",
+            "感染",
+            "检查",
+            "避孕"
+          ]
+        },
+        {
+          "title": "生殖器-盆腔痛/插入障碍",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/sexual-function-and-dysfunction-in-women/genito-pelvic-pain-penetration-disorder",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "妇科",
+            "感染",
+            "检查",
+            "生殖器-盆腔痛/插入障碍",
+            "避孕"
+          ]
+        },
+        {
+          "title": "性兴趣／性唤起障碍",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/sexual-function-and-dysfunction-in-women/sexual-interest-arousal-disorder",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "妇科",
+            "性兴趣／性唤起障碍",
+            "感染",
+            "检查",
+            "避孕"
+          ]
+        },
+        {
+          "title": "女性性高潮障碍",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/sexual-function-and-dysfunction-in-women/orgasmic-disorder-in-women",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "女性性高潮障碍",
+            "妇科",
+            "感染",
+            "检查",
+            "避孕"
+          ]
+        },
+        {
+          "title": "持续性生殖器唤起障碍",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/sexual-function-and-dysfunction-in-women/persistent-genital-arousal-disorder",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "妇科",
+            "感染",
+            "持续性生殖器唤起障碍",
+            "检查",
+            "避孕"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gyn-other",
+      "name": "其他妇科问题",
+      "icon": "📋",
+      "stages": [
+        "general"
+      ],
+      "links": [
+        {
+          "title": "巴氏腺囊肿和巴氏腺脓肿",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/miscellaneous-gynecologic-abnormalities/bartholin-gland-cyst-and-bartholin-gland-abscess",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "妇科",
+            "巴氏腺囊肿和巴氏腺脓肿",
+            "感染",
+            "检查",
+            "避孕"
+          ]
+        },
+        {
+          "title": "外阴包涵囊肿和表皮囊肿",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/miscellaneous-gynecologic-abnormalities/vulvar-inclusion-and-epidermal-cysts",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "外阴包涵囊肿和表皮囊肿",
+            "女性",
+            "妇科",
+            "感染",
+            "检查",
+            "避孕"
+          ]
+        },
+        {
+          "title": "Skene 腺囊肿",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/miscellaneous-gynecologic-abnormalities/skene-gland-cyst",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "Skene 腺囊肿",
+            "乳房",
+            "女性",
+            "妇科",
+            "感染",
+            "检查",
+            "避孕"
+          ]
+        },
+        {
+          "title": "子宫腺肌病",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/miscellaneous-gynecologic-abnormalities/uterine-adenomyosis",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "妇科",
+            "子宫腺肌病",
+            "感染",
+            "检查",
+            "避孕"
+          ]
+        },
+        {
+          "title": "妇科其他异常简介",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/miscellaneous-gynecologic-abnormalities/introduction-to-miscellaneous-gynecologic-abnormalities",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "妇科",
+            "妇科其他异常简介",
+            "感染",
+            "检查",
+            "避孕"
+          ]
+        },
+        {
+          "title": "附件扭转",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/miscellaneous-gynecologic-abnormalities/adnexal-torsion",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "妇科",
+            "感染",
+            "检查",
+            "避孕",
+            "附件扭转"
+          ]
+        },
+        {
+          "title": "宫颈狭窄",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/miscellaneous-gynecologic-abnormalities/cervical-stenosis",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "妇科",
+            "宫颈狭窄",
+            "感染",
+            "检查",
+            "避孕"
+          ]
+        },
+        {
+          "title": "卵巢囊肿和其他良性卵巢肿块",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/miscellaneous-gynecologic-abnormalities/ovarian-cysts-and-other-benign-ovarian-masses",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "卵巢囊肿和其他良性卵巢肿块",
+            "女性",
+            "妇科",
+            "感染",
+            "检查",
+            "避孕"
+          ]
+        },
+        {
+          "title": "宫颈息肉",
+          "url": "https://www.msdmanuals.cn/home/women-s-health-issues/miscellaneous-gynecologic-abnormalities/cervical-polyps",
+          "tags": [
+            "general"
+          ],
+          "keywords": [
+            "乳房",
+            "女性",
+            "妇科",
+            "宫颈息肉",
+            "感染",
+            "检查",
+            "避孕"
+          ]
+        }
+      ]
+    }
+  ]
+}

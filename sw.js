@@ -1,150 +1,126 @@
-// sw.js - 通用 Service Worker (适配 GitHub Pages 多项目)
-// 动态确定当前应用的子目录，隔离缓存，确保离线访问正常
-
-// ---------- 1. 动态路径与缓存名称 ----------
-// 获取当前 sw.js 所在的目录路径（例如 '/pwa1/'）
+// sw.js - Life PWA service worker
+// Cache names are derived from the deployment path so multiple GitHub Pages
+// projects on the same origin cannot delete or read each other's caches.
 const BASE_PATH = self.location.pathname.replace(/[^/]+$/, '');
-// 构建带项目标识的缓存名称，避免多项目冲突
-// 例如 '/Life/' -> 'pwa-cache-Life-v4'
-const CACHE_NAME = `pwa-cache${BASE_PATH.replace(/\//g, '-')}v7`;
-// 本项目缓存前缀（不含版本号，用于只清理本项目旧版本）
 const PROJECT_CACHE_PREFIX = `pwa-cache${BASE_PATH.replace(/\//g, '-')}`;
-
-// 预缓存资源列表（全部使用相对于当前 sw.js 的路径）
+const CACHE_NAME = `${PROJECT_CACHE_PREFIX}v9`;
 const PRECACHE_URLS = [
   BASE_PATH,
   `${BASE_PATH}index.html`,
   `${BASE_PATH}manifest.json`,
-  `${BASE_PATH}echarts.min.js`,
+  `${BASE_PATH}health.js`,
+  `${BASE_PATH}health-links.json`,
   `${BASE_PATH}offline.html`,
   `${BASE_PATH}icon-192.png`,
   `${BASE_PATH}icon-512.png`,
   `${BASE_PATH}icon-maskable-192.png`,
   `${BASE_PATH}icon-maskable-512.png`,
   `${BASE_PATH}apple-touch-icon.png`,
+  `${BASE_PATH}favicon-32.png`,
+  `${BASE_PATH}icon.svg`,
+  `${BASE_PATH}icon-maskable.svg`,
 ];
+const STATIC_EXTENSIONS = ['js', 'css', 'json', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'woff', 'woff2', 'ttf', 'eot', 'ico'];
 
-// 静态资源扩展名（用于判断是否缓存优先）
-const STATIC_EXTENSIONS = ['js', 'css', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'woff', 'woff2', 'ttf', 'eot', 'ico'];
-
-// ---------- 2. 工具函数 ----------
 function isStaticResource(url) {
   const ext = url.pathname.split('.').pop().toLowerCase();
   return STATIC_EXTENSIONS.includes(ext);
 }
-
 function isNavigateRequest(request) {
   return request.mode === 'navigate' || (request.method === 'GET' && request.destination === 'document');
 }
+function projectCache() { return caches.open(CACHE_NAME); }
 
-// ---------- 3. 安装阶段 ----------
-self.addEventListener('install', (event) => {
-  console.log('[SW] 安装中，BASE_PATH =', BASE_PATH);
+self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('[SW] 预缓存资源:', PRECACHE_URLS);
-        // 使用 allSettled 忽略单个资源失败
-        return Promise.allSettled(
-          PRECACHE_URLS.map(url => cache.add(url).catch(err => console.warn(`预缓存失败 ${url}:`, err)))
-        );
-      })
-      .then(() => self.skipWaiting()) // 立即激活
+    projectCache()
+      .then(cache => Promise.allSettled(PRECACHE_URLS.map(url => cache.add(url).catch(err => console.warn(`预缓存失败 ${url}:`, err)))))
+      .then(() => self.skipWaiting())
   );
 });
 
-// ---------- 4. 激活阶段（只清理当前项目的旧缓存） ----------
-self.addEventListener('activate', (event) => {
-  console.log('[SW] 激活中...');
+self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cache => {
-          // 只删除本项目的旧版本缓存，不影响其它项目
-          if (cache.startsWith(PROJECT_CACHE_PREFIX) && cache !== CACHE_NAME) {
-            console.log('[SW] 删除旧缓存:', cache);
-            return caches.delete(cache);
-          }
-        })
-      );
-    }).then(() => self.clients.claim()) // 立即控制所有页面
+    caches.keys()
+      .then(names => Promise.all(names.map(name => {
+        if (name.startsWith(PROJECT_CACHE_PREFIX) && name !== CACHE_NAME) return caches.delete(name);
+        return undefined;
+      })))
+      .then(() => self.clients.claim())
   );
 });
 
-// ---------- 4.5 通知点击（提醒中心） ----------
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener('notificationclick', event => {
   event.notification.close();
+  const data = event.notification.data || {};
+  const hash = typeof data.hash === 'string' && data.hash.startsWith('#') ? data.hash : '#health';
+  const target = BASE_PATH + hash;
   event.waitUntil(
-    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(async list => {
       for (const client of list) {
-        if ('focus' in client) return client.focus();
+        if ('focus' in client) {
+          await client.focus();
+          if ('navigate' in client) { try { await client.navigate(target); } catch {} }
+          return;
+        }
       }
-      return self.clients.openWindow(BASE_PATH);
+      return self.clients.openWindow(target);
     })
   );
 });
 
-// ---------- 5. 请求拦截 ----------
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
+  if (url.origin !== location.origin || request.method !== 'GET') return;
 
-  // 只处理同源 GET 请求
-  if (url.origin !== location.origin || request.method !== 'GET') {
+  // health-links.json: stale-while-revalidate so monthly updates arrive
+  // without breaking offline use.
+  if (url.pathname.endsWith('/health-links.json')) {
+    event.respondWith((async () => {
+      const cache = await projectCache();
+      const cached = await cache.match(request);
+      const network = fetch(request).then(response => {
+        if (response && response.status === 200) cache.put(request, response.clone());
+        return response;
+      }).catch(() => cached);
+      return cached || network;
+    })());
     return;
   }
 
-  // ----- 5.1 导航请求（HTML）：网络优先，失败回退缓存 -----
   if (isNavigateRequest(request)) {
-    event.respondWith(
-      fetch(request)
-        .then(networkResponse => {
-          if (networkResponse && networkResponse.status === 200) {
-            const responseClone = networkResponse.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(request, responseClone));
-          }
-          return networkResponse;
-        })
-        .catch(async () => {
-          // 网络失败，尝试从缓存获取
-          const cachedResponse = await caches.match(request);
-          if (cachedResponse) {
-            console.log('[SW] 离线模式，使用缓存页面:', url.pathname);
-            return cachedResponse;
-          }
-          // 连缓存都没有，返回自定义离线页（可预置 offline.html）
-          // 如果希望更美观，可以预缓存一个 offline.html 并在这里返回它
-          return new Response(
-            '<h1>📴 离线状态</h1><p>请检查网络连接后刷新页面。</p>',
-            { status: 503, statusText: 'Offline', headers: { 'Content-Type': 'text/html' } }
-          );
-        })
-    );
+    event.respondWith((async () => {
+      const cache = await projectCache();
+      try {
+        const response = await fetch(request);
+        if (response && response.status === 200) cache.put(request, response.clone());
+        return response;
+      } catch {
+        const cached = await cache.match(request);
+        if (cached) return cached;
+        const index = await cache.match(`${BASE_PATH}index.html`);
+        if (index) return index;
+        const offline = await cache.match(`${BASE_PATH}offline.html`);
+        if (offline) return offline;
+        return new Response('<h1>📴 离线状态</h1><p>请检查网络连接后刷新页面。</p>', { status: 503, statusText: 'Offline', headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+      }
+    })());
     return;
   }
 
-  // ----- 5.2 静态资源请求：缓存优先，未命中则网络请求并缓存 -----
   if (isStaticResource(url)) {
-    event.respondWith(
-      caches.match(request).then(cachedResponse => {
-        if (cachedResponse) {
-          return cachedResponse;
-        }
-        return fetch(request).then(networkResponse => {
-          if (networkResponse && networkResponse.status === 200) {
-            const responseClone = networkResponse.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(request, responseClone));
-          }
-          return networkResponse;
-        }).catch(() => {
-          // 完全离线且无缓存，返回空响应（可自定义）
-          return new Response('', { status: 408 });
-        });
-      })
-    );
-    return;
+    event.respondWith((async () => {
+      const cache = await projectCache();
+      const cached = await cache.match(request);
+      if (cached) return cached;
+      try {
+        const response = await fetch(request);
+        if (response && response.status === 200) cache.put(request, response.clone());
+        return response;
+      } catch {
+        return new Response('', { status: 408 });
+      }
+    })());
   }
-
-  // ----- 5.3 其他请求（如 API）默认不缓存，直接走网络 -----
-  // （业务数据通常存储在 IndexedDB 中，不受影响）
 });

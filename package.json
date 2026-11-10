@@ -1,0 +1,14 @@
+{
+  "name": "life-pwa",
+  "private": true,
+  "version": "3.0.0",
+  "description": "Life / 美丽心情 PWA tests",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "test:health": "python3 tools/check_health_links.py"
+  },
+  "devDependencies": {
+    "fake-indexeddb": "^6.0.0",
+    "jsdom": "^24.1.3"
+  }
+}
