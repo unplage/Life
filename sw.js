@@ -3,7 +3,7 @@
 // projects on the same origin cannot delete or read each other's caches.
 const BASE_PATH = self.location.pathname.replace(/[^/]+$/, '');
 const PROJECT_CACHE_PREFIX = `pwa-cache${BASE_PATH.replace(/\//g, '-')}`;
-const CACHE_NAME = `${PROJECT_CACHE_PREFIX}v9`;
+const CACHE_NAME = `${PROJECT_CACHE_PREFIX}v10`;
 const PRECACHE_URLS = [
   BASE_PATH,
   `${BASE_PATH}index.html`,

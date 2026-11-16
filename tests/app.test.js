@@ -118,9 +118,11 @@ test('pure date and cycle logic', async () => {
     assert.equal(t.normalizeDateString('2026-02-30'), null);
     assert.equal(t.normalizeDateString('2026/2/28'), '2026-02-28');
     assert.equal(t.normalizeDateString('2026-02-28abc'), null);
-    assert.equal(t.calculateCountdown('2026-11-10').text, '今天');
-    assert.equal(t.calculateCountdown('2026-11-09').text, '已过去');
-    assert.equal(t.calculateCountdown('2026-11-11').text, '1天');
+    const todayStr = t.getLocalDateString();
+    const todayDate = t.parseLocalDate(todayStr);
+    assert.equal(t.calculateCountdown(todayStr).text, '今天');
+    assert.equal(t.calculateCountdown(t.getLocalDateString(t.addDays(todayDate, -1))).text, '已过去');
+    assert.equal(t.calculateCountdown(t.getLocalDateString(t.addDays(todayDate, 1))).text, '1天');
 
     const pred = t.predictCycle([
       { startDate: '2026-01-01' },
@@ -488,6 +490,123 @@ test('pregnancy header shows overdue instead of negative due days', async () => 
     await app.window.updatePregnancyHeader();
     assert.match(doc.getElementById('pregnancyStatus').textContent, /已过预产期 20天/);
     assert.match(doc.getElementById('gestationalWeek').textContent, /\d+周\+\d+天/);
+  } finally { await app.close(); }
+});
+
+test('pregnancy and postpartum pause cycle prediction', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    const doc = app.window.document;
+    const now = new Date();
+    await t.db.addData('periods', { startDate: t.getLocalDateString(t.addDays(now, -56)), symptoms: [] });
+    await t.db.addData('periods', { startDate: t.getLocalDateString(t.addDays(now, -28)), symptoms: [] });
+    const lmp = t.getLocalDateString(t.addDays(now, -70));
+    await t.db.addData('pregnancy_settings', { lastMenstrualDate: lmp, expectedDue: t.computeDueFromLmp(lmp) });
+
+    await app.window.loadPeriodData();
+    assert.equal(doc.getElementById('cyclePauseNotice').style.display, 'block');
+    assert.match(doc.getElementById('cyclePauseNotice').textContent, /已进入孕期/);
+    assert.equal(doc.getElementById('cycleDay').textContent, '--');
+    assert.match(doc.getElementById('predictionDetail').textContent, /暂停/);
+
+    await app.window.renderToday();
+    assert.equal(doc.getElementById('todayCycleLabel').textContent, '孕周');
+    assert.match(doc.getElementById('todayCycleStatus').textContent, /孕期/);
+
+    const items = await app.window.collectUpcomingReminders(7);
+    assert.equal(items.some(i => i.label === '预计生理期'), false);
+
+    const deliveryDate = t.getLocalDateString(t.addDays(now, -5));
+    await t.db.addData('pregnancy_records', { stage: 'delivery', date: deliveryDate, data: {} });
+    await app.window.loadPeriodData();
+    assert.match(doc.getElementById('cyclePauseNotice').textContent, /产后/);
+    assert.match(doc.getElementById('cyclePauseNotice').textContent, /恢复/);
+
+    // 产后 42 天以上且尚无新经期：继续暂停，记录新经期后恢复预测
+    await t.db.clearStore('pregnancy_records');
+    await t.db.clearStore('pregnancy_settings');
+    await t.db.clearStore('periods');
+    await t.db.addData('pregnancy_records', { stage: 'delivery', date: t.getLocalDateString(t.addDays(now, -100)), data: {} });
+    await app.window.loadPeriodData();
+    assert.match(doc.getElementById('cyclePauseNotice').textContent, /尚未记录新的经期/);
+    await t.db.addData('periods', { startDate: t.getLocalDateString(t.addDays(now, -10)), symptoms: [] });
+    await app.window.loadPeriodData();
+    assert.equal(doc.getElementById('cyclePauseNotice').style.display, 'none');
+    assert.match(doc.getElementById('predictionDetail').textContent, /预测下次/);
+  } finally { await app.close(); }
+});
+
+test('pregnancy checks keep images and survive export/import', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    const doc = app.window.document;
+    const blob = 'data:image/png;base64,ZmFrZS1wbmc=';
+    await t.db.addData('pregnancy_checks', {
+      date: t.getLocalDateString(),
+      title: '<img src=x onerror=window.__px=1>',
+      hospital: '市妇幼',
+      result: '一切正常',
+      note: '',
+      photos: [blob],
+      createdAt: 1
+    });
+    await app.window.loadPregnancyChecks();
+    const cont = doc.getElementById('checkHistoryList');
+    assert.match(cont.textContent, /<img src=x/);
+    assert.equal(cont.querySelector('img[src="x"]'), null);
+    assert.equal(app.window.__px, undefined);
+    assert.ok(cont.querySelector('img.check-thumb'));
+
+    const exported = await app.window.buildExportObject();
+    assert.equal(exported.schemaVersion, 4);
+    assert.equal(exported.pregnancy_checks[0].photos[0], blob);
+
+    await t.db.clearStore('pregnancy_checks');
+    await app.window.applyImportedData(exported);
+    const list = await t.db.getAllData('pregnancy_checks');
+    assert.equal(list.length, 1);
+    assert.equal(list[0].title, '<img src=x onerror=window.__px=1>');
+    assert.equal(list[0].photos.length, 1);
+
+    app.window.openStoredImage(new app.window.Blob(['view-me'], { type: 'image/png' }));
+    assert.equal(doc.getElementById('photoModal').classList.contains('active'), true);
+    app.window.closePhotoModal();
+    assert.equal(doc.getElementById('photoModal').classList.contains('active'), false);
+  } finally { await app.close(); }
+});
+
+test('baby photo album shows age from delivery date', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    const doc = app.window.document;
+    const today = t.parseLocalDate(t.getLocalDateString());
+    const birth = t.getLocalDateString(t.addDays(today, -100));
+    await t.db.addData('pregnancy_records', { stage: 'delivery', date: birth, data: {} });
+    const blob = 'data:image/jpeg;base64,ZmFrZS1qcGc=';
+    const shot = t.getLocalDateString(t.addDays(t.parseLocalDate(birth), 40));
+    await t.db.addData('baby_photos', {
+      date: shot,
+      title: '<b>第一次笑</b>',
+      milestone: '第一次微笑',
+      imageBlob: blob,
+      createdAt: 1
+    });
+    await app.window.loadBabyPhotos();
+    const timeline = doc.getElementById('babyPhotoTimeline');
+    assert.match(timeline.textContent, /第一次笑/);
+    assert.equal(timeline.querySelector('b'), null);
+    assert.match(timeline.textContent, /约1个月/);
+    assert.match(timeline.textContent, /第一次微笑/);
+    assert.match(doc.getElementById('babyBirthInfo').textContent, /已出生 100 天/);
+    assert.ok(timeline.querySelector('img'));
+
+    const list = await t.db.getAllData('baby_photos');
+    await app.window.viewBabyPhoto(list[0].id);
+    assert.equal(doc.getElementById('photoModal').classList.contains('active'), true);
+    app.window.closePhotoModal();
   } finally { await app.close(); }
 });
 
