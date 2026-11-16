@@ -70,6 +70,7 @@ async function createApp(options = {}) {
         window.__downloads.push({ href: this.href, download: this.download });
       };
       window.HTMLElement.prototype.scrollIntoView = () => {};
+      window.scrollTo = () => {};
       window.Notification = class {
         static permission = 'denied';
         static requestPermission = async () => 'denied';
@@ -299,7 +300,7 @@ test('app lock hashes PIN and unlocks', async () => {
   const app = await createApp();
   try {
     const doc = app.window.document;
-    app.prompts.push('1234', '1234');
+    app.prompts.push('123456', '123456');
     await app.window.setupAppLock();
     const cfg = JSON.parse(app.window.localStorage.getItem('life_app_lock'));
     assert.ok(cfg && cfg.salt && cfg.hash);
@@ -309,7 +310,7 @@ test('app lock hashes PIN and unlocks', async () => {
     doc.getElementById('unlockPin').value = '0000';
     await app.window.unlockApp();
     assert.equal(doc.getElementById('lockScreen').classList.contains('active'), true);
-    doc.getElementById('unlockPin').value = '1234';
+    doc.getElementById('unlockPin').value = '123456';
     await app.window.unlockApp();
     assert.equal(doc.getElementById('lockScreen').classList.contains('active'), false);
   } finally { await app.close(); }
@@ -560,7 +561,7 @@ test('pregnancy checks keep images and survive export/import', async () => {
     assert.ok(cont.querySelector('img.check-thumb'));
 
     const exported = await app.window.buildExportObject();
-    assert.equal(exported.schemaVersion, 4);
+    assert.equal(exported.schemaVersion, 5);
     assert.equal(exported.pregnancy_checks[0].photos[0], blob);
 
     await t.db.clearStore('pregnancy_checks');
@@ -614,7 +615,7 @@ test('app lock rate-limits repeated failed attempts', async () => {
   const app = await createApp();
   try {
     const doc = app.window.document;
-    app.prompts.push('1234', '1234');
+    app.prompts.push('123456', '123456');
     await app.window.setupAppLock();
     app.window.showLockScreen();
     const input = doc.getElementById('unlockPin');
@@ -806,5 +807,96 @@ test('bottom navigation uses real buttons and echarts is lazy-loaded', async () 
     assert.match(container.dataset.chartMsg || container.textContent, /图表加载中|图表不可用/);
     assert.ok(doc.querySelector('script[src*="echarts"]'));
     assert.match(doc.getElementById('weightHistory').textContent, /55\.0kg/);
+  } finally { await app.close(); }
+});
+
+test('toast and one-second quick records work without alerts', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    const doc = app.window.document;
+    const alertBefore = app.alerts.length;
+    doc.getElementById('quickWeightInput').value = '56.7';
+    await app.window.quickLogWeight();
+    const weights = await t.db.getAllData('weight');
+    assert.equal(weights.length, 1);
+    assert.equal(weights[0].weight, 56.7);
+    assert.match(doc.getElementById('toastStack').textContent, /体重已记录/);
+    assert.equal(app.alerts.length, alertBefore);
+
+    await app.window.quickLogPeriod();
+    await app.window.quickLogPeriod();
+    assert.equal((await t.db.getAllData('periods')).length, 1);
+    assert.match(doc.getElementById('toastStack').textContent, /已经记录过/);
+  } finally { await app.close(); }
+});
+
+test('pregnancy vitals thresholds produce warnings and are shown in history', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    const doc = app.window.document;
+    doc.getElementById('pregDate').value = t.getLocalDateString();
+    doc.getElementById('pregBp').value = '150/100';
+    doc.getElementById('pregFetalHr').value = '100';
+    await app.window.savePregnancyRecord();
+    const list = await t.db.getAllData('pregnancy_records');
+    assert.equal(list.length, 1);
+    assert.ok(list[0].warnings.some(w => w.level === 'danger' && /血压/.test(w.text)));
+    assert.ok(list[0].warnings.some(w => /胎心率/.test(w.text)));
+    assert.match(doc.getElementById('pregClinicalAlert').textContent, /140\/90/);
+    await app.window.loadPregnancyHistory();
+    assert.match(doc.getElementById('pregHistoryList').textContent, /血压 150\/100/);
+    assert.match(doc.getElementById('pregHistoryList').textContent, /胎心率 100/);
+  } finally { await app.close(); }
+});
+
+test('EPDS screening stores score and gives referral guidance', async () => {
+  const app = await createApp();
+  try {
+    const doc = app.window.document;
+    app.window.openEpds();
+    for (let i = 0; i < 10; i++) {
+      const radio = doc.querySelector(`input[name="epds${i}"][value="3"]`);
+      radio.checked = true;
+    }
+    await app.window.submitEpds();
+    const list = await app.window.__lifeTest.db.getAllData('epds_records');
+    assert.equal(list.length, 1);
+    assert.equal(list[0].total, 30);
+    assert.equal(list[0].critical, true);
+    assert.match(doc.getElementById('epdsResult').textContent, /立即联系家人/);
+    assert.match(doc.getElementById('epdsResult').textContent, /专业评估/);
+  } finally { await app.close(); }
+});
+
+test('generic edit updates any stored record', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    const doc = app.window.document;
+    await t.db.addData('baby_records', { date: '2026-11-01', weight: 5, height: 55, head: 38, timestamp: 1 });
+    const list = await t.db.getAllData('baby_records');
+    await app.window.openGenericEdit('baby_records', list[0].id);
+    const field = doc.querySelector('#genericEditFields [data-field="weight"]');
+    field.value = '5.6';
+    await app.window.saveGenericEdit();
+    const updated = await t.db.getAllData('baby_records');
+    assert.equal(updated[0].weight, '5.6');
+    assert.equal(doc.getElementById('genericEditModal').classList.contains('active'), false);
+  } finally { await app.close(); }
+});
+
+test('ultrasound due date and import validation', async () => {
+  const app = await createApp();
+  try {
+    const due = app.window.computeDueFromUltrasound('2026-10-01', 12, 0);
+    assert.ok(due);
+    const check = app.window.validateImportedObject({
+      app: 'Life', schemaVersion: 5,
+      periods: [{ startDate: '2026-01-01', notes: 'x'.repeat(210000) }]
+    });
+    assert.equal(check.ok, false);
+    assert.match(check.message, /内容过长/);
   } finally { await app.close(); }
 });
