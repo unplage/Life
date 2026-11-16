@@ -900,3 +900,44 @@ test('ultrasound due date and import validation', async () => {
     assert.match(check.message, /内容过长/);
   } finally { await app.close(); }
 });
+
+test('legacy 4-6 digit PIN still unlocks and is upgraded', async () => {
+  const app = await createApp();
+  try {
+    const w = app.window;
+    const doc = w.document;
+    const saltB64 = w.bytesToBase64(new Uint8Array(16).fill(7));
+    const oldHash = await w.derivePinHash('1234', w.base64ToBytes(saltB64), 120000);
+    w.localStorage.setItem('life_app_lock', JSON.stringify({ salt: saltB64, hash: oldHash, enabledAt: Date.now() }));
+    w.updateLockUI();
+    w.showLockScreen();
+    doc.getElementById('unlockPin').value = '1234';
+    await w.unlockApp();
+    assert.equal(doc.getElementById('lockScreen').classList.contains('active'), false);
+    const cfg = JSON.parse(w.localStorage.getItem('life_app_lock'));
+    assert.equal(cfg.iterations, 600000);
+    assert.notEqual(cfg.hash, oldHash);
+    assert.equal(cfg.upgradedAt > 0, true);
+  } finally { await app.close(); }
+});
+
+test('legacy encrypted backup without iterations field still decrypts', async () => {
+  const app = await createApp();
+  try {
+    const w = app.window;
+    const crypto = w.crypto;
+    const pass = 'oldpassword';
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const material = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']);
+    const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: 150000, hash: 'SHA-256' }, material, { name: 'AES-GCM', length: 256 }, false, ['encrypt']);
+    const data = JSON.stringify({ app: 'Life', schemaVersion: 4, periods: [{ startDate: '2026-01-01', symptoms: [], notes: '旧版加密备份' }] });
+    const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(data));
+    const raw = JSON.stringify({ app: 'Life', format: 'life-encrypted-backup', version: 1, salt: w.bytesToBase64(salt), iv: w.bytesToBase64(iv), data: w.bytesToBase64(new Uint8Array(encrypted)) });
+    app.prompts.push(pass);
+    await w.importEncryptedBackup({ files: [{ text: async () => raw }], value: 'x' });
+    const periods = await w.__lifeTest.db.getAllData('periods');
+    assert.equal(periods.length, 1);
+    assert.equal(periods[0].notes, '旧版加密备份');
+  } finally { await app.close(); }
+});
