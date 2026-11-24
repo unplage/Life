@@ -2,8 +2,9 @@
 // Cache names are derived from the deployment path so multiple GitHub Pages
 // projects on the same origin cannot delete or read each other's caches.
 const BASE_PATH = self.location.pathname.replace(/[^/]+$/, '');
-const PROJECT_CACHE_PREFIX = `pwa-cache${BASE_PATH.replace(/\//g, '-')}`;
-const CACHE_NAME = `${PROJECT_CACHE_PREFIX}v12`;
+const PROJECT_NAME = BASE_PATH.replace(/\/+$/, '').split('/').filter(Boolean).pop() || 'root';
+const PROJECT_CACHE_PREFIX = `pwa-cache-${PROJECT_NAME}--`;
+const CACHE_NAME = `${PROJECT_CACHE_PREFIX}v13`;
 const PRECACHE_URLS = [
   BASE_PATH,
   `${BASE_PATH}index.html`,
@@ -11,6 +12,7 @@ const PRECACHE_URLS = [
   `${BASE_PATH}health.js`,
   `${BASE_PATH}health-links.json`,
   `${BASE_PATH}offline.html`,
+  `${BASE_PATH}echarts.min.js`,
   `${BASE_PATH}icon-192.png`,
   `${BASE_PATH}icon-512.png`,
   `${BASE_PATH}icon-maskable-192.png`,
@@ -23,8 +25,8 @@ const PRECACHE_URLS = [
 const STATIC_EXTENSIONS = ['js', 'css', 'json', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'woff', 'woff2', 'ttf', 'eot', 'ico'];
 
 function isStaticResource(url) {
-  const ext = url.pathname.split('.').pop().toLowerCase();
-  return STATIC_EXTENSIONS.includes(ext);
+  const name = url.pathname.split('/').pop().split('?')[0].toLowerCase();
+  return STATIC_EXTENSIONS.includes(name.split('.').pop());
 }
 function isNavigateRequest(request) {
   return request.mode === 'navigate' || (request.method === 'GET' && request.destination === 'document');
@@ -74,8 +76,6 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url);
   if (url.origin !== location.origin || request.method !== 'GET') return;
 
-  // health-links.json: stale-while-revalidate so monthly updates arrive
-  // without breaking offline use.
   if (url.pathname.endsWith('/health-links.json')) {
     event.respondWith((async () => {
       const cache = await projectCache();

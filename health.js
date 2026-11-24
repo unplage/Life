@@ -195,7 +195,8 @@
   }
 
   function getDailyTip() {
-    const day = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+    const now = new Date();
+    const day = Math.floor((new Date(now.getFullYear(), now.getMonth(), now.getDate()) - new Date(now.getFullYear(), 0, 0)) / 86400000);
     const tip = TIPS[day % TIPS.length];
     const cat = index && index.categories.find(c => c.id === tip.cat);
     const link = cat && cat.links[0];

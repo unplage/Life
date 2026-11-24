@@ -1,18 +1,25 @@
 {
-  "id": "/Life/",
+  "id": "./",
   "name": "美丽心情 · Life 生活管理",
   "short_name": "Life",
   "description": "本地优先的女性生活记录 PWA：经期、孕产、日记、体重、穿搭、待办与健康知识导航。",
   "lang": "zh-CN",
   "dir": "ltr",
-  "start_url": "/Life/",
-  "scope": "/Life/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui"],
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "background_color": "#f7f7f7",
   "theme_color": "#ff6b6b",
   "orientation": "portrait",
-  "categories": ["lifestyle", "health", "productivity"],
+  "categories": [
+    "lifestyle",
+    "health",
+    "productivity"
+  ],
   "prefer_related_applications": false,
   "icons": [
     {
@@ -45,22 +52,40 @@
       "name": "记录经期",
       "short_name": "经期",
       "description": "快速记录生理期",
-      "url": "/Life/?action=log-period",
-      "icons": [{ "src": "./icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "url": "./?action=log-period",
+      "icons": [
+        {
+          "src": "./icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     },
     {
       "name": "写日记",
       "short_name": "日记",
       "description": "快速记录心情与日记",
-      "url": "/Life/?action=log-mood",
-      "icons": [{ "src": "./icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "url": "./?action=log-mood",
+      "icons": [
+        {
+          "src": "./icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     },
     {
       "name": "健康知识",
       "short_name": "健康",
       "description": "浏览健康知识索引",
-      "url": "/Life/?action=health",
-      "icons": [{ "src": "./icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "url": "./?action=health",
+      "icons": [
+        {
+          "src": "./icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }

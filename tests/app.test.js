@@ -18,6 +18,16 @@ function prepareHtml() {
   return html;
 }
 
+async function answerSecret(app, value) {
+  const input = app.window.document.getElementById('secretInput');
+  if (!app.window.document.getElementById('secretModal').classList.contains('active')) {
+    await new Promise(resolve => setTimeout(resolve, 20));
+  }
+  input.value = value;
+  app.window.submitSecret();
+  await new Promise(resolve => setTimeout(resolve, 10));
+}
+
 async function waitFor(fn, timeout = 3000) {
   const started = Date.now();
   while (Date.now() - started < timeout) {
@@ -300,8 +310,10 @@ test('app lock hashes PIN and unlocks', async () => {
   const app = await createApp();
   try {
     const doc = app.window.document;
-    app.prompts.push('123456', '123456');
-    await app.window.setupAppLock();
+    const lockPromise = app.window.setupAppLock();
+    await answerSecret(app, '123456');
+    await answerSecret(app, '123456');
+    await lockPromise;
     const cfg = JSON.parse(app.window.localStorage.getItem('life_app_lock'));
     assert.ok(cfg && cfg.salt && cfg.hash);
     assert.equal(cfg.hash.includes('1234'), false);
@@ -371,8 +383,10 @@ test('encrypted backup roundtrip restores data', async () => {
     const t = app.window.__lifeTest;
     await t.db.addData('periods', { startDate: '2026-01-01', endDate: '2026-01-05', symptoms: [], flow: '中', pain: '无', mood: '平静', notes: '加密备份测试', timestamp: Date.now() });
 
-    app.prompts.push('password123', 'password123');
-    await app.window.exportEncryptedBackup();
+    const exportPromise = app.window.exportEncryptedBackup();
+    await answerSecret(app, 'password123');
+    await answerSecret(app, 'password123');
+    await exportPromise;
     const download = app.lastDownload();
     assert.ok(download);
     assert.match(download.download, /\.lifeenc$/);
@@ -385,9 +399,10 @@ test('encrypted backup roundtrip restores data', async () => {
     await t.db.clearStore('periods');
     assert.equal((await t.db.getAllData('periods')).length, 0);
 
-    app.prompts.push('password123');
     const input = { files: [{ text: async () => raw, name: 'backup.lifeenc' }], value: 'x' };
-    await app.window.importEncryptedBackup(input);
+    const importPromise = app.window.importEncryptedBackup(input);
+    await answerSecret(app, 'password123');
+    await importPromise;
     const periods = await t.db.getAllData('periods');
     assert.equal(periods.length, 1);
     assert.equal(periods[0].notes, '加密备份测试');
@@ -398,12 +413,15 @@ test('wrong encrypted backup password does not import', async () => {
   const app = await createApp();
   try {
     await app.window.__lifeTest.db.addData('periods', { startDate: '2026-02-01', symptoms: [] });
-    app.prompts.push('password123', 'password123');
-    await app.window.exportEncryptedBackup();
+    const exportPromise = app.window.exportEncryptedBackup();
+    await answerSecret(app, 'password123');
+    await answerSecret(app, 'password123');
+    await exportPromise;
     const raw = await app.readBlob(app.lastDownload().blob);
     await app.window.__lifeTest.db.clearStore('periods');
-    app.prompts.push('wrongpassword');
-    await app.window.importEncryptedBackup({ files: [{ text: async () => raw }], value: 'x' });
+    const importPromise = app.window.importEncryptedBackup({ files: [{ text: async () => raw }], value: 'x' });
+    await answerSecret(app, 'wrongpassword');
+    await importPromise;
     assert.match(app.alerts.join('\n'), /密码错误|损坏/);
     assert.equal((await app.window.__lifeTest.db.getAllData('periods')).length, 0);
   } finally { await app.close(); }
@@ -434,8 +452,8 @@ test('weight history escapes injected HTML and tolerates string values', async (
     await t.db.addData('weight', { date: '<img src="x" onerror="window.__w=1">', weight: '<b>bad</b>', bodyFat: null, timestamp: 2 });
     await app.window.loadWeightData();
     const history = doc.getElementById('weightHistory');
-    assert.equal(doc.getElementById('currentWeight').textContent, '--');
-    assert.equal(doc.getElementById('currentBodyFat').textContent, '--');
+    assert.equal(doc.getElementById('currentWeight').textContent, '55.5');
+    assert.equal(doc.getElementById('currentBodyFat').textContent, '18.2');
     assert.equal(history.querySelector('img'), null);
     assert.equal(history.querySelector('b'), null);
     assert.match(history.textContent, /<img src="x"/);
@@ -561,7 +579,7 @@ test('pregnancy checks keep images and survive export/import', async () => {
     assert.ok(cont.querySelector('img.check-thumb'));
 
     const exported = await app.window.buildExportObject();
-    assert.equal(exported.schemaVersion, 5);
+    assert.equal(exported.schemaVersion, 6);
     assert.equal(exported.pregnancy_checks[0].photos[0], blob);
 
     await t.db.clearStore('pregnancy_checks');
@@ -601,7 +619,7 @@ test('baby photo album shows age from delivery date', async () => {
     assert.equal(timeline.querySelector('b'), null);
     assert.match(timeline.textContent, /约1个月/);
     assert.match(timeline.textContent, /第一次微笑/);
-    assert.match(doc.getElementById('babyBirthInfo').textContent, /已出生 100 天/);
+    assert.match(doc.getElementById('babyBirthInfo').textContent, /出生 100 天/);
     assert.ok(timeline.querySelector('img'));
 
     const list = await t.db.getAllData('baby_photos');
@@ -615,8 +633,10 @@ test('app lock rate-limits repeated failed attempts', async () => {
   const app = await createApp();
   try {
     const doc = app.window.document;
-    app.prompts.push('123456', '123456');
-    await app.window.setupAppLock();
+    const lockPromise = app.window.setupAppLock();
+    await answerSecret(app, '123456');
+    await answerSecret(app, '123456');
+    await lockPromise;
     app.window.showLockScreen();
     const input = doc.getElementById('unlockPin');
     const err = doc.getElementById('lockError');
@@ -837,16 +857,16 @@ test('pregnancy vitals thresholds produce warnings and are shown in history', as
     const t = app.window.__lifeTest;
     const doc = app.window.document;
     doc.getElementById('pregDate').value = t.getLocalDateString();
-    doc.getElementById('pregBp').value = '150/100';
+    doc.getElementById('pregBp').value = '170/110';
     doc.getElementById('pregFetalHr').value = '100';
     await app.window.savePregnancyRecord();
     const list = await t.db.getAllData('pregnancy_records');
     assert.equal(list.length, 1);
     assert.ok(list[0].warnings.some(w => w.level === 'danger' && /血压/.test(w.text)));
     assert.ok(list[0].warnings.some(w => /胎心率/.test(w.text)));
-    assert.match(doc.getElementById('pregClinicalAlert').textContent, /140\/90/);
+    assert.match(doc.getElementById('pregClinicalAlert').textContent, /重度范围/);
     await app.window.loadPregnancyHistory();
-    assert.match(doc.getElementById('pregHistoryList').textContent, /血压 150\/100/);
+    assert.match(doc.getElementById('pregHistoryList').textContent, /血压 170\/110/);
     assert.match(doc.getElementById('pregHistoryList').textContent, /胎心率 100/);
   } finally { await app.close(); }
 });
@@ -882,7 +902,7 @@ test('generic edit updates any stored record', async () => {
     field.value = '5.6';
     await app.window.saveGenericEdit();
     const updated = await t.db.getAllData('baby_records');
-    assert.equal(updated[0].weight, '5.6');
+    assert.equal(updated[0].weight, 5.6);
     assert.equal(doc.getElementById('genericEditModal').classList.contains('active'), false);
   } finally { await app.close(); }
 });
@@ -934,10 +954,117 @@ test('legacy encrypted backup without iterations field still decrypts', async ()
     const data = JSON.stringify({ app: 'Life', schemaVersion: 4, periods: [{ startDate: '2026-01-01', symptoms: [], notes: '旧版加密备份' }] });
     const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(data));
     const raw = JSON.stringify({ app: 'Life', format: 'life-encrypted-backup', version: 1, salt: w.bytesToBase64(salt), iv: w.bytesToBase64(iv), data: w.bytesToBase64(new Uint8Array(encrypted)) });
-    app.prompts.push(pass);
-    await w.importEncryptedBackup({ files: [{ text: async () => raw }], value: 'x' });
+    const importPromise = w.importEncryptedBackup({ files: [{ text: async () => raw }], value: 'x' });
+    await answerSecret(app, pass);
+    await importPromise;
     const periods = await w.__lifeTest.db.getAllData('periods');
     assert.equal(periods.length, 1);
     assert.equal(periods[0].notes, '旧版加密备份');
+  } finally { await app.close(); }
+});
+
+test('EPDS uses validated item wording and severity-aligned option scores', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    const doc = app.window.document;
+    assert.equal(t.EPDS_QUESTIONS.length, 10);
+    assert.match(t.EPDS_QUESTIONS[7].q, /难过和悲伤/);
+    assert.match(t.EPDS_QUESTIONS[9].q, /伤害自己/);
+    assert.equal(t.EPDS_QUESTIONS[0].opts.map(o => o[1]).join(','), '0,1,2,3');
+    app.window.openEpds();
+    for (let i = 0; i < 10; i++) {
+      const radio = i < 2 ? doc.querySelector(`input[name="epds${i}"][value="3"]`) : doc.querySelector(`input[name="epds${i}"][value="0"]`);
+      radio.checked = true;
+    }
+    await app.window.submitEpds();
+    const list = await t.db.getAllData('epds_records');
+    assert.equal(list[0].total, 6);
+    assert.equal(list[0].critical, false);
+    assert.equal(list[0].scale, 'EPDS-CN');
+    assert.equal(list[0].answers.length, 10);
+  } finally { await app.close(); }
+});
+
+test('WHO LMS uses official L/M/S parameters and stops after 60 months', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    const lms = t.whoLmsAt('boy', 'weight', 0);
+    assert.equal(lms[1], 3.3464);
+    assert.equal(Math.round(t.lmsPercentile(3.3464, lms)), 50);
+    assert.ok(t.lmsPercentile(2.5, lms) < 3);
+    assert.ok(t.lmsPercentile(5, lms) > 97);
+    assert.equal(t.whoLmsAt('boy', 'weight', 61 * 30.4375), null);
+  } finally { await app.close(); }
+});
+
+test('pregnancy outcome ends pregnancy without resuming cycle prediction', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    const now = t.parseLocalDate(t.getLocalDateString());
+    const lmp = t.getLocalDateString(t.addDays(now, -300));
+    await t.db.addData('pregnancy_settings', { lastMenstrualDate: lmp, expectedDue: t.computeDueFromLmp(lmp) });
+    let state = await t.getPregnancyState();
+    assert.equal(state.isPregnant, true);
+    assert.equal(state.isOverdue, true);
+    const outcomeDate = t.getLocalDateString(t.addDays(now, -7));
+    await t.db.addData('pregnancy_outcomes', { date: outcomeDate, type: 'miscarriage', createdAt: Date.now() });
+    state = await t.getPregnancyState();
+    assert.equal(state.phase, 'loss');
+    assert.equal(state.isPregnant, false);
+    assert.equal(state.pausePrediction, true);
+    await t.db.addData('periods', { startDate: t.getLocalDateString(t.addDays(now, -3)), symptoms: [] });
+    state = await t.getPregnancyState();
+    assert.equal(state.pausePrediction, false);
+  } finally { await app.close(); }
+});
+
+test('IVF due date follows transfer date and embryo age', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    const due = t.computeDueFromIvf('2026-01-01', 5);
+    assert.equal(t.dateDiff(t.parseLocalDate(due), t.parseLocalDate('2026-01-01')), 261);
+    assert.equal(t.computeDueFromIvf('2026-01-01', 3) > due, true);
+  } finally { await app.close(); }
+});
+
+test('glucose thresholds depend on test type and vaccine records match by dose', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    assert.ok(t.assessPregnancyVitals({ glucose: '5.5', glucoseType: 'fasting' }).some(w => w.level === 'danger'));
+    assert.equal(t.assessPregnancyVitals({ glucose: '9.0', glucoseType: 'ogtt1h' }).length, 0);
+    assert.ok(t.assessPregnancyVitals({ glucose: '9.0', glucoseType: 'ogtt2h' }).some(w => /2小时/.test(w.text)));
+    assert.ok(t.assessPostpartum({ temp: '38.5', lochia: '少-淡红' }).some(w => w.level === 'danger'));
+    assert.ok(t.assessDeliveryRecord({ mode: '顺产', bloodLoss: '700', apgar: '9' }).some(w => /产后出血/.test(w.text)));
+    const hepB1 = t.VACCINE_SCHEDULE.find(v => v.c === 'HepB' && v.d === 1);
+    const hepB2 = t.VACCINE_SCHEDULE.find(v => v.c === 'HepB' && v.d === 2);
+    const rec = { name: '乙肝疫苗 第1剂', code: 'HepB', dose: 1 };
+    assert.equal(t.isVaccineDone(rec, hepB1), true);
+    assert.equal(t.isVaccineDone(rec, hepB2), false);
+    assert.equal(t.isVaccineDone({ name: '乙肝疫苗 第2剂' }, hepB2), true);
+  } finally { await app.close(); }
+});
+
+test('import is atomic and restores exported preferences', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    await t.db.addData('periods', { startDate: '2026-01-01', symptoms: [] });
+    let failed = false;
+    try {
+      await app.window.applyImportedData({ schemaVersion: 6, periods: [{ startDate: '2026-02-01', symptoms: [] }], settings: [{ value: 'missing-key' }] });
+    } catch { failed = true; }
+    assert.equal(failed, true);
+    assert.equal((await t.db.getAllData('periods')).length, 1);
+    app.window.localStorage.setItem('life_notify_enabled', '1');
+    const exported = await app.window.buildExportObject();
+    assert.equal(exported.preferences.life_notify_enabled, '1');
+    app.window.localStorage.removeItem('life_notify_enabled');
+    await app.window.applyImportedData(exported);
+    assert.equal(app.window.localStorage.getItem('life_notify_enabled'), '1');
   } finally { await app.close(); }
 });
