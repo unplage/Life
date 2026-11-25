@@ -4,7 +4,7 @@
 const BASE_PATH = self.location.pathname.replace(/[^/]+$/, '');
 const PROJECT_NAME = BASE_PATH.replace(/\/+$/, '').split('/').filter(Boolean).pop() || 'root';
 const PROJECT_CACHE_PREFIX = `pwa-cache-${PROJECT_NAME}--`;
-const CACHE_NAME = `${PROJECT_CACHE_PREFIX}v13`;
+const CACHE_NAME = `${PROJECT_CACHE_PREFIX}v14`;
 const PRECACHE_URLS = [
   BASE_PATH,
   `${BASE_PATH}index.html`,
