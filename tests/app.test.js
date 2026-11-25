@@ -377,6 +377,37 @@ test('upcoming reminders dedupe, sort, preview and ICS export', async () => {
   } finally { await app.close(); }
 });
 
+test('home reminder links jump to the reminder center card', async () => {
+  const app = await createApp();
+  const originalScroll = app.window.HTMLElement.prototype.scrollIntoView;
+  try {
+    const t = app.window.__lifeTest;
+    const doc = app.window.document;
+    const allLink = Array.from(doc.querySelectorAll('#view-today .link-btn')).find(el => el.textContent.includes('全部'));
+    assert.ok(allLink);
+    assert.match(allLink.getAttribute('onclick'), /goToReminderCenter/);
+
+    for (let i = 0; i < 5; i++) {
+      await t.db.addData('todos', { title: `提醒${i}`, due: t.getLocalDateString(), done: false, type: 'todo' });
+    }
+    await app.window.renderToday();
+    const moreLink = Array.from(doc.querySelectorAll('#todayReminderList .link-btn')).find(el => el.textContent.includes('还有'));
+    assert.ok(moreLink);
+    assert.match(moreLink.getAttribute('onclick'), /goToReminderCenter/);
+
+    const scrolled = [];
+    app.window.HTMLElement.prototype.scrollIntoView = function (opts) { scrolled.push({ id: this.id, behavior: opts && opts.behavior }); };
+    app.window.goToReminderCenter();
+    assert.equal(doc.getElementById('view-health').classList.contains('active'), true);
+    assert.ok(scrolled.some(s => s.id === 'reminderCenterCard' && s.behavior === 'auto'));
+    await new Promise(resolve => setTimeout(resolve, 100));
+    assert.equal(scrolled[scrolled.length - 1].id, 'reminderCenterCard');
+  } finally {
+    app.window.HTMLElement.prototype.scrollIntoView = originalScroll;
+    await app.close();
+  }
+});
+
 test('encrypted backup roundtrip restores data', async () => {
   const app = await createApp();
   try {

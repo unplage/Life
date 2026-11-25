@@ -357,7 +357,7 @@
             </div>
 
             <div class="card">
-                <div class="card-title">🔔 近期提醒 <button class="link-btn" onclick="switchTab('health')">全部 →</button></div>
+                <div class="card-title">🔔 近期提醒 <button class="link-btn" onclick="goToReminderCenter()">全部 →</button></div>
                 <div id="todayReminderList"><p class="muted">未来 7 天暂无提醒</p></div>
             </div>
 
@@ -478,7 +478,7 @@
                 <div id="healthResults" class="health-results"></div>
             </div>
 
-            <div class="card"><div class="card-title">🔔 提醒中心</div>
+            <div class="card" id="reminderCenterCard"><div class="card-title">🔔 提醒中心</div>
                 <div class="notify-row"><span>启用通知提醒</span><label class="switch"><input type="checkbox" id="notifyToggle" onchange="toggleNotify(this.checked)"><span class="slider"></span></label></div>
                 <div id="notifyPermStatus" style="font-size:13px; color:var(--text-light); margin-bottom:12px;"></div>
                 <div id="reminderPreviewList"></div>
@@ -4275,7 +4275,7 @@
     }
 
     function switchTab(tab, options = {}) {
-        const { updateHash = true } = options;
+        const { updateHash = true, skipScroll = false } = options;
         if (!VALID_TABS.includes(tab)) tab = 'today';
         if (currentTab && currentTab !== tab) { try { scrollMemory[currentTab] = window.scrollY || 0; } catch {} }
         currentTab = tab;
@@ -4295,11 +4295,19 @@
         if (updateHash) setHashForTab(tab, null, null, options.replaceHash === true);
         setTimeout(() => {
             resizeCharts();
+            if (skipScroll) return;
             try {
                 if (scrollMemory[tab] != null) window.scrollTo(0, scrollMemory[tab]);
                 else window.scrollTo(0, 0);
             } catch {}
         }, 60);
+    }
+    function goToReminderCenter() {
+        switchTab('health', { skipScroll: true });
+        const card = document.getElementById('reminderCenterCard');
+        if (!card) return;
+        try { card.scrollIntoView({ behavior: 'auto', block: 'start' }); }
+        catch { try { window.scrollTo(0, card.offsetTop || 0); } catch {} }
     }
 
     function switchSection(section, options = {}) {
@@ -4405,7 +4413,7 @@
         const reminderEl = document.getElementById('todayReminderList');
         if (reminderEl) {
             reminderEl.innerHTML = items.length
-                ? items.slice(0, 4).map(r => `<div class="today-reminder">${r.emoji}<span>${escapeHtml(r.label)}</span><span class="diff">${r.diff === 0 ? '今天' : r.diff + '天后'}</span></div>`).join('') + (items.length > 4 ? `<button class="link-btn" style="margin:8px 0 0;" onclick="switchTab('health')">还有 ${items.length - 4} 条提醒 →</button>` : '')
+                ? items.slice(0, 4).map(r => `<div class="today-reminder">${r.emoji}<span>${escapeHtml(r.label)}</span><span class="diff">${r.diff === 0 ? '今天' : r.diff + '天后'}</span></div>`).join('') + (items.length > 4 ? `<button class="link-btn" style="margin:8px 0 0;" onclick="goToReminderCenter()">还有 ${items.length - 4} 条提醒 →</button>` : '')
                 : '<p class="muted">未来 7 天暂无提醒</p>';
         }
         const info = await getCoupleInfo();
