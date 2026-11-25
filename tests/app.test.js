@@ -871,6 +871,27 @@ test('pregnancy vitals thresholds produce warnings and are shown in history', as
   } finally { await app.close(); }
 });
 
+test('pregnancy HCG and progesterone are stored with units and shown in history', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    const doc = app.window.document;
+    doc.getElementById('pregDate').value = t.getLocalDateString();
+    doc.getElementById('pregHcg').value = '25000';
+    doc.getElementById('pregProgesterone').value = '25.5';
+    doc.getElementById('pregProgesteroneUnit').value = 'nmol/L';
+    await app.window.savePregnancyRecord();
+    const list = await t.db.getAllData('pregnancy_records');
+    assert.equal(list.length, 1);
+    assert.equal(list[0].data.hcg, '25000');
+    assert.equal(list[0].data.progesterone, '25.5');
+    assert.equal(list[0].data.progesteroneUnit, 'nmol/L');
+    await app.window.loadPregnancyHistory();
+    assert.match(doc.getElementById('pregHistoryList').textContent, /HCG 25000mIU\/mL/);
+    assert.match(doc.getElementById('pregHistoryList').textContent, /孕酮 25.5nmol\/L/);
+  } finally { await app.close(); }
+});
+
 test('EPDS screening stores score and gives referral guidance', async () => {
   const app = await createApp();
   try {
@@ -1021,6 +1042,26 @@ test('pregnancy outcome ends pregnancy without resuming cycle prediction', async
   } finally { await app.close(); }
 });
 
+test('pregnancy outcome entry is tucked into settings and history only appears with records', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    const doc = app.window.document;
+    assert.equal(doc.querySelector('.pregnancy-header button[onclick*="showPregnancyOutcomeModal"]'), null);
+    assert.equal(doc.getElementById('pregnancyOutcomeCard').style.display, 'none');
+    await app.window.showPregnancySettings();
+    const link = doc.querySelector('[data-open-outcome]');
+    assert.ok(link);
+    link.click();
+    assert.equal(doc.getElementById('pregnancyOutcomeModal').classList.contains('active'), true);
+    assert.equal(doc.getElementById('pregnancySettingsModal').classList.contains('active'), false);
+    await t.db.addData('pregnancy_outcomes', { date: t.getLocalDateString(), type: 'miscarriage', createdAt: Date.now() });
+    await app.window.loadOutcomeHistory();
+    assert.equal(doc.getElementById('pregnancyOutcomeCard').style.display, 'block');
+    assert.match(doc.getElementById('outcomeHistory').textContent, /自然流产/);
+  } finally { await app.close(); }
+});
+
 test('IVF due date follows transfer date and embryo age', async () => {
   const app = await createApp();
   try {
@@ -1046,6 +1087,47 @@ test('glucose thresholds depend on test type and vaccine records match by dose',
     assert.equal(t.isVaccineDone(rec, hepB1), true);
     assert.equal(t.isVaccineDone(rec, hepB2), false);
     assert.equal(t.isVaccineDone({ name: '乙肝疫苗 第2剂' }, hepB2), true);
+  } finally { await app.close(); }
+});
+
+test('pregnancy risk prompts use BP symptoms, OGTT, HCG change and gestational age', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    const bpDanger = t.assessPregnancyVitals({ bp: '150/95', urineProtein: '+', symptoms: ['头痛'], gestWeeks: 30 });
+    assert.ok(bpDanger.some(w => w.level === 'danger' && /子痫前期/.test(w.text)));
+    assert.ok(t.assessPregnancyVitals({ ogtt: { type: '75g', fasting: '5.3', oneHour: '9.0', twoHour: '7.8' } }).some(w => /75g OGTT/.test(w.text)));
+    assert.ok(t.assessPregnancyVitals({ ogtt: { type: '50g', oneHour: '8.1' } }).some(w => /50g GCT/.test(w.text)));
+    assert.equal(t.assessPregnancyVitals({ ogtt: { type: '50g', oneHour: '7.2' } }).length, 0);
+    assert.ok(t.assessPregnancyVitals({ hcg: '1000', hcg48: '1200' }).some(w => /48 小时 HCG|48 小时复查/.test(w.text)));
+    assert.equal(t.assessPregnancyVitals({ hcg: '1000', hcg48: '1800' }).length, 0);
+    assert.ok(t.assessPregnancyVitals({ fetalHr: '170', gestWeeks: 16 }).some(w => /胎心率/.test(w.text)));
+    assert.equal(t.assessPregnancyVitals({ fetalHr: '170', gestWeeks: 8 }).length, 0);
+    assert.ok(t.assessPregnancyVitals({ fetalMove: '0', gestWeeks: 30 }).some(w => /胎动/.test(w.text)));
+    assert.equal(t.assessPregnancyVitals({ fetalMove: '0', gestWeeks: 20 }).length, 0);
+  } finally { await app.close(); }
+});
+
+test('prenatal schedule, BMI categories and preterm corrected age', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    assert.equal(t.bmiCategory(17).label, '偏瘦');
+    assert.equal(t.bmiCategory(17).range, '11–16 kg');
+    assert.equal(t.bmiCategory(22).range, '8–14 kg');
+    assert.equal(t.bmiCategory(26).range, '7–11 kg');
+    assert.equal(t.bmiCategory(30).label, '肥胖');
+    const schedule = t.getPrenatalSchedule('2026-09-10');
+    assert.ok(schedule.length >= 9);
+    const nt = schedule.find(x => x.label === 'NT 超声');
+    assert.ok(nt && /11/.test(nt.note));
+    assert.ok(t.dateDiff(nt.endDate, nt.startDate) >= 17);
+    const ogtt = schedule.find(x => x.label === 'OGTT');
+    assert.ok(ogtt && /24–28/.test(ogtt.note));
+    const term = t.babyAgeText('2026-11-25', '2026-11-01', 40);
+    assert.equal(/矫正/.test(term), false);
+    const preterm = t.babyAgeText('2026-11-25', '2026-11-01', 32);
+    assert.ok(/矫正/.test(preterm));
   } finally { await app.close(); }
 });
 
