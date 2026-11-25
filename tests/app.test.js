@@ -1184,3 +1184,136 @@ test('import is atomic and restores exported preferences', async () => {
     assert.equal(app.window.localStorage.getItem('life_notify_enabled'), '1');
   } finally { await app.close(); }
 });
+
+test('WHO LMS selects girls and preterm growth uses corrected age', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    const doc = app.window.document;
+    const girl = t.whoLmsAt('girl', 'weight', 0);
+    assert.equal(girl[1], 3.2322);
+    assert.notEqual(girl[1], t.whoLmsAt('boy', 'weight', 0)[1]);
+    const now = t.parseLocalDate(t.getLocalDateString());
+    const birth = t.getLocalDateString(t.addDays(now, -100));
+    await t.db.addData('pregnancy_records', { stage: 'delivery', date: birth, data: { gestWeeks: 32, gender: '女' }, babyId: 'b1' });
+    await t.db.addData('baby_records', { date: t.getLocalDateString(), weight: 4.2, height: 54, head: 38, babyId: 'b1' });
+    await app.window.assessBabyGrowth();
+    const text = doc.getElementById('babyGrowthAssessment').textContent;
+    assert.match(text, /矫正日龄 44 天/);
+    assert.match(text, /女宝/);
+  } finally { await app.close(); }
+});
+
+test('delivery form stores baby weight in kg and records 1/5 minute Apgar', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    const doc = app.window.document;
+    doc.getElementById('deliveryDate').value = t.getLocalDateString();
+    doc.getElementById('babyWeight').value = '3300';
+    doc.getElementById('babyLength').value = '50';
+    doc.getElementById('apgar1').value = '9';
+    doc.getElementById('apgar5').value = '10';
+    doc.getElementById('bloodLoss').value = '300';
+    await app.window.saveDeliveryRecord();
+    const babies = await t.db.getAllData('baby_records');
+    assert.equal(babies.length, 1);
+    assert.equal(babies[0].weight, 3.3);
+    assert.equal(babies[0].source, 'delivery');
+    const deliveries = (await t.db.getAllData('pregnancy_records')).filter(r => r.stage === 'delivery');
+    assert.equal(deliveries.length, 1);
+    assert.equal(deliveries[0].data.weight, '3300');
+    assert.equal(deliveries[0].data.apgar1, '9');
+    assert.equal(deliveries[0].data.apgar5, '10');
+    assert.equal(deliveries[0].babyId, babies[0].babyId);
+    assert.ok(t.assessDeliveryRecord({ weight: '4200', apgar5: '6' }).some(w => /巨大儿/.test(w.text)));
+    assert.ok(t.assessDeliveryRecord({ weight: '3300', apgar1: '6', apgar5: '9' }).some(w => /1 分钟/.test(w.text)));
+  } finally { await app.close(); }
+});
+
+test('pregnancy risk rules gate HCG, use 2-hour fetal movement and random glucose wording', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    assert.equal(t.assessPregnancyVitals({ hcg: '1000', hcg48: '1200', gestWeeks: 10 }).length, 0);
+    assert.equal(t.assessPregnancyVitals({ hcg: '8000', hcg48: '9000', gestWeeks: 6 }).length, 0);
+    assert.ok(t.assessPregnancyVitals({ hcg: '1000', hcg48: '1200', gestWeeks: 6 }).some(w => /HCG/.test(w.text)));
+    assert.ok(t.assessPregnancyVitals({ fetalMove: '5', gestWeeks: 30 }).some(w => /2 小时胎动/.test(w.text)));
+    assert.equal(t.assessPregnancyVitals({ fetalMove: '12', gestWeeks: 30 }).length, 0);
+    assert.ok(t.assessPregnancyVitals({ glucose: '12', glucoseType: 'random' }).some(w => /随机血糖/.test(w.text)));
+  } finally { await app.close(); }
+});
+
+test('manual due date, IVF range, prenatal schedule and polio schedule stay current', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    const doc = app.window.document;
+    assert.ok(t.computeDueFromIvf('2026-01-01', 5));
+    assert.equal(t.computeDueFromIvf('2026-01-01', 8), null);
+    assert.equal(t.computeDueFromIvf('2026-01-01', 1), null);
+    const schedule = t.getPrenatalSchedule('2026-09-10');
+    assert.ok(schedule.find(x => x.label === 'GBS 筛查' && /35–37/.test(x.note)));
+    assert.ok(schedule.find(x => x.label === '每周产检' && /42/.test(x.note)));
+    assert.ok(schedule.find(x => x.label === 'NIPT/无创 DNA' && /22/.test(x.note)));
+    assert.equal(t.VACCINE_SCHEDULE.filter(v => v.c === 'IPV').length, 2);
+    assert.equal(t.VACCINE_SCHEDULE.filter(v => v.c === 'bOPV').length, 2);
+
+    await app.window.showPregnancySettings();
+    doc.getElementById('pregLmpInput').value = '';
+    doc.getElementById('pregDueManual').value = '2027-01-01';
+    await app.window.savePregnancySettingsFromModal();
+    const settings = await t.db.getAllData('pregnancy_settings');
+    assert.equal(settings[0].expectedDue, '2027-01-01');
+    assert.equal(settings[0].eddSource, 'manual');
+  } finally { await app.close(); }
+});
+
+test('baby selector isolates siblings and EPDS resets between openings', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    const doc = app.window.document;
+    const now = t.parseLocalDate(t.getLocalDateString());
+    await t.db.addData('pregnancy_records', { stage: 'delivery', date: t.getLocalDateString(t.addDays(now, -200)), data: { gender: '男' }, babyId: 'b1' });
+    await t.db.addData('pregnancy_records', { stage: 'delivery', date: t.getLocalDateString(t.addDays(now, -50)), data: { gender: '女' }, babyId: 'b2' });
+    await t.db.addData('baby_records', { date: t.getLocalDateString(t.addDays(now, -190)), weight: 6, babyId: 'b1' });
+    await t.db.addData('baby_records', { date: t.getLocalDateString(t.addDays(now, -40)), weight: 8, babyId: 'b2' });
+    await app.window.loadBabyHistory();
+    let text = doc.getElementById('babyHistoryList').textContent;
+    assert.match(text, /8kg/);
+    assert.doesNotMatch(text, /6kg/);
+    app.window.selectBaby('b1');
+    await app.window.loadBabyHistory();
+    text = doc.getElementById('babyHistoryList').textContent;
+    assert.match(text, /6kg/);
+    assert.doesNotMatch(text, /8kg/);
+
+    app.window.openEpds();
+    doc.querySelector('input[name="epds0"][value="2"]').checked = true;
+    app.window.openEpds();
+    assert.equal(doc.querySelector('input[name="epds0"]:checked'), null);
+  } finally { await app.close(); }
+});
+
+test('contractions are exported and backdated records use the record date for gestational age', async () => {
+  const app = await createApp();
+  try {
+    const t = app.window.__lifeTest;
+    const doc = app.window.document;
+    app.window.localStorage.setItem('life_contractions', JSON.stringify([{ start: 1, end: 2 }]));
+    const exported = await app.window.buildExportObject();
+    assert.match(exported.preferences.life_contractions, /start/);
+
+    const now = t.parseLocalDate(t.getLocalDateString());
+    const lmp = t.getLocalDateString(t.addDays(now, -100));
+    const recordDate = t.getLocalDateString(t.addDays(now, -40));
+    await t.db.addData('pregnancy_settings', { lastMenstrualDate: lmp, expectedDue: t.computeDueFromLmp(lmp), pregnancyId: 'p1' });
+    doc.getElementById('pregDate').value = recordDate;
+    doc.getElementById('pregWeight').value = '60';
+    await app.window.savePregnancyRecord();
+    const records = (await t.db.getAllData('pregnancy_records')).filter(r => r.stage === 'pregnancy');
+    assert.equal(records.length, 1);
+    assert.equal(records[0].data.gestWeeks, 8);
+  } finally { await app.close(); }
+});

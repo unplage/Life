@@ -395,10 +395,10 @@
             <div class="pregnancy-header"><div class="week-badge" id="gestationalWeek">--</div><div id="pregnancyStatus"></div><button class="btn-small" style="margin-top:8px; background:white; border:none; border-radius:20px;" onclick="showPregnancySettings()">⚙️ 设置预产期/末次月经/IVF</button></div>
             <div class="stage-tabs scroll-hint" role="tablist" aria-label="孕产阶段"><button class="stage-tab" data-stage="preconception" role="tab" aria-selected="false">🌱 备孕</button><button class="stage-tab" data-stage="pregnancy" role="tab" aria-selected="false">🤰 怀孕</button><button class="stage-tab" data-stage="delivery" role="tab" aria-selected="false">🏥 生产</button><button class="stage-tab" data-stage="postpartum" role="tab" aria-selected="false">🌙 月子</button><button class="stage-tab active" data-stage="baby" role="tab" aria-selected="true">👶 宝宝成长</button></div>
             <div id="preconception-panel" class="stage-panel" style="display:none;"><div class="card"><div class="card-title">📝 备孕记录</div><div class="form-group"><label>基础体温(℃)</label><input type="number" step="0.1" class="form-input" id="preBbt" placeholder="36.2"></div><div class="form-group"><label>排卵试纸</label><select class="form-input" id="preOvulation"><option value="阴性">阴性</option><option value="弱阳">弱阳</option><option value="阳性">阳性</option><option value="强阳">强阳</option></select></div><div class="form-group"><label>叶酸补充</label><select class="form-input" id="preFolic"><option value="是">是</option><option value="否">否</option></select></div><div class="form-group"><label>记录日期</label><input type="date" class="form-input" id="preDate"></div><button class="btn btn-primary" onclick="savePreconceptionRecord()">保存备孕记录</button><div class="history-list" id="preHistoryList" style="margin-top:16px;"></div></div></div>
-            <div id="pregnancy-panel" class="stage-panel" style="display:none;"><div class="card"><div class="card-title">📊 孕期指标</div><div id="pregClinicalAlert" class="clinical-alert" style="display:none;"></div><div class="metrics-grid"><div><label>体重(kg)</label><input type="number" step="0.1" class="form-input" id="pregWeight"></div><div><label>血压(mmHg)</label><input type="text" class="form-input" id="pregBp" placeholder="120/80"></div><div><label>血糖(mmol/L)</label><input type="number" step="0.1" class="form-input" id="pregGlucose"></div><div><label>血糖类型</label><select class="form-input" id="pregGlucoseType"><option value="fasting">空腹</option><option value="ogtt1h">OGTT 1小时</option><option value="ogtt2h">OGTT 2小时</option><option value="random">随机</option></select></div><div><label>宫高(cm)</label><input type="number" step="0.5" class="form-input" id="pregFundal"></div><div><label>腹围(cm)</label><input type="number" step="0.5" class="form-input" id="pregAbdominal"></div><div><label>胎心率(bpm)</label><input type="number" class="form-input" id="pregFetalHr"></div><div><label>胎动(次/小时)</label><input type="number" class="form-input" id="pregFetalMove"></div><div><label>HCG(mIU/mL)</label><input type="number" step="1" min="0" class="form-input" id="pregHcg" placeholder="如 25000"></div><div><label>48h 复查 HCG</label><input type="number" step="1" min="0" class="form-input" id="pregHcg48" placeholder="可选"></div><div><label>孕酮</label><input type="number" step="0.1" min="0" class="form-input" id="pregProgesterone" placeholder="如 25"></div><div><label>孕酮单位</label><select class="form-input" id="pregProgesteroneUnit"><option value="ng/mL">ng/mL</option><option value="nmol/L">nmol/L</option></select></div><div><label>尿蛋白</label><select class="form-input" id="pregUrineProtein"><option value="">未查</option><option value="阴性">阴性</option><option value="±">±</option><option value="+">+</option><option value="++">++</option><option value="+++">+++</option></select></div></div><div class="form-group"><label class="form-label">伴随症状（可选）</label><div style="display:flex;flex-wrap:wrap;gap:8px 12px;"><label><input type="checkbox" class="preg-symptom" value="头痛"> 头痛</label><label><input type="checkbox" class="preg-symptom" value="视物模糊"> 视物模糊</label><label><input type="checkbox" class="preg-symptom" value="上腹痛"> 上腹痛</label><label><input type="checkbox" class="preg-symptom" value="明显水肿"> 明显水肿</label></div></div><p class="muted" style="font-size:12px;">胎动建议固定时间安静侧卧计数：2 小时内少于 10 次或明显减少请就医。血糖请按检测类型选择，阈值不同。HCG 与孕酮参考范围随孕周和实验室不同，单次数值不能判断胚胎发育，请结合超声、动态变化与医生解读。</p><div class="form-group"><label>备注</label><textarea class="form-input" id="pregNote" rows="2"></textarea></div><div class="form-group"><label>日期</label><input type="date" class="form-input" id="pregDate"></div><button class="btn btn-primary" onclick="savePregnancyRecord()">保存怀孕记录</button><button class="btn btn-secondary btn-small" style="margin-left:8px;" onclick="openEpds()">🌿 情绪筛查（EPDS）</button><div class="chart-container" id="pregWeightChartContainer"></div><div class="chart-container" id="pregBpChartContainer"></div><div class="chart-container" id="pregHormoneChartContainer"></div><div class="history-list" id="pregHistoryList"></div></div><div class="card"><div class="card-title">⚖️ 孕期增重与孕产档案</div><div id="pregWeightGain"></div></div><div class="card"><div class="card-title">🗓️ 产检计划</div><div id="prenatalSchedule"></div><p class="muted" style="font-size:11px; margin-top:10px;">按末次月经/预产期推算的常规产检窗口，具体项目、频次和日期请以产检医院安排为准。</p></div><div class="card"><div class="card-title">🧪 口服葡萄糖耐量（OGTT / GCT）</div><div class="form-group"><label>检测类型</label><select class="form-input" id="ogttType"><option value="75g">75g OGTT（空腹 + 1小时 + 2小时）</option><option value="50g">50g GCT（仅记录 1 小时）</option></select></div><div class="metrics-grid"><div><label>空腹(mmol/L)</label><input type="number" step="0.1" min="0" class="form-input" id="ogttFasting"></div><div><label>1小时(mmol/L)</label><input type="number" step="0.1" min="0" class="form-input" id="ogtt1h"></div><div><label>2小时(mmol/L)</label><input type="number" step="0.1" min="0" class="form-input" id="ogtt2h"></div></div><div class="form-group"><label>检查日期</label><input type="date" class="form-input" id="ogttDate"></div><button class="btn btn-primary" onclick="saveOgttRecord()">保存 OGTT/GCT</button><div id="ogttResult" style="margin-top:10px;"></div><p class="muted" style="font-size:11px;">75g OGTT 阈值：空腹 5.1、1小时 10.0、2小时 8.5 mmol/L；任一项达到或超过提示需产科评估。50g GCT 1小时 ≥7.8 mmol/L 通常需进一步 75g OGTT。请以产检医院报告和医生判断为准。</p></div><div class="card"><div class="card-title">🚨 需要尽快就医的情况</div><div class="muted" style="font-size:13px; line-height:1.9;">阴道流血或流液、持续剧烈腹痛、头痛伴视物模糊、上腹痛、明显水肿、胎动明显减少、发热、持续呕吐、抽搐或意识异常。出现以上情况不要等待，请立即联系产科或前往急诊。</div></div><div class="card"><div class="card-title">⏱️ 宫缩计时</div><div id="contractionSummary" class="muted" style="font-size:13px; margin-bottom:10px;">记录宫缩持续与间隔，帮助判断是否接近 5-1-1。</div><div style="display:flex; gap:8px; flex-wrap:wrap;"><button class="btn-small btn-primary" onclick="startContraction()">开始宫缩</button><button class="btn-small btn-secondary" onclick="endContraction()">结束本次</button><button class="btn-small btn-secondary" onclick="clearContractions()">清空</button></div><div id="contractionList" class="history-list" style="margin-top:10px;"></div><p class="muted" style="font-size:11px; margin-top:10px;">5-1-1 指宫缩约每 5 分钟一次、每次持续约 1 分钟、持续 1 小时。初产妇、经产妇及高危妊娠的标准可能不同；如破水、出血、胎动减少或疼痛难忍，请立即就医，不要只依赖计时。</p></div><div class="card"><div class="card-title">📋 产检记录 &amp; 检查图片</div><div class="metrics-grid"><div><label>检查日期</label><input type="date" class="form-input" id="checkDate"></div><div><label>检查项目</label><input type="text" class="form-input" id="checkTitle" placeholder="如：NT、唐筛、四维彩超"></div></div><div class="form-group" style="margin-top:12px;"><label>医院/科室</label><input type="text" class="form-input" id="checkHospital" placeholder="可选"></div><div class="form-group"><label>关键结果</label><textarea class="form-input" id="checkResult" rows="2" placeholder="如：双顶径 4.5cm，胎心 148bpm"></textarea></div><div class="form-group"><label>备注</label><input type="text" class="form-input" id="checkNote" placeholder="可选"></div><div class="form-group"><label class="form-label">检查图片（可多选，自动压缩保存）</label><input type="file" class="form-input" id="checkPhotos" accept="image/*" multiple onchange="previewCheckPhotos(this)"><div class="pending-photo-grid" id="checkPhotoPreview"></div></div><div class="quick-row"><button class="btn-small btn-secondary" onclick="prefillCheckFromVitals()">↧ 带入最近孕期指标</button></div><button class="btn btn-primary" onclick="savePregnancyCheck()">保存产检记录</button><div class="history-list" id="checkHistoryList" style="margin-top:16px;"></div></div><div class="card"><details><summary style="cursor:pointer; font-size:14px; font-weight:600;">📚 参考依据与版本说明</summary><div class="muted" style="font-size:12px; line-height:1.9; margin-top:10px;">孕周与预产期：末次月经 Naegele 规则（按月经周期校正）、早孕超声核对、IVF 移植日与胚胎日龄推算。孕期增重参考中国《孕前和孕期保健指南（2021）》单胎范围。OGTT 采用 75g 空腹/1h/2h 5.1/10.0/8.5 mmol/L，50g GCT 1h 7.8 mmol/L。血压 140/90 mmHg 结合症状与尿蛋白提示子痫前期风险。EPDS 采用 10 题标准量表。<br>本工具仅用于记录与风险提示，不能替代产检、实验室报告解读或医生诊断；阈值和方案请以就诊医院与当前指南为准。<br>应用 v4 · 数据格式 schema v6。</div></details></div></div>
-            <div id="delivery-panel" class="stage-panel" style="display:none;"><div class="card"><div class="card-title">👶 分娩记录</div><div id="deliveryAlert" class="clinical-alert" style="display:none;"></div><div class="form-group"><label>分娩日期</label><input type="date" class="form-input" id="deliveryDate"></div><div class="form-group"><label>分娩方式</label><select class="form-input" id="deliveryMode"><option value="顺产">顺产</option><option value="剖宫产">剖宫产</option><option value="助产">助产</option></select></div><div class="form-group"><label>胎儿数量</label><select class="form-input" id="deliveryMultiplicity"><option value="单胎">单胎</option><option value="双胎">双胎</option><option value="三胎及以上">三胎及以上</option></select></div><div class="form-group"><label>宝宝性别</label><select class="form-input" id="babyGender"><option value="女">女宝</option><option value="男">男宝</option></select></div><div class="form-group"><label>宝宝体重(g)</label><input type="number" class="form-input" id="babyWeight"></div><div class="form-group"><label>宝宝身长(cm)</label><input type="number" step="0.5" class="form-input" id="babyLength"></div><div class="form-group"><label>宝宝头围(cm)</label><input type="number" step="0.1" class="form-input" id="babyHead" placeholder="可选"></div><div class="form-group"><label>Apgar评分(1-10)</label><input type="number" class="form-input" id="apgarScore" min="0" max="10"></div><div class="form-group"><label>产后出血量(ml)</label><input type="number" class="form-input" id="bloodLoss"></div><button class="btn btn-primary" onclick="saveDeliveryRecord()">保存生产记录</button><div class="history-list" id="deliveryHistoryList"></div></div></div>
+            <div id="pregnancy-panel" class="stage-panel" style="display:none;"><div class="card"><div class="card-title">📊 孕期指标</div><div id="pregClinicalAlert" class="clinical-alert" style="display:none;"></div><div class="metrics-grid"><div><label>体重(kg)</label><input type="number" step="0.1" class="form-input" id="pregWeight"></div><div><label>血压(mmHg)</label><input type="text" class="form-input" id="pregBp" placeholder="120/80"></div><div><label>血糖(mmol/L)</label><input type="number" step="0.1" class="form-input" id="pregGlucose"></div><div><label>血糖类型</label><select class="form-input" id="pregGlucoseType"><option value="fasting">空腹</option><option value="ogtt1h">OGTT 1小时</option><option value="ogtt2h">OGTT 2小时</option><option value="random">随机</option></select></div><div><label>宫高(cm)</label><input type="number" step="0.5" class="form-input" id="pregFundal"></div><div><label>腹围(cm)</label><input type="number" step="0.5" class="form-input" id="pregAbdominal"></div><div><label>胎心率(bpm)</label><input type="number" class="form-input" id="pregFetalHr"></div><div><label>胎动(次/2小时)</label><input type="number" class="form-input" id="pregFetalMove"></div><div><label>HCG(mIU/mL)</label><input type="number" step="1" min="0" class="form-input" id="pregHcg" placeholder="如 25000"></div><div><label>48h 复查 HCG</label><input type="number" step="1" min="0" class="form-input" id="pregHcg48" placeholder="可选"></div><div><label>孕酮</label><input type="number" step="0.1" min="0" class="form-input" id="pregProgesterone" placeholder="如 25"></div><div><label>孕酮单位</label><select class="form-input" id="pregProgesteroneUnit"><option value="ng/mL">ng/mL</option><option value="nmol/L">nmol/L</option></select></div><div><label>尿蛋白</label><select class="form-input" id="pregUrineProtein"><option value="">未查</option><option value="阴性">阴性</option><option value="±">±</option><option value="+">+</option><option value="++">++</option><option value="+++">+++</option></select></div></div><div class="form-group"><label class="form-label">伴随症状（可选）</label><div style="display:flex;flex-wrap:wrap;gap:8px 12px;"><label><input type="checkbox" class="preg-symptom" value="头痛"> 头痛</label><label><input type="checkbox" class="preg-symptom" value="视物模糊"> 视物模糊</label><label><input type="checkbox" class="preg-symptom" value="上腹痛"> 上腹痛</label><label><input type="checkbox" class="preg-symptom" value="明显水肿"> 明显水肿</label></div></div><p class="muted" style="font-size:12px;">胎动建议固定时间安静侧卧计数：2 小时内少于 10 次或明显减少请就医。血糖请按检测类型选择，阈值不同。HCG 与孕酮参考范围随孕周和实验室不同，单次数值不能判断胚胎发育，请结合超声、动态变化与医生解读。</p><div class="form-group"><label>备注</label><textarea class="form-input" id="pregNote" rows="2"></textarea></div><div class="form-group"><label>日期</label><input type="date" class="form-input" id="pregDate"></div><button class="btn btn-primary" onclick="savePregnancyRecord()">保存怀孕记录</button><button class="btn btn-secondary btn-small" style="margin-left:8px;" onclick="openEpds()">🌿 情绪筛查（EPDS）</button><div class="chart-container" id="pregWeightChartContainer"></div><div class="chart-container" id="pregBpChartContainer"></div><div class="chart-container" id="pregHormoneChartContainer"></div><div class="history-list" id="pregHistoryList"></div></div><div class="card"><div class="card-title">⚖️ 孕期增重与孕产档案</div><div id="pregWeightGain"></div></div><div class="card"><div class="card-title">🗓️ 产检计划</div><div id="prenatalSchedule"></div><p class="muted" style="font-size:11px; margin-top:10px;">按末次月经/预产期推算的常规产检窗口，具体项目、频次和日期请以产检医院安排为准。</p></div><div class="card"><div class="card-title">🧪 口服葡萄糖耐量（OGTT / GCT）</div><div class="form-group"><label>检测类型</label><select class="form-input" id="ogttType"><option value="75g">75g OGTT（空腹 + 1小时 + 2小时）</option><option value="50g">50g GCT（仅记录 1 小时）</option></select></div><div class="metrics-grid"><div><label>空腹(mmol/L)</label><input type="number" step="0.1" min="0" class="form-input" id="ogttFasting"></div><div><label>1小时(mmol/L)</label><input type="number" step="0.1" min="0" class="form-input" id="ogtt1h"></div><div><label>2小时(mmol/L)</label><input type="number" step="0.1" min="0" class="form-input" id="ogtt2h"></div></div><div class="form-group"><label>检查日期</label><input type="date" class="form-input" id="ogttDate"></div><button class="btn btn-primary" onclick="saveOgttRecord()">保存 OGTT/GCT</button><div id="ogttResult" style="margin-top:10px;"></div><p class="muted" style="font-size:11px;">75g OGTT 阈值：空腹 5.1、1小时 10.0、2小时 8.5 mmol/L；任一项达到或超过提示需产科评估。50g GCT 1小时 ≥7.8 mmol/L 通常需进一步 75g OGTT。请以产检医院报告和医生判断为准。</p></div><div class="card"><div class="card-title">🚨 需要尽快就医的情况</div><div class="muted" style="font-size:13px; line-height:1.9;">阴道流血或流液、持续剧烈腹痛、头痛伴视物模糊、上腹痛、明显水肿、胎动明显减少、发热、持续呕吐、抽搐或意识异常。出现以上情况不要等待，请立即联系产科或前往急诊。</div></div><div class="card"><div class="card-title">⏱️ 宫缩计时</div><div id="contractionSummary" class="muted" style="font-size:13px; margin-bottom:10px;">记录宫缩持续与间隔，帮助判断是否接近 5-1-1。</div><div style="display:flex; gap:8px; flex-wrap:wrap;"><button class="btn-small btn-primary" onclick="startContraction()">开始宫缩</button><button class="btn-small btn-secondary" onclick="endContraction()">结束本次</button><button class="btn-small btn-secondary" onclick="clearContractions()">清空</button></div><div id="contractionList" class="history-list" style="margin-top:10px;"></div><p class="muted" style="font-size:11px; margin-top:10px;">5-1-1 指宫缩约每 5 分钟一次、每次持续约 1 分钟、持续 1 小时。初产妇、经产妇及高危妊娠的标准可能不同；如破水、出血、胎动减少或疼痛难忍，请立即就医，不要只依赖计时。</p></div><div class="card"><div class="card-title">📋 产检记录 &amp; 检查图片</div><div class="metrics-grid"><div><label>检查日期</label><input type="date" class="form-input" id="checkDate"></div><div><label>检查项目</label><input type="text" class="form-input" id="checkTitle" placeholder="如：NT、唐筛、四维彩超"></div></div><div class="form-group" style="margin-top:12px;"><label>医院/科室</label><input type="text" class="form-input" id="checkHospital" placeholder="可选"></div><div class="form-group"><label>关键结果</label><textarea class="form-input" id="checkResult" rows="2" placeholder="如：双顶径 4.5cm，胎心 148bpm"></textarea></div><div class="form-group"><label>备注</label><input type="text" class="form-input" id="checkNote" placeholder="可选"></div><div class="form-group"><label class="form-label">检查图片（可多选，自动压缩保存）</label><input type="file" class="form-input" id="checkPhotos" accept="image/*" multiple onchange="previewCheckPhotos(this)"><div class="pending-photo-grid" id="checkPhotoPreview"></div></div><div class="quick-row"><button class="btn-small btn-secondary" onclick="prefillCheckFromVitals()">↧ 带入最近孕期指标</button></div><button class="btn btn-primary" onclick="savePregnancyCheck()">保存产检记录</button><div class="history-list" id="checkHistoryList" style="margin-top:16px;"></div></div><div class="card"><details><summary style="cursor:pointer; font-size:14px; font-weight:600;">📚 参考依据与版本说明</summary><div class="muted" style="font-size:12px; line-height:1.9; margin-top:10px;">孕周与预产期：末次月经 Naegele 规则（按月经周期校正）、早孕超声核对、IVF 移植日与胚胎日龄推算。孕期增重参考中国《孕前和孕期保健指南（2021）》单胎范围。OGTT 采用 75g 空腹/1h/2h 5.1/10.0/8.5 mmol/L，50g GCT 1h 7.8 mmol/L。血压 140/90 mmHg 结合症状与尿蛋白提示子痫前期风险。EPDS 采用 10 题标准量表。<br>本工具仅用于记录与风险提示，不能替代产检、实验室报告解读或医生诊断；阈值和方案请以就诊医院与当前指南为准。<br>应用 v4 · 数据格式 schema v6。</div></details></div></div>
+            <div id="delivery-panel" class="stage-panel" style="display:none;"><div class="card"><div class="card-title">👶 分娩记录</div><div id="deliveryAlert" class="clinical-alert" style="display:none;"></div><div class="form-group"><label>分娩日期</label><input type="date" class="form-input" id="deliveryDate"></div><div class="form-group"><label>分娩方式</label><select class="form-input" id="deliveryMode"><option value="顺产">顺产</option><option value="剖宫产">剖宫产</option><option value="助产">助产</option></select></div><div class="form-group"><label>胎儿数量</label><select class="form-input" id="deliveryMultiplicity"><option value="单胎">单胎</option><option value="双胎">双胎</option><option value="三胎及以上">三胎及以上</option></select></div><div class="form-group"><label>宝宝性别</label><select class="form-input" id="babyGender"><option value="女">女宝</option><option value="男">男宝</option></select></div><div class="form-group"><label>宝宝体重(g)</label><input type="number" class="form-input" id="babyWeight"></div><div class="form-group"><label>宝宝身长(cm)</label><input type="number" step="0.5" class="form-input" id="babyLength"></div><div class="form-group"><label>宝宝头围(cm)</label><input type="number" step="0.1" class="form-input" id="babyHead" placeholder="可选"></div><div class="form-group"><label>Apgar 1 分钟(0-10)</label><input type="number" class="form-input" id="apgar1" min="0" max="10"></div><div class="form-group"><label>Apgar 5 分钟(0-10)</label><input type="number" class="form-input" id="apgar5" min="0" max="10"></div><div class="form-group"><label>产后出血量(ml)</label><input type="number" class="form-input" id="bloodLoss"></div><p class="muted" style="font-size:11px;">双胎/多胎请分别保存每个宝宝：重复保存会按每次分娩生成独立宝宝档案，可在「宝宝成长」顶部切换查看。</p><button class="btn btn-primary" onclick="saveDeliveryRecord()">保存生产记录</button><div class="history-list" id="deliveryHistoryList"></div></div></div>
             <div id="postpartum-panel" class="stage-panel" style="display:none;"><div class="card"><div class="card-title">🌙 产后恢复</div><div id="postpartumAlert" class="clinical-alert" style="display:none;"></div><div id="postpartumCheckup" class="clinical-alert" style="display:none;"></div><div class="metrics-grid"><div><label>子宫底高度(cm)</label><input type="number" step="0.5" class="form-input" id="ppUterus"></div><div><label>恶露情况</label><select class="form-input" id="ppLochia"><option value="少-淡红">少-淡红</option><option value="中-红色">中-红色</option><option value="多-血块">多-血块</option></select></div><div><label>伤口愈合</label><select class="form-input" id="ppWound"><option value="良好">良好</option><option value="红肿">红肿</option><option value="疼痛">疼痛</option></select></div><div><label>情绪评分(1-5)</label><input type="number" class="form-input" id="ppMood" min="1" max="5"></div><div><label>盆底肌训练</label><select class="form-input" id="ppPelvic"><option value="是">是</option><option value="否">否</option></select></div><div><label>体温(℃)</label><input type="number" step="0.1" class="form-input" id="ppTemp" placeholder="37.0"></div><div><label>乳房情况</label><select class="form-input" id="ppBreast"><option value="正常">正常</option><option value="胀痛">胀痛</option><option value="红肿发热">红肿发热</option></select></div></div><div class="form-group"><label>记录日期</label><input type="date" class="form-input" id="ppDate"></div><button class="btn btn-primary" onclick="savePostpartumRecord()">保存月子记录</button><div class="history-list" id="ppHistoryList"></div><div class="quick-divider"></div><div class="card-title" style="font-size:15px;">🌿 产后情绪（EPDS）</div><button class="btn-small btn-secondary" onclick="openEpds()">开始 10 题筛查</button><div id="epdsHistory" style="margin-top:12px;"></div></div></div>
-            <div id="baby-panel" class="stage-panel"><div class="card"><div class="card-title">📊 宝宝体重趋势</div><div class="chart-container" id="babyWeightChartContainer"></div><div id="babyGrowthAssessment"></div></div><div class="card"><div class="card-title">🗓️ 免疫规划对照</div><div id="vaccineSchedule"></div></div><div class="card"><div class="card-title">💉 疫苗记录</div><button class="btn-small btn-primary" onclick="showAddVaccineModal()" style="margin-bottom:12px;">+ 添加疫苗</button><div id="vaccineList" class="vaccine-timeline"></div></div><div class="card"><div class="card-title">🍼 饭食 &amp; 💩 排泄记录</div><div class="metrics-grid"><div><button class="btn-small btn-primary" onclick="showAddFoodModal()">🍚 添加饭食</button></div><div><button class="btn-small btn-primary" onclick="showAddExcretionModal()">🚽 添加排泄</button></div></div><div class="chart-container" id="foodExcreteChartContainer" style="height:200px;"></div><div class="history-list" id="foodExcreteHistory"></div></div><div class="card"><div class="card-title">📝 宝宝成长记录</div><div class="form-group"><label>日期</label><input type="date" class="form-input" id="babyRecordDate"></div><div class="form-group"><label>体重(kg)</label><input type="number" step="0.01" class="form-input" id="babyWeightInput" placeholder="例: 5.2"></div><div class="form-group"><label>身高(cm)</label><input type="number" step="0.5" class="form-input" id="babyHeightInput"></div><div class="form-group"><label>头围(cm)</label><input type="number" step="0.1" class="form-input" id="babyHeadInput" placeholder="可选"></div><button class="btn btn-primary" onclick="saveBabyRecord()">保存成长记录</button><div class="history-list" id="babyHistoryList" style="margin-top:16px;"></div></div><div class="card"><div class="card-title">📸 宝宝时光相册</div><div id="babyBirthInfo" class="muted" style="font-size:13px; margin-bottom:10px;">记录分娩日期后自动显示宝宝月龄</div><div class="metrics-grid"><div><label>拍摄日期</label><input type="date" class="form-input" id="babyPhotoDate"></div><div><label>里程碑</label><select class="form-input" id="babyPhotoMilestone"><option value="">日常记录</option><option value="满月">满月</option><option value="百天">百天</option><option value="第一次微笑">第一次微笑</option><option value="第一次翻身">第一次翻身</option><option value="第一次坐">第一次坐</option><option value="第一次爬">第一次爬</option><option value="第一次走路">第一次走路</option><option value="周岁生日">周岁生日</option><option value="其他">其他</option></select></div></div><div class="form-group" style="margin-top:12px;"><label>照片标题</label><input type="text" class="form-input" id="babyPhotoTitle" placeholder="如：第一次微笑"></div><div class="form-group"><label>选择照片</label><input type="file" class="form-input" id="babyPhotoFile" accept="image/*" onchange="previewBabyPhoto(this)"><div class="pending-photo-grid" id="babyPhotoPreview"></div></div><button class="btn btn-primary" onclick="saveBabyPhoto()">加入时光相册</button><div class="album-grid" id="babyPhotoTimeline" style="margin-top:16px;"></div></div></div>
+            <div id="baby-panel" class="stage-panel"><div class="card"><div class="card-title" style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">📊 宝宝体重趋势<select class="form-select" id="babySelector" style="max-width:220px;font-size:13px;" onchange="selectBaby(this.value)"></select></div><div class="chart-container" id="babyWeightChartContainer"></div><div id="babyGrowthAssessment"></div></div><div class="card"><div class="card-title">🗓️ 免疫规划对照</div><div id="vaccineSchedule"></div></div><div class="card"><div class="card-title">💉 疫苗记录</div><button class="btn-small btn-primary" onclick="showAddVaccineModal()" style="margin-bottom:12px;">+ 添加疫苗</button><div id="vaccineList" class="vaccine-timeline"></div></div><div class="card"><div class="card-title">🍼 饭食 &amp; 💩 排泄记录</div><div class="metrics-grid"><div><button class="btn-small btn-primary" onclick="showAddFoodModal()">🍚 添加饭食</button></div><div><button class="btn-small btn-primary" onclick="showAddExcretionModal()">🚽 添加排泄</button></div></div><div class="chart-container" id="foodExcreteChartContainer" style="height:200px;"></div><div class="history-list" id="foodExcreteHistory"></div></div><div class="card"><div class="card-title">📝 宝宝成长记录</div><div class="form-group"><label>日期</label><input type="date" class="form-input" id="babyRecordDate"></div><div class="form-group"><label>体重(kg)</label><input type="number" step="0.01" class="form-input" id="babyWeightInput" placeholder="例: 5.2"></div><div class="form-group"><label>身高(cm)</label><input type="number" step="0.5" class="form-input" id="babyHeightInput"></div><div class="form-group"><label>头围(cm)</label><input type="number" step="0.1" class="form-input" id="babyHeadInput" placeholder="可选"></div><button class="btn btn-primary" onclick="saveBabyRecord()">保存成长记录</button><div class="history-list" id="babyHistoryList" style="margin-top:16px;"></div></div><div class="card"><div class="card-title">📸 宝宝时光相册</div><div id="babyBirthInfo" class="muted" style="font-size:13px; margin-bottom:10px;">记录分娩日期后自动显示宝宝月龄</div><div class="metrics-grid"><div><label>拍摄日期</label><input type="date" class="form-input" id="babyPhotoDate"></div><div><label>里程碑</label><select class="form-input" id="babyPhotoMilestone"><option value="">日常记录</option><option value="满月">满月</option><option value="百天">百天</option><option value="第一次微笑">第一次微笑</option><option value="第一次翻身">第一次翻身</option><option value="第一次坐">第一次坐</option><option value="第一次爬">第一次爬</option><option value="第一次走路">第一次走路</option><option value="周岁生日">周岁生日</option><option value="其他">其他</option></select></div></div><div class="form-group" style="margin-top:12px;"><label>照片标题</label><input type="text" class="form-input" id="babyPhotoTitle" placeholder="如：第一次微笑"></div><div class="form-group"><label>选择照片</label><input type="file" class="form-input" id="babyPhotoFile" accept="image/*" onchange="previewBabyPhoto(this)"><div class="pending-photo-grid" id="babyPhotoPreview"></div></div><button class="btn btn-primary" onclick="saveBabyPhoto()">加入时光相册</button><div class="album-grid" id="babyPhotoTimeline" style="margin-top:16px;"></div></div></div>
             <div class="card" id="pregnancyOutcomeCard" style="display:none;"><div class="card-title">📝 妊娠结局记录</div><p class="muted" style="font-size:13px;">如流产、胎停、引产或异位妊娠，请在此记录；记录后不再按孕期显示，也不会自动恢复经期预测。</p><div id="outcomeHistory"></div></div>
             <div class="card" id="pregnancyRelatedCard"><div class="card-title">📚 相关阅读</div><div id="pregnancyRelated"></div></div>
         </div>
@@ -577,7 +577,7 @@
 
 <div class="modal" id="epdsModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">🌿 围产期情绪筛查（EPDS）</div><button class="modal-close" onclick="closeModal('epdsModal')">&times;</button></div><div class="modal-body"><p class="muted" style="font-size:13px; line-height:1.7; margin-bottom:12px;">请选择过去 7 天内最符合您感受的选项，不要漏题。量表源：Cox JL, Holden JM, Sagovsky R (1987)，爱丁堡产后抑郁量表；中文译本仅作自我筛查导航，<strong>不能替代专业诊断</strong>。危机时可拨打心理援助热线 12356，紧急情况拨打 120。</p><div id="epdsQuestions"></div><button class="btn btn-primary" onclick="submitEpds()">查看结果</button><div id="epdsResult" style="margin-top:14px;"></div></div></div></div>
 
-<div class="modal" id="pregnancySettingsModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">⚙️ 孕周与预产期设置</div><button class="modal-close" onclick="closeModal('pregnancySettingsModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label class="form-label">受孕方式</label><select class="form-select" id="pregConceptionType" onchange="toggleIvfFields()"><option value="natural">自然受孕（末次月经）</option><option value="ivf">辅助生殖（IVF）</option></select></div><div class="form-group"><label class="form-label">末次月经第一天（IVF 可留空）</label><input type="date" class="form-input" id="pregLmpInput" onchange="updatePregnancyDuePreview()"><div id="pregCycleHint" class="muted" style="font-size:12px; margin-top:4px;"></div></div><div id="ivfFields" style="display:none;"><div class="form-group"><label class="form-label">胚胎移植日期</label><input type="date" class="form-input" id="pregIvfTransfer" onchange="updatePregnancyDuePreview()"></div><div class="form-group"><label class="form-label">移植胚胎日龄（卵裂期 3 天 / 囊胚 5–6 天）</label><input type="number" class="form-input" id="pregIvfEmbryoAge" min="2" max="7" value="5" oninput="updatePregnancyDuePreview()"></div></div><div class="form-group"><label class="form-label">预产期（按医学规则自动估算）</label><div id="pregDuePreview" class="muted" style="font-size:14px;">选择日期后自动计算</div></div><div class="quick-divider"></div><div class="form-group"><label class="form-label">超声核对（可选，早孕期更准确）</label><input type="date" class="form-input" id="pregUsDate" onchange="updatePregnancyDuePreview()"></div><div class="metrics-grid"><div><label>超声孕周</label><input type="number" class="form-input" id="pregUsWeeks" min="0" max="40" oninput="updatePregnancyDuePreview()" placeholder="如 12"></div><div><label>天</label><input type="number" class="form-input" id="pregUsDays" min="0" max="6" oninput="updatePregnancyDuePreview()" placeholder="0"></div></div><div id="pregUsPreview" class="muted" style="font-size:13px; margin-top:8px;"></div><p class="muted" style="font-size:12px;">IVF 预产期 = 移植日 + 266 天 − 胚胎日龄。早孕期超声核对优先于末次月经估算。</p><div class="quick-divider"></div><details><summary style="cursor:pointer; font-size:14px; font-weight:600; margin-bottom:10px;">👩 孕产档案（可选，用于增重与风险提示）</summary><div class="metrics-grid"><div><label>身高(cm)</label><input type="number" step="0.1" class="form-input" id="pregHeight" oninput="updatePregnancyBmiPreview()"></div><div><label>孕前体重(kg)</label><input type="number" step="0.1" class="form-input" id="pregPreWeight" oninput="updatePregnancyBmiPreview()"></div><div><label>孕次</label><input type="number" min="0" max="20" class="form-input" id="pregGravidity"></div><div><label>产次</label><input type="number" min="0" max="20" class="form-input" id="pregParity"></div><div><label>胎数</label><select class="form-input" id="pregMultiple"><option value="singleton">单胎</option><option value="twins">双胎</option><option value="triplets">三胎及以上</option></select></div><div><label>血型</label><select class="form-input" id="pregBloodType"><option value="unknown">未知</option><option value="A">A</option><option value="B">B</option><option value="AB">AB</option><option value="O">O</option></select></div><div><label>Rh</label><select class="form-input" id="pregRh"><option value="unknown">未知</option><option value="positive">阳性</option><option value="negative">阴性</option></select></div></div><div class="form-group"><label>基础疾病/高危因素</label><textarea class="form-input" id="pregRiskNotes" rows="2" placeholder="如高血压、糖尿病、甲状腺疾病、既往早产等"></textarea></div><div id="pregBmiPreview" class="muted" style="font-size:12px;"></div></details><div class="quick-divider"></div><div style="text-align:center; margin-bottom:12px;"><button type="button" class="link-btn" data-open-outcome onclick="closeModal('pregnancySettingsModal'); showPregnancyOutcomeModal()" style="font-size:12px; color:var(--text-light);">本次孕期未继续？记录妊娠结局</button><div class="muted" style="font-size:11px; margin-top:4px;">正常分娩请到「生产」阶段填写分娩记录</div></div><div style="display:flex; gap:8px;"><button class="btn btn-primary" onclick="savePregnancySettingsFromModal()">保存</button><button class="btn btn-secondary" onclick="closeModal('pregnancySettingsModal')">取消</button></div></div></div></div>
+<div class="modal" id="pregnancySettingsModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">⚙️ 孕周与预产期设置</div><button class="modal-close" onclick="closeModal('pregnancySettingsModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label class="form-label">受孕方式</label><select class="form-select" id="pregConceptionType" onchange="toggleIvfFields()"><option value="natural">自然受孕（末次月经）</option><option value="ivf">辅助生殖（IVF）</option></select></div><div class="form-group"><label class="form-label">末次月经第一天（IVF 可留空）</label><input type="date" class="form-input" id="pregLmpInput" onchange="updatePregnancyDuePreview()"><div id="pregCycleHint" class="muted" style="font-size:12px; margin-top:4px;"></div></div><div class="form-group"><label class="form-label">月经周期长度（天，可选，21–45）</label><input type="number" class="form-input" id="pregCycleLength" min="21" max="45" placeholder="留空则按记录自动估算" oninput="updatePregnancyDuePreview()"></div><div id="ivfFields" style="display:none;"><div class="form-group"><label class="form-label">胚胎移植日期</label><input type="date" class="form-input" id="pregIvfTransfer" onchange="updatePregnancyDuePreview()"></div><div class="form-group"><label class="form-label">移植胚胎日龄（卵裂期 3 天 / 囊胚 5–6 天）</label><input type="number" class="form-input" id="pregIvfEmbryoAge" min="2" max="7" value="5" oninput="updatePregnancyDuePreview()"></div></div><div class="form-group"><label class="form-label">预产期（按医学规则自动估算）</label><div id="pregDuePreview" class="muted" style="font-size:14px;">选择日期后自动计算</div></div><div class="form-group"><label class="form-label">手动指定预产期（可选，优先于估算）</label><input type="date" class="form-input" id="pregDueManual" onchange="updatePregnancyDuePreview()"></div><div class="quick-divider"></div><div class="form-group"><label class="form-label">超声核对（可选，早孕期更准确）</label><input type="date" class="form-input" id="pregUsDate" onchange="updatePregnancyDuePreview()"></div><div class="metrics-grid"><div><label>超声孕周</label><input type="number" class="form-input" id="pregUsWeeks" min="0" max="40" oninput="updatePregnancyDuePreview()" placeholder="如 12"></div><div><label>天</label><input type="number" class="form-input" id="pregUsDays" min="0" max="6" oninput="updatePregnancyDuePreview()" placeholder="0"></div></div><div id="pregUsPreview" class="muted" style="font-size:13px; margin-top:8px;"></div><p class="muted" style="font-size:12px;">IVF 预产期 = 移植日 + 266 天 − 胚胎日龄。早孕期超声核对优先于末次月经估算。</p><div class="quick-divider"></div><details><summary style="cursor:pointer; font-size:14px; font-weight:600; margin-bottom:10px;">👩 孕产档案（可选，用于增重与风险提示）</summary><div class="metrics-grid"><div><label>身高(cm)</label><input type="number" step="0.1" class="form-input" id="pregHeight" oninput="updatePregnancyBmiPreview()"></div><div><label>孕前体重(kg)</label><input type="number" step="0.1" class="form-input" id="pregPreWeight" oninput="updatePregnancyBmiPreview()"></div><div><label>孕次</label><input type="number" min="0" max="20" class="form-input" id="pregGravidity"></div><div><label>产次</label><input type="number" min="0" max="20" class="form-input" id="pregParity"></div><div><label>胎数</label><select class="form-input" id="pregMultiple"><option value="singleton">单胎</option><option value="twins">双胎</option><option value="triplets">三胎及以上</option></select></div><div><label>血型</label><select class="form-input" id="pregBloodType"><option value="unknown">未知</option><option value="A">A</option><option value="B">B</option><option value="AB">AB</option><option value="O">O</option></select></div><div><label>Rh</label><select class="form-input" id="pregRh"><option value="unknown">未知</option><option value="positive">阳性</option><option value="negative">阴性</option></select></div></div><div class="form-group"><label>基础疾病/高危因素</label><textarea class="form-input" id="pregRiskNotes" rows="2" placeholder="如高血压、糖尿病、甲状腺疾病、既往早产等"></textarea></div><div id="pregBmiPreview" class="muted" style="font-size:12px;"></div></details><div class="quick-divider"></div><div style="text-align:center; margin-bottom:12px;"><button type="button" class="link-btn" data-open-outcome onclick="closeModal('pregnancySettingsModal'); showPregnancyOutcomeModal()" style="font-size:12px; color:var(--text-light);">本次孕期未继续？记录妊娠结局</button><div class="muted" style="font-size:11px; margin-top:4px;">正常分娩请到「生产」阶段填写分娩记录</div></div><div style="display:flex; gap:8px;"><button class="btn btn-primary" onclick="savePregnancySettingsFromModal()">保存</button><button class="btn btn-secondary" onclick="closeModal('pregnancySettingsModal')">取消</button></div></div></div></div>
 
 <div class="modal" id="pregnancyOutcomeModal"><div class="modal-content"><div class="modal-header"><div class="modal-title">📝 记录妊娠结局</div><button class="modal-close" onclick="closeModal('pregnancyOutcomeModal')">&times;</button></div><div class="modal-body"><div class="form-group"><label class="form-label">结局类型</label><select class="form-select" id="outcomeType"><option value="miscarriage">自然流产</option><option value="stillbirth">胎死宫内</option><option value="termination">医学终止妊娠</option><option value="ectopic">异位妊娠</option><option value="other">其他</option></select></div><div class="form-group"><label class="form-label">发生日期</label><input type="date" class="form-input" id="outcomeDate"></div><div class="form-group"><label class="form-label">当时孕周（可选）</label><input type="number" class="form-input" id="outcomeWeeks" min="0" max="45"></div><div class="form-group"><label class="form-label">备注</label><textarea class="form-input" id="outcomeNote" rows="2" placeholder="如：医院复查情况、医生建议"></textarea></div><p class="muted" style="font-size:12px;">记录后周期预测会保持暂停，直到您记录一次新的经期。流产后如持续出血、发热或剧烈腹痛请及时就医。</p><div style="display:flex; gap:8px;"><button class="btn btn-primary" onclick="savePregnancyOutcome()">保存</button><button class="btn btn-secondary" onclick="closeModal('pregnancyOutcomeModal')">取消</button></div></div></div></div>
 
@@ -894,6 +894,7 @@
             box.innerHTML = EPDS_QUESTIONS.map((item, i) => `<div class="form-group"><label class="form-label">${i + 1}. ${escapeHtml(item.q)}</label><div class="quick-row">${item.opts.map(([label, val], j) => `<label style="font-size:13px;"><input type="radio" name="epds${i}" value="${val}" data-label="${escapeHtml(label)}"> ${label}</label>`).join('')}</div></div>`).join('');
             box.dataset.ready = '1';
         }
+        box.querySelectorAll('input[type="radio"]').forEach(r => { r.checked = false; });
         const result = document.getElementById('epdsResult');
         if (result) result.innerHTML = '';
         openModal('epdsModal');
@@ -2259,21 +2260,31 @@
         const glucose = parseFloat(d.glucose);
         const gType = GLUCOSE_LIMITS[d.glucoseType] ? d.glucoseType : 'fasting';
         const limit = GLUCOSE_LIMITS[gType];
-        if (!isNaN(glucose) && glucose >= limit) warns.push({ level: 'danger', text: `${GLUCOSE_LABELS[gType]}血糖 ${glucose} mmol/L 达到/超过参考上限 ${limit}，请复核检测条件并咨询医生。` });
+        if (!isNaN(glucose) && glucose >= limit) {
+            const text = gType === 'random'
+                ? `随机血糖 ${glucose} mmol/L ≥${limit}，需排除应激、饮食等影响并尽快复查，建议产科评估；随机血糖不能单独用于诊断。`
+                : `${GLUCOSE_LABELS[gType]}血糖 ${glucose} mmol/L 达到/超过参考上限 ${limit}，请复核检测条件并咨询医生。`;
+            warns.push({ level: 'danger', text });
+        }
+        const gestWeeks = Number(d.gestWeeks);
+        const hasGa = isFinite(gestWeeks) && gestWeeks > 0;
         const hcg = parseFloat(d.hcg), hcg48 = parseFloat(d.hcg48);
-        if (!isNaN(hcg) && !isNaN(hcg48) && hcg > 0 && hcg48 > 0) {
+        const hcgRuleApplies = (!hasGa || gestWeeks < 9) && hcg > 0 && hcg < 5000;
+        if (!isNaN(hcg) && !isNaN(hcg48) && hcg > 0 && hcg48 > 0 && hcgRuleApplies) {
             const rise = ((hcg48 - hcg) / hcg) * 100;
             if (rise < 0) warns.push({ level: 'warn', text: '48 小时复查 HCG 较前下降；早孕 HCG 变化需结合孕周、超声和孕酮由医生综合判断，单次或两次结果不能确诊。' });
             else if (rise < 53) warns.push({ level: 'warn', text: `48 小时 HCG 上升约 ${rise.toFixed(0)}%，低于约 53% 的常见参考升幅；请结合孕周、超声和医生意见评估，不能仅凭此判断胚胎发育。` });
         }
-        const gestWeeks = Number(d.gestWeeks);
-        const hasGa = isFinite(gestWeeks) && gestWeeks > 0;
         const hr = parseFloat(d.fetalHr);
-        if (!isNaN(hr) && (!hasGa || gestWeeks >= 12) && (hr < 110 || hr > 160)) warns.push({ level: 'danger', text: `胎心率 ${hr} bpm 超出常见基线范围 110–160，请复测；持续异常请及时就医。` });
+        if (!isNaN(hr) && (hr < 110 || hr > 160)) {
+            if (!hasGa) warns.push({ level: 'warn', text: `胎心率 ${hr} bpm；未记录孕周，胎心基线随孕周变化，请结合孕周由医生判断。` });
+            else if (gestWeeks >= 12) warns.push({ level: 'danger', text: `胎心率 ${hr} bpm 超出常见基线范围 110–160，请复测；持续异常请及时就医。` });
+        }
         const fm = parseFloat(d.fetalMove);
-        if (!isNaN(fm) && (!hasGa || gestWeeks >= 28)) {
-            if (fm === 0) warns.push({ level: 'danger', text: '记录到 0 次胎动：请安静侧卧计数 2 小时，如仍无胎动或明显减少，请立即就医。' });
-            else if (fm < 3) warns.push({ level: 'warn', text: `胎动 ${fm} 次/小时偏少；建议固定时间侧卧计数，2 小时少于 10 次请就医。` });
+        if (!isNaN(fm) && !(hasGa && gestWeeks < 28)) {
+            if (fm === 0) warns.push({ level: 'danger', text: '记录到 0 次胎动（2 小时）：请安静侧卧继续计数，如仍无胎动或明显减少，请立即就医。' });
+            else if (!hasGa) warns.push({ level: 'warn', text: `2 小时胎动 ${fm} 次；未记录孕周，胎动计数一般从 28 周开始，请结合孕周由医生判断。` });
+            else if (fm < 10) warns.push({ level: 'warn', text: `2 小时胎动 ${fm} 次，少于 10 次；建议固定时间侧卧计数，持续偏少或明显减少请及时就医。` });
         }
         if (d.ogtt && typeof d.ogtt === 'object') {
             const type = d.ogtt.type === '50g' ? '50g' : '75g';
@@ -2296,16 +2307,26 @@
         const threshold = d.mode === '剖宫产' ? 1000 : 500;
         if (!isNaN(loss) && loss >= 1500) warns.push({ level: 'danger', text: `产后出血量 ${loss} ml 属危急情况，请立即告知医生。` });
         else if (!isNaN(loss) && loss >= threshold) warns.push({ level: 'danger', text: `出血量 ${loss} ml 达到${d.mode === '剖宫产' ? '剖宫产' : '阴道分娩'}产后出血警戒值 ${threshold} ml，请由医生评估。` });
-        const apgar = Number(d.apgar);
-        if (!isNaN(apgar) && apgar <= 7) warns.push({ level: 'danger', text: `Apgar ${apgar} 分偏低，需由儿科医生评估，勿自行判断。` });
+        if (d.apgar1 != null && d.apgar1 !== '') {
+            const a1 = Number(d.apgar1);
+            if (!isNaN(a1) && a1 <= 7) warns.push({ level: 'warn', text: `Apgar 1 分钟 ${a1} 分偏低，需儿科医生评估并继续观察 5 分钟评分。` });
+        }
+        if (d.apgar5 != null && d.apgar5 !== '') {
+            const a5 = Number(d.apgar5);
+            if (!isNaN(a5) && a5 <= 7) warns.push({ level: 'danger', text: `Apgar 5 分钟 ${a5} 分偏低${a5 <= 3 ? '（≤3 分属重度抑制）' : ''}，请立即由儿科医生评估。` });
+        } else if (d.apgar != null && d.apgar !== '') {
+            const apgar = Number(d.apgar);
+            if (!isNaN(apgar) && apgar <= 7) warns.push({ level: 'danger', text: `Apgar ${apgar} 分偏低，需由儿科医生评估，勿自行判断。` });
+        }
         const gw = Number(d.gestWeeks);
         if (!isNaN(gw) && gw > 0 && gw < 37) warns.push({ level: 'warn', text: `分娩孕周 ${gw} 周属早产范围，请遵医嘱随访新生儿情况。` });
         if (!isNaN(gw) && gw >= 42) warns.push({ level: 'warn', text: `分娩孕周 ${gw} 周属过期产范围，请遵医嘱随访。` });
         const bw = Number(d.weight);
-        if (!isNaN(bw) && bw > 0 && bw < 2500) warns.push({ level: 'warn', text: `出生体重 ${bw} g 偏低，建议儿保科评估。` });
+        if (!isNaN(bw) && bw > 0 && bw < 2500) warns.push({ level: bw < 1500 ? 'danger' : 'warn', text: `出生体重 ${bw} g 偏低（${bw < 1500 ? '极低出生体重' : '低出生体重'}），建议新生儿科评估。` });
+        else if (!isNaN(bw) && bw >= 4000) warns.push({ level: 'warn', text: `出生体重 ${bw} g 属巨大儿范围（≥4000 g），建议监测血糖并咨询儿保科。` });
         return warns;
     }
-    function assessPostpartum(d) {
+    function assessPostpartum(d, ctx = {}) {
         const warns = [];
         if (String(d.lochia || '').includes('多')) warns.push({ level: 'danger', text: '恶露量多或伴血块，警惕产后出血或宫腔残留，请及时就医。' });
         if (d.wound === '红肿' || d.wound === '疼痛') warns.push({ level: 'warn', text: '伤口红肿/疼痛需观察有无渗液发热，必要时就医。' });
@@ -2313,7 +2334,16 @@
         if (!isNaN(temp) && temp >= 38) warns.push({ level: 'danger', text: `体温 ${temp}℃ 达到发热标准，警惕产褥感染，请及时就医。` });
         if (d.breast === '红肿发热') warns.push({ level: 'warn', text: '乳房红肿发热需警惕乳腺炎，建议尽快就诊并继续哺乳/挤奶。' });
         const uterus = parseFloat(d.uterus);
-        if (!isNaN(uterus) && uterus > 15) warns.push({ level: 'warn', text: '子宫底高度偏高，请结合产后天数由医生评估复旧情况。' });
+        const ppDays = Number(ctx.postpartumDays);
+        if (!isNaN(uterus)) {
+            if (isFinite(ppDays) && ppDays >= 0) {
+                const expected = Math.max(0, 15 - ppDays);
+                if (ppDays <= 2 && uterus > 20) warns.push({ level: 'warn', text: `产后 ${ppDays} 天宫底高度 ${uterus} cm 偏高，请结合子宫复旧与出血情况由医生评估。` });
+                else if (ppDays > 2 && uterus > expected + 3) warns.push({ level: 'warn', text: `产后 ${ppDays} 天宫底高度 ${uterus} cm 高于常见复旧进度（约 ${expected} cm），如伴出血多、腹痛或发热请及时就医。` });
+            } else if (uterus > 20) {
+                warns.push({ level: 'warn', text: '子宫底高度偏高；请补充分娩日期以便结合产后天数判断复旧情况。' });
+            }
+        }
         if (d.mood !== '' && Number(d.mood) <= 2) warns.push({ level: 'warn', text: '情绪评分偏低，建议做一次 EPDS 筛查并与家人沟通。' });
         return warns;
     }
@@ -2325,13 +2355,23 @@
         box.className = 'clinical-alert' + (warns.some(w => w.level === 'danger') ? ' danger' : '');
         box.innerHTML = warns.map(w => `<div>${escapeHtml(w.text)}</div>`).join('');
     }
+    function belongsToPregnancy(rec, pid) {
+        return !pid || !rec || !rec.pregnancyId || rec.pregnancyId === 'legacy' || rec.pregnancyId === pid;
+    }
+    async function activePregnancyIdOrNull() {
+        const setting = await getPregnancySetting();
+        return setting && setting.pregnancyId ? setting.pregnancyId : null;
+    }
     async function refreshPregnancyAlerts() {
-        const all = await getAllData('pregnancy_records');
-        const latest = stage => all.filter(r => r && r.stage === stage).sort((a, b) => parseLocalDate(b.date) - parseLocalDate(a.date))[0] || null;
+        const [all, setting] = await Promise.all([getAllData('pregnancy_records'), getPregnancySetting()]);
+        const pid = setting && setting.pregnancyId ? setting.pregnancyId : null;
+        const scoped = all.filter(r => belongsToPregnancy(r, pid));
+        const latest = stage => scoped.filter(r => r && r.stage === stage).sort((a, b) => parseLocalDate(b.date) - parseLocalDate(a.date))[0] || null;
+        const delivery = latest('delivery');
         const groups = [
-            ['pregnancy', 'pregClinicalAlert', assessPregnancyVitals],
-            ['postpartum', 'postpartumAlert', assessPostpartum],
-            ['delivery', 'deliveryAlert', assessDeliveryRecord]
+            ['pregnancy', 'pregClinicalAlert', d => assessPregnancyVitals(d)],
+            ['postpartum', 'postpartumAlert', d => assessPostpartum(d, { postpartumDays: delivery && delivery.date ? dateDiff(parseLocalDate(latest('postpartum').date), parseLocalDate(delivery.date)) : null })],
+            ['delivery', 'deliveryAlert', d => assessDeliveryRecord(d)]
         ];
         for (const [stage, container, assess] of groups) {
             const rec = latest(stage);
@@ -2339,8 +2379,7 @@
             const warns = assess(rec.data || {});
             if (JSON.stringify(warns) !== JSON.stringify(rec.warnings || [])) {
                 await updateData('pregnancy_records', { ...rec, warnings: warns });
-                const box = document.getElementById(container);
-                if (box && Array.isArray(rec.warnings)) loadPregnancyHistory();
+                if (stage === 'pregnancy' && document.getElementById(container)) loadPregnancyHistory();
             }
             renderClinicalWarnings(container, warns);
         }
@@ -2350,7 +2389,7 @@
     async function getPregnancySetting() { let list = await getAllData('pregnancy_settings'); return list.length ? list[0] : null; }
     async function savePregnancySetting(setting) { let exist = await getPregnancySetting(); if(exist) { setting.id = exist.id; await updateData('pregnancy_settings', setting); } else await addData('pregnancy_settings', setting); }
     async function currentPregnancyId() { const s = await getPregnancySetting(); return (s && s.pregnancyId) || 'legacy'; }
-    async function currentBabyId() { const d = await getLatestDeliveryRecord(); return (d && d.babyId) || 'legacy'; }
+    async function currentBabyId() { if (currentBabySelection) return currentBabySelection; const d = await getLatestDeliveryRecord(); return (d && d.babyId) || 'legacy'; }
     async function getLatestDeliveryRecord() {
         const records = await getAllData('pregnancy_records');
         return records
@@ -2371,7 +2410,7 @@
     function computeDueFromIvf(transferDate, embryoAge) {
         const d = parseLocalDate(transferDate);
         const age = Number(embryoAge);
-        if (isNaN(d) || !isFinite(age) || age < 0 || age > 14) return null;
+        if (isNaN(d) || !isFinite(age) || age < 2 || age > 7) return null;
         d.setDate(d.getDate() + 266 - age);
         return getLocalDateString(d);
     }
@@ -2388,6 +2427,7 @@
     }
     function resolveExpectedDue(s) {
         if (!s) return null;
+        if (s.eddSource === 'manual' && s.expectedDue) return s.expectedDue;
         if (s.eddSource === 'ultrasound' && s.pregUsDate && s.pregUsWeeks !== '' && s.pregUsWeeks != null && isEarlyDatingUltrasound(s.pregUsWeeks, s.pregUsDays)) {
             const due = computeDueFromUltrasound(s.pregUsDate, s.pregUsWeeks, s.pregUsDays);
             if (due) return due;
@@ -2409,6 +2449,7 @@
         const [outcomes, deliveries, periods] = await Promise.all([
             getAllData('pregnancy_outcomes'), getAllData('pregnancy_records'), getAllData('periods')
         ]);
+        const pid = setting && setting.pregnancyId ? setting.pregnancyId : null;
         const lmpDate = setting && setting.lastMenstrualDate ? parseLocalDate(setting.lastMenstrualDate) : null;
         const dueStr = resolveExpectedDue(setting);
         const dueDate = dueStr ? parseLocalDate(dueStr) : null;
@@ -2416,10 +2457,10 @@
         const startDate = validDue ? addDays(todayStart(dueDate), -280)
             : (lmpDate && !isNaN(lmpDate) ? todayStart(lmpDate) : null);
         const delivery = deliveries
-            .filter(r => r && r.stage === 'delivery' && r.date && !isNaN(parseLocalDate(r.date)) && todayStart(parseLocalDate(r.date)) <= today)
+            .filter(r => belongsToPregnancy(r, pid) && r && r.stage === 'delivery' && r.date && !isNaN(parseLocalDate(r.date)) && todayStart(parseLocalDate(r.date)) <= today)
             .sort((a, b) => parseLocalDate(b.date) - parseLocalDate(a.date))[0] || null;
         const events = [
-            ...outcomes.filter(o => o && o.date && !isNaN(parseLocalDate(o.date)) && todayStart(parseLocalDate(o.date)) <= today)
+            ...outcomes.filter(o => belongsToPregnancy(o, pid) && o && o.date && !isNaN(parseLocalDate(o.date)) && todayStart(parseLocalDate(o.date)) <= today)
                 .map(o => ({ date: parseLocalDate(o.date), type: o.type, record: o })),
             ...(delivery ? [{ date: parseLocalDate(delivery.date), type: 'livebirth', record: delivery }] : [])
         ].filter(e => !startDate || e.date >= startDate).sort((a, b) => b.date - a.date);
@@ -2520,9 +2561,15 @@
             pregUsDays: document.getElementById('pregUsDays').value,
             eddSource: 'ultrasound'
         };
-        const baseDue = form.conceptionType === 'ivf' ? computeDueFromIvf(form.ivfTransferDate, form.ivfEmbryoAge) : computeDueFromLmp(form.lastMenstrualDate, pregPreviewCycleLength);
-        const cycleNote = form.conceptionType === 'ivf' || !form.lastMenstrualDate ? '' : `（按平均周期 ${pregPreviewCycleLength} 天估算）`;
-        preview.textContent = baseDue ? `${form.conceptionType === 'ivf' ? '按 IVF 移植日' : '按末次月经'}：${baseDue}${cycleNote}` : '请填写日期后自动计算';
+        const cycleEl = document.getElementById('pregCycleLength');
+        const cycleValue = cycleEl ? Number(cycleEl.value) : NaN;
+        const cycle = isFinite(cycleValue) && cycleValue >= 21 && cycleValue <= 45 ? Math.round(cycleValue) : pregPreviewCycleLength;
+        const manualEl = document.getElementById('pregDueManual');
+        const manualDue = manualEl ? manualEl.value : '';
+        const baseDue = form.conceptionType === 'ivf' ? computeDueFromIvf(form.ivfTransferDate, form.ivfEmbryoAge) : computeDueFromLmp(form.lastMenstrualDate, cycle);
+        const cycleNote = form.conceptionType === 'ivf' || !form.lastMenstrualDate ? '' : `（按平均周期 ${cycle} 天估算）`;
+        preview.textContent = manualDue ? `手动预产期：${manualDue}（优先于估算${baseDue ? `；按日期估算 ${baseDue}` : ''}）`
+            : baseDue ? `${form.conceptionType === 'ivf' ? '按 IVF 移植日' : '按末次月经'}：${baseDue}${cycleNote}` : '请填写日期后自动计算';
         const usPreview = document.getElementById('pregUsPreview');
         const usDue = (form.pregUsDate && form.pregUsWeeks !== '') ? computeDueFromUltrasound(form.pregUsDate, form.pregUsWeeks, form.pregUsDays) : null;
         if (usPreview) usPreview.textContent = usDue ? (isEarlyDatingUltrasound(form.pregUsWeeks, form.pregUsDays) ? `按早孕期超声校正：${usDue}（将作为最终预产期）` : `晚孕期超声估算：${usDue}（仅作参考，不用于更改预产期）`) : '填写超声日期与孕周可校正预产期';
@@ -2621,13 +2668,15 @@
         const items = [
             { startWeek: 6, endWeek: 8, label: '早孕建档/超声', note: '确认宫内孕与胎心' },
             { startWeek: 11, endWeek: 13 + 6 / 7, label: 'NT 超声', note: '11–13+6 周' },
-            { startWeek: 15, endWeek: 20, label: '唐筛/无创', note: '按医生建议选择' },
+            { startWeek: 12, endWeek: 22 + 6 / 7, label: 'NIPT/无创 DNA', note: '12–22+6 周，按医生建议' },
+            { startWeek: 15, endWeek: 20, label: '唐筛', note: '15–20 周，按医生建议' },
             { startWeek: 20, endWeek: 24, label: '大排畸超声', note: '20–24 周' },
             { startWeek: 24, endWeek: 28, label: 'OGTT', note: '24–28 周' },
             { startWeek: 28, endWeek: 32, label: '晚孕产检', note: '血常规、尿常规等' },
             { startWeek: 32, endWeek: 36, label: '每 2 周产检', note: '32–36 周' },
-            { startWeek: 36, endWeek: 37, label: 'GBS 筛查', note: '36–37 周' },
-            { startWeek: 37, endWeek: 41, label: '每周产检', note: '37 周后' }
+            { startWeek: 35, endWeek: 37, label: 'GBS 筛查', note: '35–37 周' },
+            { startWeek: 37, endWeek: 42, label: '每周产检', note: '37–42 周，每周 1 次' },
+            { startWeek: 41, endWeek: 42, label: '过期妊娠评估', note: '≥41 周评估分娩时机' }
         ];
         return items.map(item => {
             const startDate = addDays(datingStart, Math.round(item.startWeek * 7));
@@ -2658,7 +2707,8 @@
         if (!box) return;
         const [setting, records, state] = await Promise.all([getPregnancySetting(), getAllData('pregnancy_records'), getPregnancyState()]);
         if (!setting) { box.innerHTML = '<p class="muted" style="font-size:13px;">在“设置预产期/末次月经/IVF”中填写孕产档案后显示。</p>'; return; }
-        const latest = records.filter(r => r && r.stage === 'pregnancy' && r.data && r.data.weight !== '' && r.data.weight != null && isFinite(Number(r.data.weight)))
+        const pid = setting && setting.pregnancyId ? setting.pregnancyId : null;
+        const latest = records.filter(r => belongsToPregnancy(r, pid) && r && r.stage === 'pregnancy' && r.data && r.data.weight !== '' && r.data.weight != null && isFinite(Number(r.data.weight)))
             .sort((a, b) => String(b.date).localeCompare(String(a.date)))[0] || null;
         const bits = [];
         if (setting.gravidity != null || setting.parity != null) bits.push(`孕${setting.gravidity == null ? '?' : setting.gravidity}产${setting.parity == null ? '?' : setting.parity}`);
@@ -2698,6 +2748,8 @@
         const todayStr = getLocalDateString();
         input.max = todayStr;
         input.value = (setting && setting.lastMenstrualDate) || '';
+        document.getElementById('pregCycleLength').value = setting && setting.lmpCycleLength ? setting.lmpCycleLength : '';
+        document.getElementById('pregDueManual').value = setting && setting.eddSource === 'manual' ? (setting.expectedDue || '') : '';
         document.getElementById('pregConceptionType').value = (setting && setting.conceptionType) || 'natural';
         document.getElementById('pregIvfTransfer').value = (setting && setting.ivfTransferDate) || '';
         document.getElementById('pregIvfEmbryoAge').value = (setting && setting.ivfEmbryoAge) || 5;
@@ -2729,10 +2781,14 @@
         const usDate = document.getElementById('pregUsDate').value;
         const usWeeks = document.getElementById('pregUsWeeks').value;
         const usDays = document.getElementById('pregUsDays').value;
+        const manualDue = document.getElementById('pregDueManual').value;
+        const cycleInput = document.getElementById('pregCycleLength').value.trim();
         const todayStr = getLocalDateString();
-        if (type === 'natural' && !date) { alert('请选择末次月经日期'); return; }
+        if (type === 'natural' && !date && !manualDue) { alert('请选择末次月经日期或手动指定预产期'); return; }
         if (date && date > todayStr) { alert('末次月经日期不能晚于今天'); return; }
-        if (type === 'ivf' && (!transfer || transfer > todayStr)) { alert('请填写有效的前胚胎移植日期'); return; }
+        if (type === 'ivf' && (!transfer || transfer > todayStr)) { alert('请填写有效的胚胎移植日期'); return; }
+        if (type === 'ivf' && !(Number(embryoAge) >= 2 && Number(embryoAge) <= 7)) { alert('胚胎日龄请输入 2–7 天（卵裂期 3 天，囊胚 5–6 天）'); return; }
+        if (cycleInput !== '' && !(Number(cycleInput) >= 21 && Number(cycleInput) <= 45)) { alert('月经周期长度请输入 21–45 天'); return; }
         if (usDate && usDate > todayStr) { alert('超声日期不能晚于今天'); return; }
         if (usDate && usWeeks === '') { alert('填写超声日期时请同时填写超声孕周'); return; }
         if (!numericFieldInRange('pregHeight', '身高', 100, 220)) return;
@@ -2743,13 +2799,14 @@
         const parityValue = document.getElementById('pregParity').value.trim();
         if (gravidityValue !== '' && parityValue !== '' && Number(parityValue) > Number(gravidityValue)) { alert('产次不能大于孕次'); return; }
         const predicted = predictCycle(await getAllData('periods'));
-        const cycleLength = type === 'ivf' ? null : (predicted && predicted.hasData ? normalizeCycleLength(predicted.avgCycle) : 28);
-        const baseDue = type === 'ivf' ? computeDueFromIvf(transfer, embryoAge) : computeDueFromLmp(date, cycleLength);
-        if (!baseDue) { alert('日期或胚胎日龄无效，请重新填写'); return; }
+        const autoCycle = predicted && predicted.hasData ? normalizeCycleLength(predicted.avgCycle) : 28;
+        const cycleLength = type === 'ivf' ? null : (cycleInput !== '' ? normalizeCycleLength(cycleInput) : autoCycle);
+        const baseDue = type === 'ivf' ? computeDueFromIvf(transfer, embryoAge) : (date ? computeDueFromLmp(date, cycleLength) : null);
+        if (!baseDue && !manualDue) { alert('日期或胚胎日龄无效，请重新填写'); return; }
         const usDue = (usDate && usWeeks !== '') ? computeDueFromUltrasound(usDate, usWeeks, usDays) : null;
         if (usDate && usWeeks !== '' && !usDue) { alert('超声孕周无效，请检查日期与孕周'); return; }
         const earlyUs = usDue && isEarlyDatingUltrasound(usWeeks, usDays);
-        const due = earlyUs ? usDue : baseDue;
+        const due = manualDue || (earlyUs ? usDue : baseDue);
         const prev = await getPregnancySetting();
         const prevState = await getPregnancyState();
         const keepId = prev && prev.pregnancyId && !prevState.deliveryDate && !prevState.outcome;
@@ -2761,7 +2818,7 @@
             ivfEmbryoAge: type === 'ivf' ? Number(embryoAge) : null,
             expectedDue: due,
             lmpCycleLength: cycleLength,
-            eddSource: earlyUs ? 'ultrasound' : (type === 'ivf' ? 'ivf' : 'lmp'),
+            eddSource: manualDue ? 'manual' : (earlyUs ? 'ultrasound' : (type === 'ivf' ? 'ivf' : 'lmp')),
             pregUsDate: usDate || null, pregUsWeeks: usWeeks || '', pregUsDays: usDays || '',
             height: document.getElementById('pregHeight').value.trim() === '' ? null : Number(document.getElementById('pregHeight').value),
             prePregnancyWeight: document.getElementById('pregPreWeight').value.trim() === '' ? null : Number(document.getElementById('pregPreWeight').value),
@@ -2770,7 +2827,8 @@
             multipleGestation: document.getElementById('pregMultiple').value,
             bloodType: document.getElementById('pregBloodType').value,
             rh: document.getElementById('pregRh').value,
-            riskNotes: document.getElementById('pregRiskNotes').value.trim()
+            riskNotes: document.getElementById('pregRiskNotes').value.trim(),
+            postpartumCheckupDone: keepId && prev && prev.postpartumCheckupDone ? prev.postpartumCheckupDone : null
         };
         await savePregnancySetting(setting);
         closeModal('pregnancySettingsModal');
@@ -2781,8 +2839,8 @@
         renderPregnancyWeightGain();
         renderPrenatalSchedule();
         renderToday();
-        const basis = earlyUs ? '按早孕期超声' : (type === 'ivf' ? '按 IVF 移植日' : `按末次月经${cycleLength !== 28 ? `及平均周期 ${cycleLength} 天` : ''}`);
-        const lateNote = usDue && !earlyUs ? '；晚孕期超声仅作参考，未用于更改预产期' : '';
+        const basis = manualDue ? '手动指定' : earlyUs ? '按早孕期超声' : (type === 'ivf' ? '按 IVF 移植日' : `按末次月经${cycleLength !== 28 ? `及平均周期 ${cycleLength} 天` : ''}`);
+        const lateNote = usDue && !earlyUs && !manualDue ? '；晚孕期超声仅作参考，未用于更改预产期' : '';
         alert(`预产期大约为: ${due}（${basis}${lateNote}）`);
     };
 
@@ -2854,7 +2912,7 @@
         const f = id => document.getElementById(id).value.trim();
         const progesterone = f('pregProgesterone');
         const symptoms = Array.from(document.querySelectorAll('.preg-symptom:checked')).map(el => el.value);
-        const state = await getPregnancyState();
+        const state = await getPregnancyState(parseLocalDate(date));
         const data = { weight: f('pregWeight'), bp: f('pregBp'), glucose: f('pregGlucose'), glucoseType: document.getElementById('pregGlucoseType').value, fundal: f('pregFundal'), abdominal: f('pregAbdominal'), fetalHr: f('pregFetalHr'), fetalMove: f('pregFetalMove'), hcg: f('pregHcg'), hcg48: f('pregHcg48'), progesterone, progesteroneUnit: progesterone ? (document.getElementById('pregProgesteroneUnit').value === 'nmol/L' ? 'nmol/L' : 'ng/mL') : '', urineProtein: document.getElementById('pregUrineProtein').value, symptoms, gestWeeks: state.gestWeeks, note: f('pregNote') };
         const hasValue = Object.entries(data).some(([k, v]) => Array.isArray(v) ? v.length > 0 : (k === 'glucoseType' || k === 'gestWeeks' ? false : Boolean(v)));
         if (!hasValue) { toast('请至少填写一项指标', 'warn'); return; }
@@ -2862,7 +2920,7 @@
         if (data.weight && !isNaN(Number(data.weight))) {
             const weights = await getAllData('weight');
             if (!weights.some(w => w.date === date && String(w.weight) === String(data.weight))) {
-                await addData('weight', { date, weight: Number(data.weight), bodyFat: null, timestamp: Date.now() });
+                await addData('weight', { date, weight: Number(data.weight), bodyFat: null, source: 'pregnancy', timestamp: Date.now() });
             }
         }
         clearDraft('preg');
@@ -2883,7 +2941,7 @@
         const twoHour = document.getElementById('ogtt2h').value.trim();
         if (type === '75g' && (!fasting || !oneHour || !twoHour)) { toast('75g OGTT 请填写空腹、1小时和2小时三个数值', 'warn'); return; }
         if (type === '50g' && !oneHour) { toast('50g GCT 请填写1小时血糖', 'warn'); return; }
-        const data = { ogtt: { type, fasting, oneHour, twoHour }, gestWeeks: (await getPregnancyState()).gestWeeks, note: 'OGTT/GCT' };
+        const data = { ogtt: { type, fasting, oneHour, twoHour }, gestWeeks: (await getPregnancyState(parseLocalDate(date))).gestWeeks, note: 'OGTT/GCT' };
         const warnings = assessPregnancyVitals(data);
         await addData('pregnancy_records', { stage: 'pregnancy', date, data, pregnancyId: await currentPregnancyId(), warnings, createdAt: Date.now() });
         toast('OGTT/GCT 已保存');
@@ -2898,27 +2956,36 @@
         if (!numericFieldInRange('babyWeight', '宝宝体重', 300, 7000)) return;
         if (!numericFieldInRange('babyLength', '宝宝身长', 20, 70)) return;
         if (!numericFieldInRange('babyHead', '宝宝头围', 15, 45)) return;
-        if (!numericFieldInRange('apgarScore', 'Apgar 评分', 0, 10)) return;
+        if (!numericFieldInRange('apgar1', 'Apgar 1 分钟', 0, 10)) return;
+        if (!numericFieldInRange('apgar5', 'Apgar 5 分钟', 0, 10)) return;
         if (!numericFieldInRange('bloodLoss', '产后出血量', 0, 5000)) return;
         const f = id => document.getElementById(id).value.trim();
         const mode = document.getElementById('deliveryMode').value;
         const multiplicity = document.getElementById('deliveryMultiplicity').value;
         const gender = document.getElementById('babyGender').value;
         const weight = f('babyWeight'), length = f('babyLength'), babyHead = f('babyHead');
-        const apgar = f('apgarScore'), bloodLoss = f('bloodLoss');
+        const apgar1 = f('apgar1'), apgar5 = f('apgar5'), bloodLoss = f('bloodLoss');
+        const weightGrams = weight === '' ? null : Number(weight);
+        if (weightGrams != null && (!isFinite(weightGrams) || weightGrams <= 0)) { alert('宝宝体重无效'); return; }
         const setting = await getPregnancySetting();
         const due = resolveExpectedDue(setting);
         const datingStart = due ? addDays(todayStart(parseLocalDate(due)), -280) : null;
         const gestWeeks = datingStart ? Math.max(0, Math.floor(dateDiff(parseLocalDate(deliveryDate), datingStart) / 7)) : null;
         const babyId = newRecordId('baby');
-        const data = { mode, multiplicity, gender, weight, length, apgar, bloodLoss, babyHead, gestWeeks };
+        const data = { mode, multiplicity, gender, weight, length, apgar1, apgar5, bloodLoss, babyHead, gestWeeks };
         await addData('pregnancy_records', { stage: 'delivery', date: deliveryDate, data, pregnancyId: await currentPregnancyId(), babyId, warnings: assessDeliveryRecord(data), createdAt: Date.now() });
-        if (weight && !isNaN(Number(weight))) {
-            const babies = await getAllData('baby_records');
-            if (!babies.some(b => b.date === deliveryDate && Number(b.weight) === Number(weight))) {
-                await addData('baby_records', { date: deliveryDate, weight: Number(weight), height: length && !isNaN(Number(length)) ? Number(length) : null, head: babyHead && !isNaN(Number(babyHead)) ? Number(babyHead) : null, babyId, timestamp: Date.now() });
-            }
+        if (weightGrams != null) {
+            await addData('baby_records', {
+                date: deliveryDate,
+                weight: Math.round(weightGrams) / 1000,
+                height: length && !isNaN(Number(length)) ? Number(length) : null,
+                head: babyHead && !isNaN(Number(babyHead)) ? Number(babyHead) : null,
+                source: 'delivery',
+                babyId,
+                timestamp: Date.now()
+            });
         }
+        currentBabySelection = babyId;
         toast("生产记录已保存");
         loadDeliveryHistory(); await updatePregnancyHeader(); loadPeriodData(); loadBabyPhotos(); renderPostpartumCheckup(); renderToday();
         await refreshPregnancyAlerts();
@@ -2930,18 +2997,22 @@
         if (!numericFieldInRange('ppMood', '情绪评分', 1, 5)) return;
         if (!numericFieldInRange('ppTemp', '体温', 34, 43)) return;
         const d = { uterus: document.getElementById('ppUterus').value, lochia: document.getElementById('ppLochia').value, wound: document.getElementById('ppWound').value, mood: document.getElementById('ppMood').value, pelvic: document.getElementById('ppPelvic').value, temp: document.getElementById('ppTemp').value, breast: document.getElementById('ppBreast').value };
-        const warns = assessPostpartum(d);
+        const records = await getAllData('pregnancy_records');
+        const birth = getBabyBirthDateFromRecords(records);
+        const postpartumDays = birth ? dateDiff(parseLocalDate(date), parseLocalDate(birth)) : null;
+        const warns = assessPostpartum(d, { postpartumDays });
         await addData('pregnancy_records', { stage: 'postpartum', date, data: d, pregnancyId: await currentPregnancyId(), warnings: warns, createdAt: Date.now() });
         clearDraft('pp');
         toast('月子记录已保存');
         await refreshPregnancyAlerts();
         loadPostpartumHistory();
     }
-    async function loadPreconceptionHistory() { let all = await getAllData('pregnancy_records'); let records = all.filter(r=>r.stage==='preconception').sort((a,b)=>parseLocalDate(b.date)-parseLocalDate(a.date)); let container = document.getElementById('preHistoryList'); if(!records.length) { container.innerHTML='<div class="empty-state">暂无备孕记录</div>'; return; } container.innerHTML = records.map(rec => `<div class="history-item"><div class="history-date">${escapeHtml(rec.date)}</div><div class="history-value">🌡️${escapeHtml(rec.data?.bbt||'--')}℃ / ${escapeHtml(rec.data?.ovulation||'--')}</div>${editButton('pregnancy_records', rec.id)}<button class="delete-btn" onclick="deletePregnancyRecord(${Number(rec.id)})">🗑️</button></div>`).join(''); }
+    async function loadPreconceptionHistory() { const pid = await activePregnancyIdOrNull(); let all = await getAllData('pregnancy_records'); let records = all.filter(r=>r.stage==='preconception' && belongsToPregnancy(r, pid)).sort((a,b)=>parseLocalDate(b.date)-parseLocalDate(a.date)); let container = document.getElementById('preHistoryList'); if(!records.length) { container.innerHTML='<div class="empty-state">暂无备孕记录</div>'; return; } container.innerHTML = records.map(rec => `<div class="history-item"><div class="history-date">${escapeHtml(rec.date)}</div><div class="history-value">🌡️${escapeHtml(rec.data?.bbt||'--')}℃ / ${escapeHtml(rec.data?.ovulation||'--')}</div>${editButton('pregnancy_records', rec.id)}<button class="delete-btn" onclick="deletePregnancyRecord(${Number(rec.id)})">🗑️</button></div>`).join(''); }
     async function loadPregnancyHistory() {
         renderPrenatalSchedule();
+        const pid = await activePregnancyIdOrNull();
         const all = await getAllData('pregnancy_records');
-        const records = all.filter(r => r.stage === 'pregnancy').sort((a,b) => parseLocalDate(b.date) - parseLocalDate(a.date));
+        const records = all.filter(r => r.stage === 'pregnancy' && belongsToPregnancy(r, pid)).sort((a,b) => parseLocalDate(b.date) - parseLocalDate(a.date));
         const container = document.getElementById('pregHistoryList');
         if (!records.length) { container.innerHTML = '<div class="empty-state">暂无孕期记录</div>'; updatePregBpChart(records); updatePregHormoneChart(records); return; }
         renderPagedList(container, records, rec => {
@@ -2964,11 +3035,11 @@
         updatePregBpChart(records);
         updatePregHormoneChart(records);
     }
-    async function loadDeliveryHistory() { let all = await getAllData('pregnancy_records'); let records = all.filter(r=>r.stage==='delivery').sort((a,b)=>parseLocalDate(b.date)-parseLocalDate(a.date)); let container = document.getElementById('deliveryHistoryList'); if(!records.length) { container.innerHTML='<div class="empty-state">暂无分娩记录</div>'; return; } container.innerHTML = records.map(rec => { const gw = rec.data && rec.data.gestWeeks != null ? Number(rec.data.gestWeeks) : null; const term = gw == null ? '' : (gw < 37 ? ' · 早产' : gw >= 42 ? ' · 过期产' : ' · 足月'); return `<div class="history-item"><div>${escapeHtml(rec.date)}${term}</div><div>${escapeHtml(rec.data?.mode||'--')} | ${escapeHtml(rec.data?.gender||'--')} ${escapeHtml(rec.data?.weight||'--')}g${gw != null ? ` · ${gw}周` : ''}</div>${editButton('pregnancy_records', rec.id)}<button class="delete-btn" onclick="deletePregnancyRecord(${Number(rec.id)})">🗑️</button></div>`; }).join(''); }
+    async function loadDeliveryHistory() { const pid = await activePregnancyIdOrNull(); let all = await getAllData('pregnancy_records'); let records = all.filter(r=>r.stage==='delivery' && belongsToPregnancy(r, pid)).sort((a,b)=>parseLocalDate(b.date)-parseLocalDate(a.date)); let container = document.getElementById('deliveryHistoryList'); if(!records.length) { container.innerHTML='<div class="empty-state">暂无分娩记录</div>'; return; } container.innerHTML = records.map(rec => { const gw = rec.data && rec.data.gestWeeks != null ? Number(rec.data.gestWeeks) : null; const term = gw == null ? '' : (gw < 37 ? ' · 早产' : gw >= 42 ? ' · 过期产' : ' · 足月'); return `<div class="history-item"><div>${escapeHtml(rec.date)}${term}</div><div>${escapeHtml(rec.data?.mode||'--')} | ${escapeHtml(rec.data?.gender||'--')} ${escapeHtml(rec.data?.weight||'--')}g${gw != null ? ` · ${gw}周` : ''}</div>${editButton('pregnancy_records', rec.id)}<button class="delete-btn" onclick="deletePregnancyRecord(${Number(rec.id)})">🗑️</button></div>`; }).join(''); }
     async function renderPostpartumCheckup() {
         const box = document.getElementById('postpartumCheckup');
         if (!box) return;
-        const records = await getAllData('pregnancy_records');
+        const [records, setting] = await Promise.all([getAllData('pregnancy_records'), getPregnancySetting()]);
         const birth = getBabyBirthDateFromRecords(records);
         if (!birth) { box.style.display = 'none'; return; }
         const due = addDays(todayStart(parseLocalDate(birth)), 42);
@@ -2978,12 +3049,39 @@
         box.style.background = '#f7f9fb';
         box.style.borderColor = '#e3e8ee';
         box.style.color = 'var(--text)';
-        if (diff > 0) box.innerHTML = `📅 产后 42 天复查：${escapeHtml(dateText)}（还有 ${diff} 天）。建议评估伤口、子宫复旧、血压，并完成 EPDS 情绪筛查。<button class="link-btn" style="font-size:12px;" onclick="openEpds()">去筛查 →</button>`;
-        else if (diff >= -14) box.innerHTML = `📅 产后 42 天复查日期已到（${escapeHtml(dateText)}）。如尚未复查，请尽快联系产科；并建议完成 <button class="link-btn" style="font-size:12px;" onclick="openEpds()">EPDS 情绪筛查 →</button>`;
-        else box.innerHTML = `📅 产后 42 天复查日期为 ${escapeHtml(dateText)}，已过 ${Math.abs(diff)} 天。如仍未复查，请尽快联系产科；情绪持续低落请完成 <button class="link-btn" style="font-size:12px;" onclick="openEpds()">EPDS 筛查 →</button>`;
+        if (setting && setting.postpartumCheckupDone) {
+            box.innerHTML = `✅ 已标记完成产后复查（${escapeHtml(setting.postpartumCheckupDone)}）。如仍有伤口疼痛、出血多、发热或情绪低落，请及时就医。<button class="link-btn" style="font-size:12px;" onclick="openEpds()">EPDS 筛查 →</button>`;
+            return;
+        }
+        const mark = ' <button class="link-btn" style="font-size:12px;" onclick="markPostpartumCheckupDone()">标记已完成 ✓</button>';
+        if (diff > 0) box.innerHTML = `📅 产后 42 天复查：${escapeHtml(dateText)}（还有 ${diff} 天）。建议评估伤口、子宫复旧、血压，并完成 EPDS 情绪筛查。<button class="link-btn" style="font-size:12px;" onclick="openEpds()">去筛查 →</button>${mark}`;
+        else if (diff >= -14) box.innerHTML = `📅 产后 42 天复查日期已到（${escapeHtml(dateText)}）。如尚未复查，请尽快联系产科；并建议完成 <button class="link-btn" style="font-size:12px;" onclick="openEpds()">EPDS 情绪筛查 →</button>${mark}`;
+        else box.innerHTML = `📅 产后 42 天复查日期为 ${escapeHtml(dateText)}，已过 ${Math.abs(diff)} 天。如仍未复查，请尽快联系产科；情绪持续低落请完成 <button class="link-btn" style="font-size:12px;" onclick="openEpds()">EPDS 筛查 →</button>${mark}`;
     }
-    async function loadPostpartumHistory() { renderPostpartumCheckup(); let all = await getAllData('pregnancy_records'); let records = all.filter(r=>r.stage==='postpartum').sort((a,b)=>parseLocalDate(b.date)-parseLocalDate(a.date)); let container = document.getElementById('ppHistoryList'); if(!records.length) { container.innerHTML='<div class="empty-state">暂无月子记录</div>'; return; } container.innerHTML = records.map(rec => `<div class="history-item"><div>${escapeHtml(rec.date)}</div><div>😊情绪${escapeHtml(rec.data?.mood||'--')}/5 | 恶露${escapeHtml(rec.data?.lochia||'--')}</div>${editButton('pregnancy_records', rec.id)}<button class="delete-btn" onclick="deletePregnancyRecord(${Number(rec.id)})">🗑️</button></div>`).join(''); }
-    window.deletePregnancyRecord = async (id) => { if(confirm("删除这条记录？")) { await deleteData('pregnancy_records', id); refreshCurrentStagePanel(); updatePregnancyHeader(); loadPeriodData(); loadBabyPhotos(); renderPregnancyWeightGain(); renderToday(); } };
+    window.markPostpartumCheckupDone = async function() {
+        const setting = await getPregnancySetting();
+        if (!setting) return;
+        await savePregnancySetting({ ...setting, postpartumCheckupDone: getLocalDateString() });
+        renderPostpartumCheckup();
+        toast('已标记产后复查完成');
+    };
+    async function loadPostpartumHistory() { renderPostpartumCheckup(); const pid = await activePregnancyIdOrNull(); let all = await getAllData('pregnancy_records'); let records = all.filter(r=>r.stage==='postpartum' && belongsToPregnancy(r, pid)).sort((a,b)=>parseLocalDate(b.date)-parseLocalDate(a.date)); let container = document.getElementById('ppHistoryList'); if(!records.length) { container.innerHTML='<div class="empty-state">暂无月子记录</div>'; return; } container.innerHTML = records.map(rec => `<div class="history-item"><div>${escapeHtml(rec.date)}</div><div>😊情绪${escapeHtml(rec.data?.mood||'--')}/5 | 恶露${escapeHtml(rec.data?.lochia||'--')}</div>${editButton('pregnancy_records', rec.id)}<button class="delete-btn" onclick="deletePregnancyRecord(${Number(rec.id)})">🗑️</button></div>`).join(''); }
+    window.deletePregnancyRecord = async (id) => {
+        if (!confirm("删除这条记录？")) return;
+        const rec = await getDataById('pregnancy_records', id);
+        if (rec && rec.stage === 'pregnancy' && rec.data && rec.data.weight) {
+            const weights = await getAllData('weight');
+            const linked = weights.find(w => w.source === 'pregnancy' && w.date === rec.date && Number(w.weight) === Number(rec.data.weight));
+            if (linked) await deleteData('weight', linked.id);
+        }
+        if (rec && rec.stage === 'delivery') {
+            const babies = await getAllData('baby_records');
+            for (const b of babies.filter(b => b.source === 'delivery' && b.babyId === rec.babyId)) await deleteData('baby_records', b.id);
+            if (currentBabySelection === rec.babyId) currentBabySelection = null;
+        }
+        await deleteData('pregnancy_records', id);
+        refreshCurrentStagePanel(); updatePregnancyHeader(); loadPeriodData(); loadBabyPhotos(); renderPregnancyWeightGain(); renderToday();
+    };
     function refreshCurrentStagePanel() { let activeStage = document.querySelector('.stage-tab.active').dataset.stage; if(activeStage === 'preconception') loadPreconceptionHistory(); if(activeStage === 'pregnancy') { loadPregnancyHistory(); updatePregWeightChart(); loadPregnancyChecks(); renderPregnancyWeightGain(); } if(activeStage === 'delivery') loadDeliveryHistory(); if(activeStage === 'postpartum') loadPostpartumHistory(); if(activeStage === 'baby') { loadBabyHistory(); updateBabyWeightChart(); loadBabyPhotos(); } refreshPregnancyAlerts(); }
 
     // ========== 产检记录（含检查图片） ==========
@@ -3026,8 +3124,8 @@
         renderCheckPhotoPreview();
     };
     async function prefillCheckFromVitals() {
-        const all = await getAllData('pregnancy_records');
-        const rec = all.filter(r => r.stage === 'pregnancy').sort((a,b) => parseLocalDate(b.date) - parseLocalDate(a.date))[0];
+        const [all, pid] = await Promise.all([getAllData('pregnancy_records'), activePregnancyIdOrNull()]);
+        const rec = all.filter(r => r.stage === 'pregnancy' && belongsToPregnancy(r, pid)).sort((a,b) => parseLocalDate(b.date) - parseLocalDate(a.date))[0];
         if (!rec) { toast('还没有孕期指标记录', 'warn'); return; }
         const d = rec.data || {};
         const ogttText = d.ogtt ? (d.ogtt.type === '50g' ? `50g GCT 1h ${d.ogtt.oneHour}mmol/L` : `75g OGTT ${d.ogtt.fasting}/${d.ogtt.oneHour}/${d.ogtt.twoHour}mmol/L`) : '';
@@ -3059,7 +3157,8 @@
         loadPregnancyChecks();
     };
     async function loadPregnancyChecks() {
-        const list = await getAllData('pregnancy_checks');
+        const [all, pid] = await Promise.all([getAllData('pregnancy_checks'), activePregnancyIdOrNull()]);
+        const list = all.filter(r => belongsToPregnancy(r, pid));
         const box = document.getElementById('checkHistoryList');
         if (!box) return;
         revokeObjectUrls(_checkThumbURLs);
@@ -3092,9 +3191,42 @@
     let pendingBabyPhoto = null;
     let _albumPreviewURL = null;
     let _albumThumbURLs = [];
+    let currentBabySelection = null;
+    function babyMatchesSelection(rec) {
+        return !currentBabySelection || !rec || !rec.babyId || rec.babyId === 'legacy' || rec.babyId === currentBabySelection;
+    }
+    async function ensureBabySelection() {
+        try {
+            const records = await getAllData('pregnancy_records');
+            const deliveries = records
+                .filter(r => r && r.stage === 'delivery' && r.date && !isNaN(parseLocalDate(r.date)))
+                .sort((a, b) => parseLocalDate(b.date) - parseLocalDate(a.date));
+            if (currentBabySelection && !deliveries.some(d => d.babyId === currentBabySelection)) currentBabySelection = null;
+            if (!currentBabySelection && deliveries[0] && deliveries[0].babyId) currentBabySelection = deliveries[0].babyId;
+            const sel = document.getElementById('babySelector');
+            if (sel) {
+                const opts = deliveries.filter(d => d.babyId).map(d => {
+                    const g = d.data && d.data.gender ? `${d.data.gender}宝` : '';
+                    const m = d.data && d.data.multiplicity && d.data.multiplicity !== '单胎' ? d.data.multiplicity : '';
+                    return `<option value="${escapeHtml(d.babyId)}">${escapeHtml(d.date)}${g ? ` · ${escapeHtml(g)}` : ''}${m ? ` · ${escapeHtml(m)}` : ''}</option>`;
+                });
+                sel.innerHTML = opts.length ? opts.join('') : '<option value="">暂无宝宝</option>';
+                sel.value = currentBabySelection || '';
+                sel.disabled = opts.length === 0;
+            }
+            return currentBabySelection;
+        } catch (e) {
+            console.warn('宝宝选择加载失败', e);
+            currentBabySelection = null;
+        }
+    }
+    window.selectBaby = function(id) {
+        currentBabySelection = id || null;
+        loadBabyHistory(); updateBabyWeightChart(); loadVaccines(); renderVaccineSchedule(); loadBabyPhotos(); updateFoodExcreteChart(); assessBabyGrowth();
+    };
     function getBabyBirthDateFromRecords(records) {
         const delivery = (records || [])
-            .filter(r => r && r.stage === 'delivery' && r.date && !isNaN(parseLocalDate(r.date)))
+            .filter(r => r && r.stage === 'delivery' && r.date && !isNaN(parseLocalDate(r.date)) && babyMatchesSelection(r))
             .sort((a, b) => parseLocalDate(b.date) - parseLocalDate(a.date))[0];
         return delivery ? delivery.date : null;
     }
@@ -3125,7 +3257,7 @@
         return formatBabyAgeDays(days);
     }
     function getBabyGestWeeks(records) {
-        const delivery = records.filter(r => r && r.stage === 'delivery').sort((a,b) => parseLocalDate(b.date) - parseLocalDate(a.date))[0];
+        const delivery = records.filter(r => r && r.stage === 'delivery' && babyMatchesSelection(r)).sort((a,b) => parseLocalDate(b.date) - parseLocalDate(a.date))[0];
         const gw = delivery && delivery.data && delivery.data.gestWeeks != null ? Number(delivery.data.gestWeeks) : null;
         return gw != null && isFinite(gw) && gw > 0 ? gw : null;
     }
@@ -3166,7 +3298,9 @@
         loadBabyPhotos();
     };
     async function loadBabyPhotos() {
-        const [list, records] = await Promise.all([getAllData('baby_photos'), getAllData('pregnancy_records')]);
+        await ensureBabySelection();
+        const [allPhotos, records] = await Promise.all([getAllData('baby_photos'), getAllData('pregnancy_records')]);
+        const list = allPhotos.filter(babyMatchesSelection);
         const birth = getBabyBirthDateFromRecords(records);
         const gestWeeks = getBabyGestWeeks(records);
         const info = document.getElementById('babyBirthInfo');
@@ -3197,7 +3331,7 @@
     };
     let pregWeightChart = null;
     function updatePregWeightChart(records=null) {
-        if(!records) { getAllData('pregnancy_records').then(all=>{ let r = all.filter(rr=>rr.stage==='pregnancy').sort((a,b)=>parseLocalDate(a.date)-parseLocalDate(b.date)); updatePregWeightChart(r); }); return; }
+        if(!records) { Promise.all([getAllData('pregnancy_records'), activePregnancyIdOrNull()]).then(([all, pid])=>{ let r = all.filter(rr=>rr.stage==='pregnancy' && belongsToPregnancy(rr, pid)).sort((a,b)=>parseLocalDate(a.date)-parseLocalDate(b.date)); updatePregWeightChart(r); }); return; }
         const container = document.getElementById('pregWeightChartContainer');
         if (!container) return;
         if (!chartReady(container)) return;
@@ -3223,7 +3357,7 @@
     }
     let pregBpChart = null;
     function updatePregBpChart(records=null) {
-        if (!records) { getAllData('pregnancy_records').then(all => { const r = all.filter(rr => rr.stage === 'pregnancy').sort((a,b) => String(a.date).localeCompare(String(b.date))); updatePregBpChart(r); }); return; }
+        if (!records) { Promise.all([getAllData('pregnancy_records'), activePregnancyIdOrNull()]).then(([all, pid]) => { const r = all.filter(rr => rr.stage === 'pregnancy' && belongsToPregnancy(rr, pid)).sort((a,b) => String(a.date).localeCompare(String(b.date))); updatePregBpChart(r); }); return; }
         const container = document.getElementById('pregBpChartContainer');
         if (!container) return;
         if (!chartReady(container)) return;
@@ -3253,7 +3387,7 @@
     }
     let pregHormoneChart = null;
     function updatePregHormoneChart(records=null) {
-        if (!records) { getAllData('pregnancy_records').then(all => { const r = all.filter(rr => rr.stage === 'pregnancy').sort((a,b) => String(a.date).localeCompare(String(b.date))); updatePregHormoneChart(r); }); return; }
+        if (!records) { Promise.all([getAllData('pregnancy_records'), activePregnancyIdOrNull()]).then(([all, pid]) => { const r = all.filter(rr => rr.stage === 'pregnancy' && belongsToPregnancy(rr, pid)).sort((a,b) => String(a.date).localeCompare(String(b.date))); updatePregHormoneChart(r); }); return; }
         const container = document.getElementById('pregHormoneChartContainer');
         if (!container) return;
         if (!chartReady(container)) return;
@@ -3324,7 +3458,7 @@
         return z > 0 ? 1 - p : p;
     }
     function whoLmsAt(gender, metric, days) {
-        const sex = WHO_LMS[gender] ? gender : 'boy';
+        const sex = WHO_LMS.weeks && WHO_LMS.weeks[gender] ? gender : 'boy';
         const age = Math.max(0, Number(days) || 0);
         const table = age < 92 ? WHO_LMS.weeks[sex][metric] : WHO_LMS.months[sex][metric];
         const unit = age < 92 ? age / 7 : age / 30.4375;
@@ -3354,31 +3488,38 @@
     async function assessBabyGrowth() {
         const box = document.getElementById('babyGrowthAssessment');
         if (!box) return;
-        const [recs, records] = await Promise.all([getAllData('baby_records'), getAllData('pregnancy_records')]);
+        await ensureBabySelection();
+        const [allRecs, records] = await Promise.all([getAllData('baby_records'), getAllData('pregnancy_records')]);
+        const recs = allRecs.filter(babyMatchesSelection);
         const birth = getBabyBirthDateFromRecords(records);
-        const delivery = records.filter(r => r && r.stage === 'delivery').sort((a, b) => parseLocalDate(b.date) - parseLocalDate(a.date))[0];
+        const delivery = records.filter(r => r && r.stage === 'delivery' && babyMatchesSelection(r)).sort((a, b) => parseLocalDate(b.date) - parseLocalDate(a.date))[0];
         const gender = delivery && delivery.data && delivery.data.gender === '女' ? 'girl' : 'boy';
         const gestWeeks = getBabyGestWeeks(records);
         const latest = recs.filter(r => r.weight || r.height || r.head).sort((a,b) => parseLocalDate(b.date) - parseLocalDate(a.date))[0];
         if (!latest) { box.innerHTML = '<p class="muted" style="font-size:13px;margin-top:12px;">记录一次体重/身高/头围后可查看 WHO 参考</p>'; return; }
         if (!birth || isNaN(parseLocalDate(birth))) { box.innerHTML = '<p class="muted" style="font-size:13px;">记录分娩日期后才能计算月龄与百分位</p>'; return; }
         const days = Math.max(0, dateDiff(parseLocalDate(latest.date), parseLocalDate(birth)));
+        const preterm = isFinite(Number(gestWeeks)) && Number(gestWeeks) > 0 && Number(gestWeeks) < 37;
+        const deficitDays = preterm ? Math.round((40 - Number(gestWeeks)) * 7) : 0;
+        const correctedDays = Math.max(0, days - deficitDays);
+        const lmsDays = preterm && days <= 24 * 30.4375 ? correctedDays : days;
         const rows = [['体重', latest.weight, 'weight', 'kg'], ['身长', latest.height, 'height', 'cm'], ['头围', latest.head, 'head', 'cm']]
             .filter(([,v]) => v != null && v !== '' && !isNaN(Number(v)))
             .map(([label, v, key, unit]) => {
-                const lms = whoLmsAt(gender, key, days);
+                const lms = whoLmsAt(gender, key, lmsDays);
                 return `<div class="history-item"><span>${label} ${escapeHtml(v)}${unit}</span><span style="font-size:13px;">${lms ? percentileText(v, lms) : '超出 WHO 0–5 岁参考范围'}</span></div>`;
             }).join('');
-        box.innerHTML = `<div class="quick-divider"></div><div class="muted" style="font-size:13px;">${escapeHtml(latest.date)} · 日龄 ${days} 天${gestWeeks && gestWeeks < 37 ? ` · ${escapeHtml(babyAgeText(latest.date, birth, gestWeeks))}` : ''} · ${gender === 'boy' ? '男宝' : '女宝'} · WHO 2006 LMS</div>${rows}<div class="clinical-alert" style="background:#f7f9fb;border-color:#e3e8ee;color:var(--text-light);font-size:12px;margin-top:10px;">采用 WHO 官方 L/M/S 参数按日龄/月龄插值（0–5 岁），百分位为估算值，受测量误差与个体差异影响；<strong>不能替代儿保科评估</strong>。持续低于 3 或高于 97 百分位建议就医。</div>`;
+        const ageNote = preterm ? ` · 日龄 ${days} 天，按矫正日龄 ${correctedDays} 天评估` : ` · 日龄 ${days} 天`;
+        box.innerHTML = `<div class="quick-divider"></div><div class="muted" style="font-size:13px;">${escapeHtml(latest.date)}${ageNote}${preterm ? `（${escapeHtml(babyAgeText(latest.date, birth, gestWeeks))}）` : ''} · ${gender === 'boy' ? '男宝' : '女宝'} · WHO 2006 LMS</div>${rows}<div class="clinical-alert" style="background:#f7f9fb;border-color:#e3e8ee;color:var(--text-light);font-size:12px;margin-top:10px;">采用 WHO 官方 L/M/S 参数按日龄/月龄插值（0–5 岁）${preterm ? '；早产儿 2 岁内使用矫正日龄' : ''}，百分位为估算值，受测量误差与个体差异影响；<strong>不能替代儿保科评估</strong>。持续低于 3 或高于 97 百分位建议就医。</div>`;
     }
     const VACCINE_SCHEDULE = [
         {m:0,n:'乙肝疫苗 第1剂',c:'HepB',d:1},{m:0,n:'卡介苗',c:'BCG',d:0},{m:1,n:'乙肝疫苗 第2剂',c:'HepB',d:2},
         {m:2,n:'脊灰疫苗 第1剂',c:'IPV',d:1},{m:3,n:'脊灰疫苗 第2剂',c:'IPV',d:2},{m:3,n:'百白破 第1剂',c:'DTaP',d:1},
-        {m:4,n:'脊灰疫苗 第3剂',c:'IPV',d:3},{m:4,n:'百白破 第2剂',c:'DTaP',d:2},{m:5,n:'百白破 第3剂',c:'DTaP',d:3},
+        {m:4,n:'脊灰疫苗 第3剂',c:'bOPV',d:3},{m:4,n:'百白破 第2剂',c:'DTaP',d:2},{m:5,n:'百白破 第3剂',c:'DTaP',d:3},
         {m:6,n:'乙肝疫苗 第3剂',c:'HepB',d:3},{m:6,n:'A群流脑 第1剂',c:'MCV_A',d:1},{m:8,n:'麻腮风 第1剂',c:'MMR',d:1},
         {m:8,n:'乙脑减毒活疫苗 第1剂',c:'JE',d:1},{m:9,n:'A群流脑 第2剂',c:'MCV_A',d:2},{m:18,n:'麻腮风 第2剂',c:'MMR',d:2},
         {m:18,n:'甲肝减毒活疫苗',c:'HepA',d:0},{m:18,n:'百白破 第4剂',c:'DTaP',d:4},{m:24,n:'乙脑减毒活疫苗 第2剂',c:'JE',d:2},
-        {m:36,n:'A群C群流脑 第1剂',c:'MCV_AC',d:1},{m:48,n:'脊灰疫苗 第4剂',c:'IPV',d:4},{m:72,n:'白破疫苗',c:'DT',d:0},{m:72,n:'A群C群流脑 第2剂',c:'MCV_AC',d:2}
+        {m:36,n:'A群C群流脑 第1剂',c:'MCV_AC',d:1},{m:48,n:'脊灰疫苗 第4剂',c:'bOPV',d:4},{m:72,n:'白破疫苗',c:'DT',d:0},{m:72,n:'A群C群流脑 第2剂',c:'MCV_AC',d:2}
     ];
     function vaccineKey(code, dose) { return `${code}|${Number(dose) || 0}`; }
     function isVaccineDone(v, item) {
@@ -3409,7 +3550,9 @@
     async function renderVaccineSchedule() {
         const box = document.getElementById('vaccineSchedule');
         if (!box) return;
-        const [records, vaccines] = await Promise.all([getAllData('pregnancy_records'), getAllData('vaccines')]);
+        await ensureBabySelection();
+        const [records, allVaccines] = await Promise.all([getAllData('pregnancy_records'), getAllData('vaccines')]);
+        const vaccines = allVaccines.filter(babyMatchesSelection);
         const birth = getBabyBirthDateFromRecords(records);
         if (!birth) { box.innerHTML = '<p class="muted" style="font-size:13px;">记录分娩日期后自动生成免疫规划对照</p>'; return; }
         const today = getLocalDateString();
@@ -3445,11 +3588,12 @@
 
     // ========== 宝宝成长 ==========
     async function saveBabyRecord() { let date = document.getElementById('babyRecordDate').value || getLocalDateString(); let weight = parseFloat(document.getElementById('babyWeightInput').value); let height = parseFloat(document.getElementById('babyHeightInput').value); let head = parseFloat(document.getElementById('babyHeadInput').value); if(isNaN(weight) && isNaN(height) && isNaN(head)) { toast("请至少填写体重、身高或头围", 'warn'); return; } if(!ensureNotFuture(date, '记录日期')) return; if (!numericFieldInRange('babyWeightInput', '体重', 0.5, 30)) return; if (!numericFieldInRange('babyHeightInput', '身高', 25, 130)) return; if (!numericFieldInRange('babyHeadInput', '头围', 20, 60)) return; await addData('baby_records', { date, weight: weight||null, height: height||null, head: isNaN(head) ? null : head, babyId: await currentBabyId(), timestamp:Date.now() }); toast("成长记录已保存"); loadBabyHistory(); updateBabyWeightChart(); document.getElementById('babyWeightInput').value = ''; document.getElementById('babyHeightInput').value = ''; document.getElementById('babyHeadInput').value = ''; assessBabyGrowth(); }
-    async function loadBabyHistory() { let records = await getAllData('baby_records'); records.sort((a,b)=>parseLocalDate(b.date)-parseLocalDate(a.date)); let container = document.getElementById('babyHistoryList'); if(!records.length){ container.innerHTML='<div class="empty-state">暂无成长记录</div>'; return; } renderPagedList(container, records, rec=>`<div class="history-item"><div>${escapeHtml(rec.date)}</div><div>⚖️${rec.weight?escapeHtml(rec.weight)+'kg':'-'} 📏${rec.height?escapeHtml(rec.height)+'cm':'-'} 🧢${rec.head?escapeHtml(rec.head)+'cm':'-'}</div><div class="history-actions">${editButton('baby_records', rec.id)}<button class="delete-btn" onclick="deleteBabyRecord(${Number(rec.id)})">🗑️</button></div></div>`); }
+    async function loadBabyHistory() { await ensureBabySelection(); let records = (await getAllData('baby_records')).filter(babyMatchesSelection); records.sort((a,b)=>parseLocalDate(b.date)-parseLocalDate(a.date)); let container = document.getElementById('babyHistoryList'); if(!records.length){ container.innerHTML='<div class="empty-state">暂无成长记录</div>'; return; } renderPagedList(container, records, rec=>`<div class="history-item"><div>${escapeHtml(rec.date)}</div><div>⚖️${rec.weight?escapeHtml(rec.weight)+'kg':'-'} 📏${rec.height?escapeHtml(rec.height)+'cm':'-'} 🧢${rec.head?escapeHtml(rec.head)+'cm':'-'}</div><div class="history-actions">${editButton('baby_records', rec.id)}<button class="delete-btn" onclick="deleteBabyRecord(${Number(rec.id)})">🗑️</button></div></div>`); }
     window.deleteBabyRecord = async (id)=>{ if(confirm("删除?")){ await deleteData('baby_records',id); loadBabyHistory(); updateBabyWeightChart(); } };
     let babyWeightChart = null;
     function updateBabyWeightChart() {
-        getAllData('baby_records').then(records => {
+        ensureBabySelection().then(() => getAllData('baby_records')).then(records => {
+            records = records.filter(babyMatchesSelection);
             const container = document.getElementById('babyWeightChartContainer');
             if (!container) return;
             if (!chartReady(container)) return;
@@ -3491,7 +3635,7 @@
         closeModal('vaccineModal'); loadVaccines(); renderVaccineSchedule(); scheduleReminders();
         document.getElementById('vaccineName').value=''; document.getElementById('vaccineDate').value=''; document.getElementById('vaccineNext').value='';
     };
-    async function loadVaccines() { let list = await getAllData('vaccines'); list.sort((a,b)=>parseLocalDate(b.date)-parseLocalDate(a.date)); let container = document.getElementById('vaccineList'); if(!list.length){ container.innerHTML='<div class="empty-state">暂无疫苗记录</div>'; return; } renderPagedList(container, list, v=>{ const next = v.nextDate || v.next || ''; return `<div class="vaccine-item"><div><strong>${escapeHtml(v.name)}</strong> ${escapeHtml(v.date)}</div><div>${next?`下次提醒: ${escapeHtml(next)}`:''}</div><div class="history-actions">${editButton('vaccines', v.id)}<button class="delete-btn" onclick="deleteVaccine(${Number(v.id)})">删除</button></div></div>`; }); }
+    async function loadVaccines() { await ensureBabySelection(); let list = (await getAllData('vaccines')).filter(babyMatchesSelection); list.sort((a,b)=>parseLocalDate(b.date)-parseLocalDate(a.date)); let container = document.getElementById('vaccineList'); if(!list.length){ container.innerHTML='<div class="empty-state">暂无疫苗记录</div>'; return; } renderPagedList(container, list, v=>{ const next = v.nextDate || v.next || ''; return `<div class="vaccine-item"><div><strong>${escapeHtml(v.name)}</strong> ${escapeHtml(v.date)}</div><div>${next?`下次提醒: ${escapeHtml(next)}`:''}</div><div class="history-actions">${editButton('vaccines', v.id)}<button class="delete-btn" onclick="deleteVaccine(${Number(v.id)})">删除</button></div></div>`; }); }
     window.deleteVaccine = async (id)=>{ if(confirm("删除疫苗记录?")){ await deleteData('vaccines',id); loadVaccines(); } };
     window.showAddFoodModal = ()=>openModal('foodModal');
     window.addFoodRecord = async ()=>{ let date = document.getElementById('foodDate').value||getLocalDateString(); if(!ensureNotFuture(date, '记录日期')) return; let type = document.getElementById('foodType').value; let amount = document.getElementById('foodAmount').value; await addData('baby_food', { date, type, amount, babyId: await currentBabyId(), timestamp:Date.now() }); closeModal('foodModal'); updateFoodExcreteChart(); document.getElementById('foodDate').value=''; document.getElementById('foodAmount').value=''; };
@@ -3516,7 +3660,9 @@
     window.deleteFoodRecord = async (id) => { if (confirm('删除这条饭食记录？')) { await deleteData('baby_food', Number(id)); updateFoodExcreteChart(); } };
     window.deleteExcreteRecord = async (id) => { if (confirm('删除这条排泄记录？')) { await deleteData('baby_excrete', Number(id)); updateFoodExcreteChart(); } };
     function updateFoodExcreteChart() {
-        Promise.all([getAllData('baby_food'), getAllData('baby_excrete')]).then(([foods, excrets]) => {
+        ensureBabySelection().then(() => Promise.all([getAllData('baby_food'), getAllData('baby_excrete')])).then(([allFoods, allExcrets]) => {
+            const foods = allFoods.filter(babyMatchesSelection);
+            const excrets = allExcrets.filter(babyMatchesSelection);
             renderFoodExcreteHistory(foods, excrets);
             const container = document.getElementById('foodExcreteChartContainer');
             if (!container) return;
@@ -3792,8 +3938,8 @@
     }
 
     // ========== 导出/导入/清空 ==========
-    const APP_STORAGE_KEYS = ['life_notify_enabled', 'life_notify_last_date', 'qweather_host', 'qweather_key', 'life_weather_cache', 'life_last_weather_city', 'lastCity', 'life_app_lock', 'life_app_lock_fails', 'life_last_backup', 'life_health_favorites', 'life_health_index_v1'];
-    const EXPORT_PREFERENCE_KEYS = ['life_notify_enabled', 'qweather_host', 'qweather_key', 'life_weather_cache', 'life_last_weather_city', 'lastCity', 'life_health_favorites', 'life_last_backup'];
+    const APP_STORAGE_KEYS = ['life_notify_enabled', 'life_notify_last_date', 'qweather_host', 'qweather_key', 'life_weather_cache', 'life_last_weather_city', 'lastCity', 'life_app_lock', 'life_app_lock_fails', 'life_last_backup', 'life_health_favorites', 'life_health_index_v1', 'life_contractions'];
+    const EXPORT_PREFERENCE_KEYS = ['life_notify_enabled', 'qweather_host', 'qweather_key', 'life_weather_cache', 'life_last_weather_city', 'lastCity', 'life_health_favorites', 'life_last_backup', 'life_contractions'];
     const APP_SCHEMA_VERSION = 6;
     const LOCK_KEY = 'life_app_lock';
     const LOCK_ATTEMPTS_KEY = 'life_app_lock_fails';
@@ -3810,6 +3956,10 @@
                     await updateData('vaccines', v);
                 } else if (!next && v.next) {
                     delete v.next;
+                    await updateData('vaccines', v);
+                }
+                if (v.code === 'IPV' && Number(v.dose) >= 3) {
+                    v.code = 'bOPV';
                     await updateData('vaccines', v);
                 }
             }
@@ -3919,6 +4069,9 @@
                 const item = VACCINE_SCHEDULE.find(v => rec.name && String(rec.name).replace(/\s+/g, '') === v.n.replace(/\s+/g, ''));
                 if (item) { rec.code = item.c; rec.dose = item.d; }
             }
+        }
+        for (const rec of imported.vaccines || []) {
+            if (rec.code === 'IPV' && Number(rec.dose) >= 3) rec.code = 'bOPV';
         }
         imported.schemaVersion = APP_SCHEMA_VERSION;
         return imported;
@@ -4334,7 +4487,7 @@
         if (section === 'diary') loadDiaries();
         if (section === 'outfit') { loadOutfitHistory(); loadOutfitWeather(false); }
         if (section === 'todo') loadTodos();
-        if (section === 'pregnancy') { echartsLoadFailed = false; updatePregnancyHeader(); loadPregnancyChecks(); loadBabyPhotos(); refreshCurrentStagePanel(); renderPregnancyWeightGain(); loadBabyHistory(); updateBabyWeightChart(); loadVaccines(); updateFoodExcreteChart(); renderPregnancyRelated('baby'); }
+        if (section === 'pregnancy') { echartsLoadFailed = false; updatePregnancyHeader(); loadPregnancyChecks(); loadBabyPhotos(); refreshCurrentStagePanel(); renderPregnancyWeightGain(); loadBabyHistory(); updateBabyWeightChart(); loadVaccines(); updateFoodExcreteChart(); renderContractionTimer(); renderPregnancyRelated('baby'); }
         setTimeout(resizeCharts, 100);
     }
 
