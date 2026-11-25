@@ -478,14 +478,6 @@
                 <div id="healthResults" class="health-results"></div>
             </div>
 
-            <div class="card" id="reminderCenterCard"><div class="card-title">🔔 提醒中心</div>
-                <div class="notify-row"><span>启用通知提醒</span><label class="switch"><input type="checkbox" id="notifyToggle" onchange="toggleNotify(this.checked)"><span class="slider"></span></label></div>
-                <div id="notifyPermStatus" style="font-size:13px; color:var(--text-light); margin-bottom:12px;"></div>
-                <div id="reminderPreviewList"></div>
-                <button class="btn btn-secondary btn-small" style="margin-top:14px;" onclick="exportRemindersICS()">📅 导出未来提醒 (.ics)</button>
-            </div>
-
-
             <div class="card">
                 <div class="card-title">⚠️ 免责声明</div>
                 <p class="muted" style="line-height:1.8;">健康知识仅供科普参考，不能替代专业医疗建议、诊断或治疗。周期、排卵期、孕周、生长百分位等均为统计估算，<strong>本应用不是医疗器械，不可用于避孕或作为诊断、治疗依据</strong>。如有不适或紧急情况，请及时就医。默沙东诊疗手册为独立第三方网站，本应用与其无隶属或合作关系。</p>
@@ -515,6 +507,13 @@
                 <div id="timelineEvents"></div>
                 <div class="upcoming-events"><h3>📅 即将到来</h3><div id="upcomingList"></div></div>
                 <div class="holiday-grid"><div class="holiday-card"><div id="qixiDate"></div><div>七夕</div><div id="qixiCountdown"></div></div><div class="holiday-card"><div id="valentineDate"></div><div>情人节</div><div id="valentineCountdown"></div></div></div>
+            </div>
+
+            <div class="card" id="reminderCenterCard"><div class="card-title">🔔 提醒中心</div>
+                <div class="notify-row"><span>启用通知提醒</span><label class="switch"><input type="checkbox" id="notifyToggle" onchange="toggleNotify(this.checked)"><span class="slider"></span></label></div>
+                <div id="notifyPermStatus" style="font-size:13px; color:var(--text-light); margin-bottom:12px;"></div>
+                <div id="reminderPreviewList"></div>
+                <button class="btn btn-secondary btn-small" style="margin-top:14px;" onclick="exportRemindersICS()">📅 导出未来提醒 (.ics)</button>
             </div>
 
             <div class="card">
@@ -4303,7 +4302,7 @@
         }, 60);
     }
     function goToReminderCenter() {
-        switchTab('health', { skipScroll: true });
+        switchTab('me', { skipScroll: true });
         const card = document.getElementById('reminderCenterCard');
         if (!card) return;
         try { card.scrollIntoView({ behavior: 'auto', block: 'start' }); }
@@ -4607,7 +4606,7 @@
         const windowDays = Math.max(1, Number(days) || 7);
         const y = now.getFullYear();
         const items = [];
-        const pushExact = (date, emoji, label, hash = '#health') => {
+        const pushExact = (date, emoji, label, hash = '#me') => {
             if (!date) return;
             const d = date instanceof Date ? todayStart(date) : parseLocalDate(date);
             if (isNaN(d)) return;
@@ -4690,7 +4689,7 @@
         const todayKey = getLocalDateString();
         const locked = !!getLockConfig();
         const fireNotify = (title, body, hash) => {
-            const opts = { body, icon: './icon-192.png', tag: 'life-reminders-' + hash, data: { hash: hash || '#health' } };
+            const opts = { body, icon: './icon-192.png', tag: 'life-reminders-' + hash, data: { hash: hash || '#me' } };
             if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
                 navigator.serviceWorker.ready.then(reg => reg.showNotification(title, opts)).catch(() => {
                     try { new Notification(title, opts); } catch {}
@@ -4703,7 +4702,7 @@
             const body = locked
                 ? `您有 ${items.length} 条健康提醒，请打开应用查看`
                 : items.map(r => `${r.label}：${r.diff === 0 ? '今天！' : r.diff + '天后'}`).join('\n');
-            fireNotify('💕 Life 提醒', body, (items[0] && items[0].hash) || '#health');
+            fireNotify('💕 Life 提醒', body, (items[0] && items[0].hash) || '#me');
             try { localStorage.setItem(NOTIFY_LAST_KEY, todayKey); } catch {}
             for (const r of items.filter(x => x.diff === 0)) {
                 const itemKey = `life_notify_${r.date}_${r.label}`;
@@ -4711,7 +4710,7 @@
                 const delay = at.getTime() - Date.now();
                 const trigger = () => {
                     if (localStorage.getItem(itemKey) === todayKey) return;
-                    fireNotify(`${r.emoji} ${r.label}`, locked ? '您有一条健康提醒，请打开应用查看' : '今天的提醒，请查看应用', r.hash || '#health');
+                    fireNotify(`${r.emoji} ${r.label}`, locked ? '您有一条健康提醒，请打开应用查看' : '今天的提醒，请查看应用', r.hash || '#me');
                     try { localStorage.setItem(itemKey, todayKey); } catch {}
                 };
                 if (delay > 0 && delay < 12 * 3600000) setTimeout(trigger, delay);

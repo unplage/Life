@@ -55,7 +55,7 @@ self.addEventListener('activate', event => {
 self.addEventListener('notificationclick', event => {
   event.notification.close();
   const data = event.notification.data || {};
-  const hash = typeof data.hash === 'string' && data.hash.startsWith('#') ? data.hash : '#health';
+  const hash = typeof data.hash === 'string' && data.hash.startsWith('#') ? data.hash : '#me';
   const target = BASE_PATH + hash;
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(async list => {

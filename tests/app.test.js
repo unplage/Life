@@ -395,10 +395,13 @@ test('home reminder links jump to the reminder center card', async () => {
     assert.ok(moreLink);
     assert.match(moreLink.getAttribute('onclick'), /goToReminderCenter/);
 
+    const card = doc.getElementById('reminderCenterCard');
+    assert.ok(card.closest('#view-me'));
+    assert.equal(card.closest('#view-health'), null);
     const scrolled = [];
     app.window.HTMLElement.prototype.scrollIntoView = function (opts) { scrolled.push({ id: this.id, behavior: opts && opts.behavior }); };
     app.window.goToReminderCenter();
-    assert.equal(doc.getElementById('view-health').classList.contains('active'), true);
+    assert.equal(doc.getElementById('view-me').classList.contains('active'), true);
     assert.ok(scrolled.some(s => s.id === 'reminderCenterCard' && s.behavior === 'auto'));
     await new Promise(resolve => setTimeout(resolve, 100));
     assert.equal(scrolled[scrolled.length - 1].id, 'reminderCenterCard');
